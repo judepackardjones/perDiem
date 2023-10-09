@@ -87,7 +87,7 @@ impl Date {
 
 }
 
-pub fn SameDayOfMonth(date1: Date, date2: Date) -> bool {
+pub fn sameDayOfMonth(date1: Date, date2: Date) -> bool {
     if date1.day == date2.day {
         return true;
     }
