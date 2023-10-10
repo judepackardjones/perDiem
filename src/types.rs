@@ -27,5 +27,7 @@ pub trait datekind {
     fn isLeapYear(&self) -> bool;
     fn weekday(&self) -> Result<String, std::io::Error> ;
     fn weekday_as_int(&self) -> Result<i8, std::io::Error>;
-    fn sameDayOfMonth(date1: &Self, date2: &Self) -> bool;
+    fn sharesDay(&self, date2: &Self) -> bool;
+    fn sharesMonth(&self, date2: &Self) -> bool;
+    fn sharesYear(&self, date2: &Self) -> bool;
 }

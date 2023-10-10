@@ -36,12 +36,25 @@ macro_rules! implevalfns {
                 }
                 ) - 1 ) / 5 ) + first_two_digits_year as i8 + (first_two_digits_year as i8 / 4) + (last_two_digits_year as i8 / 4) - 2*last_two_digits_year as i8) % 7) as i8);
             }
-            fn sameDayOfMonth(date1: &$struct, date2: &$struct) -> bool {
-                if date1.day == date2.day {
+            fn sharesDay(&self, date2: &$struct) -> bool {
+                if self.day == date2.day {
                     return true;
                 }
                 false
-            } 
+            }
+            fn sharesYear(&self, date2: &$struct) -> bool {
+                if self.year == date2.year {
+                    return true;
+                }
+                false
+            }
+            fn sharesMonth(&self, date2: &$struct) -> bool {
+                if self.month == date2.month {
+                    return true;
+                }
+                false
+            }
+
 
         }
     }

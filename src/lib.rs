@@ -15,10 +15,10 @@ Decrease date macro
 date parsing
 formatting Date as String
 measuring time between dates
-is before
+is before 
 is after
 has same day, month, year
-which are same of dates
+which fields are same of list of dates
 converstion between DateTime and Date
 */
 
