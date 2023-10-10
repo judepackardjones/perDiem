@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 #![allow(non_camel_case_types)]
 #![allow(dead_code)]
-use chrono::prelude::*;
+#![allow(unused_macros)]
 /*This is a public crate for various date related utilities
 This crate relies on the chrono crate. 
 It was a deliberate choice to use i32 for all date related types. I'd be happy to discuss it, it just makes the calculations of 

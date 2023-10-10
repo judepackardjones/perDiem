@@ -6,3 +6,9 @@ macro_rules! increase_date {
         todo!();
     }
 }
+
+macro_rules! decrease_date {
+    ($($time_span:expr, TimeSpan), *) => {
+        todo!();
+    }
+}
