@@ -17,8 +17,9 @@ mod tests {
     assert_eq!(Date{ day: 7, month: 10,  year: 1900}.isLeapYear(), false);
     }
     #[test]
-    fn same_fields() {
+    fn same_fields_shared() {
         assert_eq!(Date {day: 15, month: 4, year: 1943}.sharesDay(&Date {day: 15, month: 5, year: 1900}), true);
-        assert_eq!(Date {day: 15, month: 5, year: 1900}.sharesYear(&Date {day: 15, month: 5, year: 1900}), true);
+        assert_eq!(Date {day: 14, month: 5, year: 1943}.sharesMonth(&Date {day: 15, month: 5, year: 1940}), true);
+        assert_eq!(Date {day: 24, month: 1, year: 1980}.sharesYear(&Date {day: 15, month: 2, year: 1980}), true);
     }
 }

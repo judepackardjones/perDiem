@@ -9,6 +9,7 @@ Completed functions and methods:
 use method weekday to return the day of a week from a given Date struct 
 use method weekday_as_int to return the day of the week as an index from 0-6 starting on Sunday. *both of these use Zellers congruence for calculations
 use current_date to get the current date as Date
+use sharesDay, sharesMonth, sharesYear methods to check if parameter 1 has same date field as self.
 TODO:
 Increment date macro
 Decrease date macro
@@ -17,7 +18,6 @@ formatting Date as String
 measuring time between dates
 is before 
 is after
-has same day, month, year
 which fields are same of list of dates
 converstion between DateTime and Date
 */
