@@ -4,7 +4,6 @@
 #![allow(unused_macros)]
 /*This is a public crate for various date related utilities
 This crate relies on the chrono crate. 
-It was a deliberate choice to use i32 for all date related types. I'd be happy to discuss it, it just makes the calculations of 
 Completed functions and methods:
 use method weekday to return the day of a week from a given Date struct 
 use method weekday_as_int to return the day of the week as an index from 0-6 starting on Sunday. *both of these use Zellers congruence for calculations

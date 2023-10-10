@@ -68,8 +68,15 @@ impl crate::types::Date {
             year: local.year() as i16,
             
         }
-
-}
+    }
+    fn DateShares(&self, compare_type: &str, datetime2: &Self) -> Result<bool, &str> {
+        match compare_type {
+            "second" => if self.day == datetime2.day{ Ok(true) } else { Ok(false) },
+            "minute" => if self.month == datetime2.month { Ok(true) } else { Ok(false) },
+            "hour" => if self.year == datetime2.year { Ok(true) } else { Ok(false) },
+            &_ => return Err("Invalid compare type")
+        }
+    }
 }
 impl crate::types::DateTime {
     fn snapshot_datetime() -> crate::types::DateTime {
@@ -85,7 +92,35 @@ impl crate::types::DateTime {
         }
 
     }
-    
+    fn sharesSecond(&self, datetime2: DateTime) -> bool{
+        if self.second == datetime2.second {
+            return true;
+        }
+        false
+    }
+    fn sharesMinute(&self, datetime2: DateTime) -> bool{
+        if self.minute == datetime2.minute {
+            return true;
+        }
+        false
+    }
+    fn sharesHour(&self, datetime2: DateTime) -> bool{
+        if self.hour == datetime2.hour {
+            return true;
+        }
+        false
+    }
+    fn DateTimeShares(&self, compare_type: &str, datetime2: &Self) -> Result<bool, &str> {
+        match compare_type {
+            "second" => if self.second == datetime2.second { Ok(true) } else { Ok(false) },
+            "minute" => if self.minute == datetime2.minute { Ok(true) } else { Ok(false) },
+            "hour" => if self.hour == datetime2.hour { Ok(true) } else { Ok(false) },
+            "day" => if self.day == datetime2.day { Ok(true) } else { Ok(false) },
+            "month" => if self.month == datetime2.month { Ok(true) } else { Ok(false) },
+            "year" => if self.year == datetime2.year { Ok(true) } else { Ok(false) },
+            &_ => {return Err("Invalid compare type");}
+        }
+    }
 }
 implevalfns!(Date);
 implevalfns!(DateTime);
