@@ -10,8 +10,8 @@ use method weekday to return the day of a week from a given Date struct
 use method weekday_as_int to return the day of the week as an index from 0-6 starting on Sunday. *both of these use Zellers congruence for calculations
 use current_date to get the current date as Date
 TODO:
-Increment date method
-Decrease date method
+Increment date macro
+Decrease date macro
 date parsing
 formatting Date as String
 measuring time between dates

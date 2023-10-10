@@ -1,7 +1,7 @@
 
 #[cfg(test)]
 mod tests {
-    use date_utils::{types::{Date, DateTime, datekind}, *};
+    use perDiem::{types::{Date, DateTime, datekind}, *};
 
 
     #[test]

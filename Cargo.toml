@@ -1,5 +1,5 @@
 [package]
-name = "date_utils"
+name = "perDiem"
 version = "0.1.0"
 edition = "2021"
 

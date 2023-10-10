@@ -12,7 +12,7 @@ macro_rules! allShare { // macro checks if every element has the same of one or 
 }
 
 #[macro_export]
-macro_rules! implfns {
+macro_rules! implevalfns {
     ($struct:ident) => {
         impl crate::types::datekind for $struct {
             fn isLeapYear(&self) -> bool {
@@ -47,7 +47,7 @@ macro_rules! implfns {
     }
 }
 impl crate::types::Date {
-    fn current_date() -> crate::types::Date {
+    fn snapshot_date() -> crate::types::Date {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::Date {
             day: local.day() as i8,
@@ -59,7 +59,7 @@ impl crate::types::Date {
 }
 }
 impl crate::types::DateTime {
-    fn current_datetime() -> crate::types::DateTime {
+    fn snapshot_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::DateTime {
             second: local.second() as i8,
@@ -73,5 +73,5 @@ impl crate::types::DateTime {
 
 }
 }
-implfns!(Date);
-implfns!(DateTime);
+implevalfns!(Date);
+implevalfns!(DateTime);
