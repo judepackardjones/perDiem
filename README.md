@@ -1,4 +1,4 @@
-# date-utils
+# date_utils
 /*This is a public crate for various date related utilities created by Jude Packard-Jones
 This crate relies on the chrono crate. 
 Completed functions and methods:
