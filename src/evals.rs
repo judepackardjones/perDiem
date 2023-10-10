@@ -16,10 +16,7 @@ macro_rules! implfns {
     ($struct:ident) => {
         impl crate::types::datekind for $struct {
             fn isLeapYear(&self) -> bool {
-                if self.year % 4 == 0 && self.year % 100 != 0{
-                    return true;
-                } 
-                if self.year % 400 == 0 {
+                if (self.year % 4 == 0 && self.year % 100 != 0) || self.year % 400 == 0{
                     return true;
                 }
                 false
