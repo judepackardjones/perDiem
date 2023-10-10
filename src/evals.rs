@@ -1,7 +1,15 @@
 use crate::types::*;
 use chrono::{DateTime as chronoDateTime, Timelike};
-use chrono::prelude::{Local};
+use chrono::prelude::Local;
 use chrono::Datelike;
+
+
+#[macro_export]
+macro_rules! allShare { // macro checks if every element has the same of one or more fields and returns them
+    ($($date:expr), *) => {
+        todo!();
+    }
+}
 
 #[macro_export]
 macro_rules! implfns {
@@ -54,7 +62,7 @@ impl crate::types::Date {
 }
 }
 impl crate::types::DateTime {
-    fn current_date() -> crate::types::DateTime {
+    fn current_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::DateTime {
             second: local.second() as i8,

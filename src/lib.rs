@@ -43,15 +43,3 @@ pub mod textmanagement {
     pub mod parsing;
 }
 
-#[macro_export]
-macro_rules! increase_date {
-    ($($time_span:expr, TimeSpan), *) => {
-        todo!();
-    }
-}
-#[macro_export]
-macro_rules! allShare { // macro checks if every element has the same of one or more fields and returns them
-    ($($time_span:expr, TimeSpan), *) => {
-        todo!();
-    }
-}
