@@ -12,7 +12,7 @@ macro_rules! allShare { // macro checks if every element has the same of one or 
 }
 
 #[macro_export]
-macro_rules! implevalfns {
+macro_rules! impl_eval_fns {
     ($struct:ident) => {
         impl crate::types::datekind for $struct {
             fn isLeapYear(&self) -> bool {
@@ -122,5 +122,5 @@ impl crate::types::DateTime {
         }
     }
 }
-implevalfns!(Date);
-implevalfns!(DateTime);
+impl_eval_fns!(Date);
+impl_eval_fns!(DateTime);
