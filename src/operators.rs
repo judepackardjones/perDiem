@@ -19,6 +19,9 @@ macro_rules! impl_operators_fns {
             fn not_as_datekind(&self) -> Either<Date, DateTime> {
                 todo!()
             }
+            fn last_two_digits_year(&self) -> i32 {
+                self.year.to_string().as_str().chars().take(2).map(|x| x.to_string()).collect::<String>().parse().unwrap()
+            }
         }
     }
 }
@@ -26,16 +29,6 @@ macro_rules! impl_operators_fns {
 
 
 
-impl Date {
-    pub fn last_two_digits_year(&self) -> i32 {
-    self.year.to_string().as_str().chars().take(2).map(|x| x.to_string()).collect::<String>().parse().unwrap()
-}
-}
 
-impl DateTime{
-    pub fn last_two_digits_year(&self) -> i32 {
-        self.year.to_string().as_str().chars().take(2).map(|x| x.to_string()).collect::<String>().parse().unwrap()
-       }
-}
 impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);

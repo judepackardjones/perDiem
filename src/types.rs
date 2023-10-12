@@ -34,6 +34,7 @@ pub trait datekindEvals {
 }
 pub trait datekindOperators {
     fn not_as_datekind(&self) -> Either<Date, DateTime>;
+    fn last_two_digits_year(&self) -> i32;
 }
 
 
