@@ -1,3 +1,4 @@
+use either::*;
 pub struct Date { // the basic struct for dates
     pub day: i8,
     pub month: i8, 
@@ -30,4 +31,8 @@ pub trait datekind {
     fn sharesDay(&self, date2: &Self) -> bool;
     fn sharesMonth(&self, date2: &Self) -> bool;
     fn sharesYear(&self, date2: &Self) -> bool;
+    fn not_as_datekind(&self) -> Either<Date, DateTime>;
+}
+pub trait x { // used for creating String methods
+    fn as_Date(&self) -> Date;
 }

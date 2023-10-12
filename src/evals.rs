@@ -2,8 +2,7 @@ use crate::types::*;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use chrono::prelude::Local;
 use chrono::Datelike;
-
-
+use crate::operators::*;
 #[macro_export]
 macro_rules! allShare { // macro checks if every element has the same of one or more fields and returns them
     ($($date:expr), *) => {
@@ -26,7 +25,6 @@ macro_rules! impl_eval_fns {
                 return Ok(weekdays[self.weekday_as_int().expect("Error converting date to week number") as usize].to_string());
             }
             fn weekday_as_int(&self) -> Result<i8, std::io::Error> {
-                let last_two_digits_year: i32 = self.year.to_string().as_str().chars().take(2).map(|x| x.to_string()).collect::<String>().parse().unwrap();
                 let first_two_digits_year: i32 = self.year as i32 % 100;      
             return Ok(((self.day + 
                 ((13*(if self.month == 1 || self.month == 2{
@@ -34,7 +32,7 @@ macro_rules! impl_eval_fns {
                 } else {
                 self.month - 2
                 }
-                ) - 1 ) / 5 ) + first_two_digits_year as i8 + (first_two_digits_year as i8 / 4) + (last_two_digits_year as i8 / 4) - 2*last_two_digits_year as i8) % 7) as i8);
+                ) - 1 ) / 5 ) + first_two_digits_year as i8 + (first_two_digits_year as i8 / 4) + (self.last_two_digits_year() as i8 / 4) - 2*self.last_two_digits_year() as i8) % 7) as i8);
             }
             fn sharesDay(&self, date2: &$struct) -> bool {
                 if self.day == date2.day {
