@@ -15,7 +15,7 @@ macro_rules! decrease_date {
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
-        impl crate::types::datekind for $struct {
+        impl crate::types::datekindOperators for $struct {
             fn not_as_datekind(&self) -> Either<Date, DateTime> {
                 todo!()
             }

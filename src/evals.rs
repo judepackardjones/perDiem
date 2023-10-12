@@ -13,7 +13,7 @@ macro_rules! allShare { // macro checks if every element has the same of one or 
 #[macro_export]
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
-        impl crate::types::datekind for $struct {
+        impl crate::types::datekindEvals for $struct {
             fn isLeapYear(&self) -> bool {
                 if (self.year % 4 == 0 && self.year % 100 != 0) || self.year % 400 == 0{
                     return true;

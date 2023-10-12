@@ -23,16 +23,22 @@ pub enum TimeSpan { // will be used for increase and decrease methods
     month(i32),
     year(i32),
 }
-
-pub trait datekind {
+pub trait datekind {}
+pub trait datekindEvals {
     fn isLeapYear(&self) -> bool;
     fn weekday(&self) -> Result<String, std::io::Error> ;
     fn weekday_as_int(&self) -> Result<i8, std::io::Error>;
     fn sharesDay(&self, date2: &Self) -> bool;
     fn sharesMonth(&self, date2: &Self) -> bool;
     fn sharesYear(&self, date2: &Self) -> bool;
+}
+pub trait datekindOperators {
     fn not_as_datekind(&self) -> Either<Date, DateTime>;
 }
+
+
+
+
 pub trait x { // used for creating String methods
     fn as_Date(&self) -> Date;
 }
