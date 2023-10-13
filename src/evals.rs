@@ -2,7 +2,7 @@ use crate::types::*;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use chrono::prelude::Local;
 use chrono::Datelike;
-use crate::operators::*;
+
 #[macro_export]
 macro_rules! allShare { // macro checks if every element has the same of one or more fields and returns them
     ($($date:expr), *) => {

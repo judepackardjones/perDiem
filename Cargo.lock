@@ -59,6 +59,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "cond_utils"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9f40e034e89ee41e710c37288a3198e654433acb8c0960eb3dc64976ec1a2d2"
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -134,6 +140,7 @@ name = "perDiem"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "cond_utils",
  "either",
 ]
 

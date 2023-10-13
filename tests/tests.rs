@@ -3,7 +3,7 @@
 mod tests {
 
     mod weekdays {
-        use perDiem::types::{Date, datekind, DateTime, datekindEvals};
+        use perDiem::types::{Date, DateTime, datekindEvals};
 
     #[test]
     fn date_to_weekday_tags() {
@@ -15,7 +15,7 @@ mod tests {
     }
     }
     mod dateconditions {
-        use perDiem::types::{Date, datekind, datekindEvals};
+        use perDiem::types::{Date, datekindEvals};
 
     #[test]
     fn is_leap_year() {
@@ -23,7 +23,7 @@ mod tests {
     }
     }
     mod comparisons {
-        use perDiem::types::{Date, datekind, datekindEvals};
+        use perDiem::types::{Date, datekindEvals};
 
     #[test]
     fn same_fields_shared() {
