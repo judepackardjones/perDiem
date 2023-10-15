@@ -43,3 +43,6 @@ pub trait datekindOperators {
 pub trait x { // used for creating String methods
     fn as_Date(&self) -> Date;
 }
+pub trait y { // used for creating &str methods
+    fn with_separators(&self, separator: &char) -> String;
+}

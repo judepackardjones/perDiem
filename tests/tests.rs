@@ -32,4 +32,19 @@ mod tests {
         assert_eq!(Date {day: 24, month: 1, year: 1980}.sharesYear(&Date {day: 15, month: 2, year: 1980}), true);
     }
     }
+    mod texttests {
+
+        mod parses{
+            use perDiem::types::y;
+
+            #[test]
+            fn separators_insert() {
+                let strr: &str = "ddmmyyyy";
+            assert_eq!(mut strr.with_separators(&'/'), String::from("dd/mm/yyyy"));
+            }
+        }
+        mod formatting{
+
+        }
+    }
 }
