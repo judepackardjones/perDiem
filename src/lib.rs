@@ -14,7 +14,7 @@ Dateshares and DateTimeshares are the same as the methods above but you specify 
 last_two_digits_year returns convert Date -> DateTime or DateTime -> Date. Date -> DateTime starts with fields second: 0, minute: 0, hour: 0,.
 to_string method converts Date to given format as String. 
 snapshot_date and snapshot_datetime gets the current date/datetime and converts it into Date or DateTime, respectively. 
-
+to_DateTime and to_Date take the other as a parameter and return the date as the other.
 TODO:
 Increment date macro
 Decrease date macro
@@ -23,7 +23,6 @@ measuring time between dates
 is before
 is after
 which fields are same of list of dates(macro)
-converstion between DateTime and Date
 */
 
 /*

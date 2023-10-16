@@ -1,4 +1,21 @@
 use either::*;
+pub enum DateType {
+    Date {
+        // the basic struct for dates
+        day: i8,
+        month: i8,
+        year: i16,
+    },
+    DateTime {
+        second: i8,
+        minute: i8,
+        hour: i8,
+        day: i8,
+        month: i8,
+        year: i16,
+    },
+
+}
 pub struct Date {
     // the basic struct for dates
     pub day: i8,
@@ -36,7 +53,6 @@ pub trait datekindEvals {
     fn sharesYear(&self, date2: &Self) -> bool;
 }
 pub trait datekindOperators {
-    fn toggle_datekind(&self) -> Either<Date, DateTime>;
     fn last_two_digits_year(&self) -> String;
 }
 

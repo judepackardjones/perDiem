@@ -16,9 +16,6 @@ macro_rules! decrease_date {
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
         impl crate::types::datekindOperators for $struct {
-            fn toggle_datekind(&self) -> Either<Date, DateTime> {
-                todo!()
-            }
             fn last_two_digits_year(&self) -> String {
                 self.year
                     .to_string()
@@ -38,3 +35,25 @@ macro_rules! impl_operators_fns {
 
 impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);
+
+impl Date {
+    pub fn to_DateTime(&self) -> DateTime {
+        DateTime {
+            second: 0,
+            minute: 0,
+            hour: 0,
+            day: self.day,
+            month: self.month,
+            year: self.year,
+        }
+    }
+}
+impl DateTime {
+    pub fn to_Date(&self) -> Date {
+        Date {
+            day: self.day,
+            month: self.month,
+            year: self.year,
+        }
+    }
+}
