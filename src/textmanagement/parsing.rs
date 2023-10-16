@@ -1,15 +1,29 @@
+use std::collections::HashMap;
+
 use crate::types::*;
-use regex::Regex;
 
 impl x for String {
     fn as_Date(&self, format: &str) -> Date {
-        if format == "" {
-            format = "ddmmyyyy"
+        let mut parts = self.split(|x| x == '/' || x == ',' || x == '-' || x == '\\' || x == '.');
+        let mut seen: HashMap<char, bool> = HashMap::new();
+        let format_order = format;
+        format_order.chars().collect::<Vec<char>>().retain(|&x| seen.insert(x, true).is_none());
+        let mut day: i8 = 0;
+        let mut month: i8 = 0;
+        let mut year: i16 = 0;
+        for i in format_order.chars() {
+            match i {
+                'd' => {day = parts.next().expect("Iterator likely out of bounds").parse::<i8>().expect("Failed to parse day field to i8.");},
+                'm' => {month = parts.next().expect("Iterator likely out of bounds").parse::<i8>().expect("Failed to parse month field to i8.");},
+                'y' => {year = parts.next().expect("Iterator likely out of bounds").parse::<i16>().expect("Failed to parse year field to i16.");},
+                _ => {},
+            }
         }
-        let regex_build: &str = 
-        let re: Regex = Regex::new(r"").unwrap();
-
-
+        Date {
+            day: day,
+            month: month,
+            year: year,
+        }
     }
 }
 
