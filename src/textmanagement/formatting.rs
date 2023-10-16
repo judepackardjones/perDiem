@@ -8,13 +8,13 @@ impl x for String {
 
 
 impl Date {
-    fn to_string(&self, date_format: &str, separator: &char) -> Result<String, &str> {
+    pub fn to_string(&self, date_format: &str, separator: &char) -> Result<String, &str> {
         let mut rtn_str = date_format.with_separators(separator);
         rtn_str = rtn_str.to_ascii_lowercase();
         match (rtn_str.contains("dd"), rtn_str.contains("mm")) {
             (true, true) => {
-                rtn_str = rtn_str.replace("dd", &format!("{:>2}", self.day));
-                rtn_str = rtn_str.replace("mm", &format!("{:>2}", self.month));
+                rtn_str = rtn_str.replace("dd", &format!("{:02}", self.day));
+                rtn_str = rtn_str.replace("mm", &format!("{:02}", self.month));
             }
             (false, true) => return Err("Failed to find dd in format structure"),
             (true, false) => return Err("Failed to find mm in format structure"),
@@ -29,6 +29,7 @@ impl Date {
                     rtn_str =
                         rtn_str.replace("yy", self.last_two_digits_year().to_string().as_str());
                 } else {
+                    println!("{rtn_str}");
                     return Err("failed to find suitable year formatting.");
                 }
             }

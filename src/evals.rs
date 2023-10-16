@@ -25,14 +25,18 @@ macro_rules! impl_eval_fns {
                 return Ok(weekdays[self.weekday_as_int().expect("Error converting date to week number") as usize].to_string());
             }
             fn weekday_as_int(&self) -> Result<i8, std::io::Error> {
-                let first_two_digits_year: i32 = self.year as i32 % 100;      
-            return Ok(((self.day + 
-                ((13*(if self.month == 1 || self.month == 2{
-                self.month + 10
-                } else {
-                self.month - 2
+                let first_two_digits_year: i32 = self.year as i32 % 100;     
+                let mut num: i8 = ((self.day +
+                    ((13 * (if self.month == 1 || self.month == 2 {
+                        self.month + 10
+                    } else {
+                        self.month - 2
+                    }) - 1) / 5) + first_two_digits_year as i8 + (first_two_digits_year as i8 / 4) + (self.last_two_digits_year().parse::<i8>().expect("Failed to unwrap last two digits to i8") / 4) - 2 * self.last_two_digits_year().parse::<i8>().expect("Failed to unwrap last two digits to i8")) % 7 + 1);
+                if num == 7 {
+                    num = 0;
                 }
-                ) - 1 ) / 5 ) + first_two_digits_year as i8 + (first_two_digits_year as i8 / 4) + (self.last_two_digits_year() as i8 / 4) - 2*self.last_two_digits_year() as i8) % 7) as i8);
+                return Ok(num);
+                
             }
             fn sharesDay(&self, date2: &$struct) -> bool {
                 if self.day == date2.day {

@@ -19,8 +19,8 @@ macro_rules! impl_operators_fns {
             fn not_as_datekind(&self) -> Either<Date, DateTime> {
                 todo!()
             }
-            fn last_two_digits_year(&self) -> i32 {
-                self.year.to_string().as_str().chars().take(2).map(|x| x.to_string()).collect::<String>().parse().unwrap()
+            fn last_two_digits_year(&self) -> String {
+                self.year.to_string().as_str().chars().rev().take(2).map(|x| x.to_string()).collect::<String>().chars().rev().collect::<String>()
             }
         }
     }
