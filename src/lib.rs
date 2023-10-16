@@ -29,7 +29,7 @@ which fields are same of list of dates(macro)
 Important details about some functions:
 increase and decrease date, when increasing by month, will convert the day of month to the next month: October 2nd to November 2nd, November 2nd to December 2nd.
 If you try to increase month and the first month has more days then the second, it will default to the last day of that month. January 31st - Febuary 28th/29th, Febuary 28th/29th - March 28th/29th
-
+Date represents start of day, so when converting to DateTime, all DateTime specific fields are set to 0.
 
 
 

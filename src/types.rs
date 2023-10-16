@@ -1,21 +1,4 @@
-use either::*;
-pub enum DateType {
-    Date {
-        // the basic struct for dates
-        day: i8,
-        month: i8,
-        year: i16,
-    },
-    DateTime {
-        second: i8,
-        minute: i8,
-        hour: i8,
-        day: i8,
-        month: i8,
-        year: i16,
-    },
 
-}
 pub struct Date {
     // the basic struct for dates
     pub day: i8,
