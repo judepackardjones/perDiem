@@ -6,7 +6,6 @@ impl x for String {
     }
 }
 
-
 impl Date {
     pub fn to_string(&self, date_format: &str, separator: &char) -> Result<String, &str> {
         let mut rtn_str = date_format.with_separators(separator);
@@ -40,40 +39,44 @@ impl Date {
 
 impl y for &str {
     fn with_separators(&self, separator: &char) -> String {
-    let mut result: String = String::new();
-    let mut counter: i8 = 0;
-    let mut index: usize = 0;
-    for i in self.chars() {
-        match counter {
-            0 => {
-                result.push(i);
-            }
-            1 => {
-                result.push(i);
-                if i == *self
-                    .chars()
-                    .collect::<Vec<char>>()
-                    .get(index)
-                    .expect("Failed to unwrap option")
-                {
-                    result.push(*separator);
+        let mut result: String = String::new();
+        let mut counter: i8 = 0;
+        let mut index: usize = 0;
+        for i in self.chars() {
+            match counter {
+                0 => {
+                    result.push(i);
+                }
+                1 => {
+                    result.push(i);
+                    if i == *self
+                        .chars()
+                        .collect::<Vec<char>>()
+                        .get(index)
+                        .expect("Failed to unwrap option")
+                    {
+                        result.push(*separator);
+                    }
+                }
+                _ => {
+                    panic!("SOMETHING TERRIBLY WRONG")
                 }
             }
-            _ => {
-                panic!("SOMETHING TERRIBLY WRONG")
+            if counter == 1 {
+                counter = 0;
+                continue;
             }
+            index += 1;
+            counter += 1;
         }
-        if counter == 1 {
-            counter = 0;
-            continue;
+        if result
+            .chars()
+            .nth(result.len() - 1)
+            .expect("Failed to unwrap Option<char> to char")
+            == '/'
+        {
+            result.remove(result.len() - 1);
         }
-        index += 1;
-        counter += 1;
+        result
     }
-    if result.chars().nth(result.len() - 1).expect("Failed to unwrap Option<char> to char") == '/' {
-        result.remove(result.len() - 1);
-    }
-    result
-}
-
 }
