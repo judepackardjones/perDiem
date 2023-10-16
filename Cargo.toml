@@ -9,6 +9,6 @@ edition = "2021"
 chrono = "0.4.31"
 either = "1.9.0"
 cond_utils = "0.1.0"
-
+regex = "1.10.2"
 [profile.dev]
 opt-level = 3  

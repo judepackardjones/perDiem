@@ -41,7 +41,7 @@ pub trait datekindOperators {
 
 pub trait x {
     // used for creating String methods
-    fn as_Date(&self) -> Date;
+    fn as_Date(&self, format: &str) -> Date;
 }
 pub trait y {
     // used for creating &str methods
