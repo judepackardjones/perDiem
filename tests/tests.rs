@@ -35,16 +35,15 @@ mod tests {
     mod texttests {
 
         mod parses{
-            use perDiem::types::y;
 
+        }
+        mod formatting{
+            use perDiem::types::y;
             #[test]
             fn separators_insert() {
                 let strr: &str = "ddmmyyyy";
-            assert_eq!(mut strr.with_separators(&'/'), String::from("dd/mm/yyyy"));
+            assert_eq!(strr.with_separators(&'/'), String::from("dd/mm/yyyy"));
             }
-        }
-        mod formatting{
-
         }
     }
 }
