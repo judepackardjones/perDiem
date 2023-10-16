@@ -40,14 +40,14 @@ impl Date {
 impl y for &str {
     fn with_separators(&self, separator: &char) -> String {
         let mut result: String = String::new();
-        let mut counter: i8 = 0;
+        let mut toggle: bool = false;
         let mut index: usize = 0;
         for i in self.chars() {
-            match counter {
-                0 => {
+            match toggle {
+                false => {
                     result.push(i);
                 }
-                1 => {
+                true => {
                     result.push(i);
                     if i == *self
                         .chars()
@@ -58,16 +58,13 @@ impl y for &str {
                         result.push(*separator);
                     }
                 }
-                _ => {
-                    panic!("SOMETHING TERRIBLY WRONG")
-                }
             }
-            if counter == 1 {
-                counter = 0;
+            if toggle == true {
+                toggle = !toggle;
                 continue;
             }
             index += 1;
-            counter += 1;
+            toggle = !toggle;
         }
         if result
             .chars()

@@ -36,7 +36,7 @@ pub trait datekindEvals {
     fn sharesYear(&self, date2: &Self) -> bool;
 }
 pub trait datekindOperators {
-    fn not_as_datekind(&self) -> Either<Date, DateTime>;
+    fn toggle_datekind(&self) -> Either<Date, DateTime>;
     fn last_two_digits_year(&self) -> String;
 }
 

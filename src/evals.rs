@@ -96,7 +96,7 @@ impl crate::types::Date {
             year: local.year() as i16,
         }
     }
-    fn DateShares(&self, compare_type: &str, datetime2: &Self) -> Result<bool, &str> {
+    fn DateShares(&self, datetime2: &Date, compare_type: &str,) -> Result<bool, &str> {
         match compare_type {
             "second" => {
                 if self.day == datetime2.day {

@@ -5,19 +5,24 @@
 /*This is a public crate for various date related utilities
 This crate relies on the chrono crate.
 Completed functions and methods:
-use method weekday to return the day of a week from a given Date struct
-use method weekday_as_int to return the day of the week as an index from 0-6 starting on Sunday. *both of these use Zellers congruence for calculations
-use current_date to get the current date as Date
-use sharesDay, sharesMonth, sharesYear methods to check if parameter 1 has same date field as self.
+IsLeapYear method checks if given Date or DateTime was a leap year.
+weekday method returns day of week of given Date or DateTime
+weekday_as_int returns day of week of given Date or DateTime as int from 0-6, starting Sunday.
+sharesday, sharesmonth, and sharesyear methods return bool of if self and given Date/DateTime have the same of given field.
+sharessecond, sharesminute, shareshour methods return bool of if self and given DateTime have the same of given field.
+Dateshares and DateTimeshares are the same as the methods above but you specify the field you want to compare. 
+last_two_digits_year returns convert Date -> DateTime or DateTime -> Date. Date -> DateTime starts with fields second: 0, minute: 0, hour: 0,.
+to_string method converts Date to given format as String. 
+snapshot_date and snapshot_datetime gets the current date/datetime and converts it into Date or DateTime, respectively. 
+
 TODO:
 Increment date macro
 Decrease date macro
 date parsing
-formatting Date as String
 measuring time between dates
 is before
 is after
-which fields are same of list of dates
+which fields are same of list of dates(macro)
 converstion between DateTime and Date
 */
 
