@@ -158,6 +158,8 @@ dependencies = [
  "cond_utils",
  "either",
  "regex",
+ "tap",
+ "undup",
 ]
 
 [[package]]
@@ -217,6 +219,18 @@ dependencies = [
  "quote",
  "unicode-ident",
 ]
+
+[[package]]
+name = "tap"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
+
+[[package]]
+name = "undup"
+version = "0.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "821dac11f9e26febecc5e2c041bbe9c4fceb36c09356e6e0e17b220d761438a9"
 
 [[package]]
 name = "unicode-ident"

@@ -42,7 +42,11 @@ mod tests {
     mod texttests {
 
         mod parses{
-
+            use perDiem::types::*;
+            #[test]
+            fn as_date_test() {
+                assert_eq!(Date {day: 1, month: 2, year: 2000}, String::from("01/02/2000").as_Date("dd/mm/yyyy"));
+            }
         }
         mod formatting{
             use perDiem::types::*;
