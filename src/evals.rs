@@ -10,7 +10,6 @@ macro_rules! allShare {
         todo!();
     };
 }
-
 #[macro_export]
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
@@ -122,7 +121,39 @@ impl crate::types::Date {
             &_ => return Err("Invalid compare type"),
         }
     }
+    fn is_after(&self, date: Date) -> bool {
+        if compare_nums(self.year, date.year) == two_nums::larger {
+            true
+        } else if compare_nums(self.year, date.year) == two_nums::smaller{
+            false
+        } else if compare_nums(self.month as i16, date.month as i16) == two_nums::larger {
+            true
+        } else if compare_nums(self.month as i16, date.month as i16) == two_nums::smaller{
+            false
+        }
+        else if compare_nums(self.day as i16, date.day as i16) == two_nums::smaller{
+            false
+        }
+        else if compare_nums(self.day as i16, date.day as i16) == two_nums::smaller{
+            false
+        } else {
+            false
+        }
 }
+}
+ fn compare_nums(first: i16, second: i16) -> two_nums {
+    match first > second {
+        true => two_nums::larger,
+        false => {
+            if first < second {
+                two_nums::smaller
+            } else {
+                two_nums::equal
+            }
+        }
+    }
+ }
+
 impl crate::types::DateTime {
     fn snapshot_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
@@ -203,5 +234,6 @@ impl crate::types::DateTime {
         }
     }
 }
+
 impl_eval_fns!(Date);
 impl_eval_fns!(DateTime);

@@ -47,3 +47,9 @@ pub trait y {
     // used for creating &str methods
     fn with_separators(&self, separator: &char) -> String;
 }
+#[derive(PartialEq)]
+pub enum two_nums {
+    larger,
+    smaller,
+    equal,
+}
