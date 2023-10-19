@@ -121,7 +121,7 @@ impl crate::types::Date {
             &_ => return Err("Invalid compare type"),
         }
     }
-    fn is_after(&self, date: Date) -> bool {
+    pub fn is_after(&self, date: Date) -> bool {
         if compare_nums(self.year, date.year) == two_nums::larger {
             true
         } else if compare_nums(self.year, date.year) == two_nums::smaller{
@@ -130,11 +130,9 @@ impl crate::types::Date {
             true
         } else if compare_nums(self.month as i16, date.month as i16) == two_nums::smaller{
             false
-        }
-        else if compare_nums(self.day as i16, date.day as i16) == two_nums::smaller{
-            false
-        }
-        else if compare_nums(self.day as i16, date.day as i16) == two_nums::smaller{
+        } else if compare_nums(self.day as i16, date.day as i16) == two_nums::larger{
+            true
+        } else if compare_nums(self.day as i16, date.day as i16) == two_nums::smaller{
             false
         } else {
             false

@@ -28,6 +28,12 @@ mod tests {
     fn is_leap_year() {
     assert_eq!(Date{ day: 7, month: 10,  year: 1900}.isLeapYear(), false);
     }
+    #[test]
+    fn is_after_test() {
+        assert!(Date{ day: 6, month: 10, year: 1900}.is_after(Date {day: 5, month: 10, year: 1900}));
+        assert_ne!(Date{ day: 6, month: 10, year: 1900}.is_after(Date {day: 5, month: 8, year: 1600}), false);
+        assert_eq!(Date{ day: 6, month: 10, year: 1900}.is_after(Date {day: 20, month: 10, year: 1900}), false);
+    }
     }
     mod comparisons {
         use perDiem::types::{Date, datekindEvals};
