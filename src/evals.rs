@@ -137,7 +137,11 @@ impl crate::types::Date {
         } else {
             false
         }
-}
+    }
+    pub fn is_before(&self, date: Date) -> bool {
+        !self.is_after(date)
+    }
+    
 }
  fn compare_nums(first: i16, second: i16) -> two_nums {
     match first > second {
