@@ -6,14 +6,21 @@ use chrono::{DateTime as chronoDateTime, Timelike};
 #[macro_export]
 macro_rules! allShare {
     ($($date:expr), *) => {{
+        use perDiem::types::*;
         let mut date_vec: Vec<Date> = Vec::new();
+        let mut datetime_vec: Vec<DateTime> = Vec::new();
+        let mut second: Option<i8> = None;
+        let mut minute: Option<i8> = None;
+        let mut hour: Option<i8> = None;
         let mut day: Option<i8> = None;
         let mut month: Option<i8> = None;
         let mut year: Option<i16> = None;
-        let mut shares_terms: Vec<&str> = vec!["day", "month", "year"];
+        let mut shares_terms: Vec<&str> = vec!["second", "minute", "hour", "day", "month", "year"];
 
         $(let date = $date;
-
+            if date.type_id() == 0 {
+                shares_terms.drain(0..2);
+            }
           if day.is_none() {
               day = Some(date.day as i8);
           } else if day != Some(date.day) {
@@ -36,7 +43,36 @@ macro_rules! allShare {
                     shares_terms.remove(index);
                 }
             }
-          date_vec.push(date);
+
+            if date.type_id() != 0 {
+                if second.is_none() {
+                    second = Some(date.second as i8);
+                } else if second != Some(date.second) {
+                      if let Some(index) = shares_terms.iter().position(|&x| x == "second") {
+                          shares_terms.remove(index);
+                      }
+                  }
+      
+                if minute.is_none() {
+                    minute = Some(date.minute);
+                } else if minute != Some(date.minute) {
+                      if let Some(index) = shares_terms.iter().position(|&x| x == "minute") {
+                          shares_terms.remove(index);
+                      }
+                  }
+                if hour.is_none() {
+                    hour = Some(date.hour);
+                } else if hour != Some(date.hour) {
+                      if let Some(index) = shares_terms.iter().position(|&x| x == "hour") {
+                          shares_terms.remove(index);
+                      }
+                  }
+            }
+            if date.type_id() == 1 {
+                date_vec.push(date);
+            } else {
+                datetime_vec.push(date);
+            }
         )*
         shares_terms
     }};

@@ -4,6 +4,11 @@ pub struct Date {
     pub month: i8,
     pub year: i16,
 }
+impl Date {
+    pub fn type_id(&self) -> i8 {
+        0
+    }
+}
 #[derive(Debug)]
 pub struct DateTime {
     pub second: i8,
@@ -12,6 +17,11 @@ pub struct DateTime {
     pub day: i8,
     pub month: i8,
     pub year: i16,
+}
+impl DateTime {
+    pub fn type_id(&self) -> i8 {
+        1
+    }
 }
 pub struct TimeDifference {
     // will be used to show the amount of distance of each between dates. It will be the difference across all I.E. : Oct 7 and nov 9 2023: 2 days, 1 month
