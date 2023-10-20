@@ -1,6 +1,5 @@
 #[derive(Debug, PartialEq, Eq)]
 pub struct Date {
-    // the basic struct for dates
     pub day: i8,
     pub month: i8,
     pub year: i16,

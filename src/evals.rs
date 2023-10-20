@@ -97,21 +97,21 @@ impl crate::types::Date {
     }
     fn DateShares(&self, datetime2: &Date, compare_type: &str,) -> Result<bool, &str> {
         match compare_type {
-            "second" => {
+            "day" => {
                 if self.day == datetime2.day {
                     Ok(true)
                 } else {
                     Ok(false)
                 }
             }
-            "minute" => {
+            "month" => {
                 if self.month == datetime2.month {
                     Ok(true)
                 } else {
                     Ok(false)
                 }
             }
-            "hour" => {
+            "year" => {
                 if self.year == datetime2.year {
                     Ok(true)
                 } else {
@@ -141,7 +141,7 @@ impl crate::types::Date {
     pub fn is_before(&self, date: Date) -> bool {
         !self.is_after(date)
     }
-    
+
 }
  fn compare_nums(first: i16, second: i16) -> two_nums {
     match first > second {

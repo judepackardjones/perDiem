@@ -19,8 +19,6 @@ TODO:
 Increment date macro
 Decrease date macro
 measuring time between dates
-is before
-is after
 which fields are same of list of dates(macro)
 */
 
