@@ -46,7 +46,11 @@ mod tests {
     }
     mod comparisons {
         use perDiem::types::{Date, datekindEvals};
-
+        use perDiem::allShare;
+    #[test]
+    fn all_shares_test() {
+        println!("{:?}", allShare!(Date {day: 15, month: 4, year: 1943}, Date {day: 15, month: 4, year: 1943}, Date {day: 15, month: 4, year: 1943}));
+    }
     #[test]
     fn same_fields_shared() {
         assert_eq!(Date {day: 15, month: 4, year: 1943}.sharesDay(&Date {day: 15, month: 5, year: 1900}), true);

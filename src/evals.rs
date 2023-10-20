@@ -5,11 +5,38 @@ use chrono::{DateTime as chronoDateTime, Timelike};
 
 #[macro_export]
 macro_rules! allShare {
-    // macro checks if every element has the same of one or more fields and returns them
-    ($($date:expr), *) => {
-        todo!();
-    };
+    ($($date:expr), *) => {{
+        let mut date_vec: Vec<Date> = Vec::new();
+        let mut day: Option<i8> = None;
+        let mut month: Option<i8> = None;
+        let mut year: Option<i16> = None;
+
+        $(let date = $date;
+
+          if day.is_none() {
+              day = Some(date.day as i8);
+          } else if day != Some(date.day) {
+              panic!("Not all dates have the same day");
+          }
+
+          if month.is_none() {
+              month = Some(date.month);
+          } else if month != Some(date.month) {
+              panic!("Not all dates have the same month");
+          }
+
+          if year.is_none() {
+              year = Some(date.year);
+          } else if year != Some(date.year) {
+              panic!("Not all dates have the same year");
+          }
+          date_vec.push(date);
+        )*
+
+        date_vec
+    }};
 }
+
 #[macro_export]
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
