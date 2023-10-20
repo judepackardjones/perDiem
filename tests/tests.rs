@@ -49,7 +49,7 @@ mod tests {
         use perDiem::allShare;
     #[test]
     fn all_shares_test() {
-        println!("{:?}", allShare!(Date {day: 15, month: 4, year: 1943}, Date {day: 15, month: 4, year: 1943}, Date {day: 15, month: 4, year: 1943}));
+        println!("{:?}", allShare!(Date {day: 10, month: 3, year: 1903}, Date {day: 15, month: 4, year: 1943}, Date {day: 15, month: 4, year: 1943}));
     }
     #[test]
     fn same_fields_shared() {

@@ -10,30 +10,36 @@ macro_rules! allShare {
         let mut day: Option<i8> = None;
         let mut month: Option<i8> = None;
         let mut year: Option<i16> = None;
+        let mut shares_terms: Vec<&str> = vec!["day", "month", "year"];
 
         $(let date = $date;
 
           if day.is_none() {
               day = Some(date.day as i8);
           } else if day != Some(date.day) {
-              panic!("Not all dates have the same day");
-          }
+                if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
+                    shares_terms.remove(index);
+                }
+            }
 
           if month.is_none() {
               month = Some(date.month);
           } else if month != Some(date.month) {
-              panic!("Not all dates have the same month");
-          }
-
+                if let Some(index) = shares_terms.iter().position(|&x| x == "month") {
+                    shares_terms.remove(index);
+                }
+            }
           if year.is_none() {
               year = Some(date.year);
           } else if year != Some(date.year) {
-              panic!("Not all dates have the same year");
-          }
+                if let Some(index) = shares_terms.iter().position(|&x| x == "year") {
+                    shares_terms.remove(index);
+                }
+            }
           date_vec.push(date);
         )*
 
-        date_vec
+        shares_terms
     }};
 }
 
@@ -122,7 +128,7 @@ impl crate::types::Date {
             year: local.year() as i16,
         }
     }
-    fn DateShares(&self, datetime2: &Date, compare_type: &str,) -> Result<bool, &str> {
+    fn DateShares(&self, datetime2: &Date, compare_type: &str) -> Result<bool, &str> {
         match compare_type {
             "day" => {
                 if self.day == datetime2.day {
@@ -151,15 +157,15 @@ impl crate::types::Date {
     pub fn is_after(&self, date: Date) -> bool {
         if compare_nums(self.year, date.year) == two_nums::larger {
             true
-        } else if compare_nums(self.year, date.year) == two_nums::smaller{
+        } else if compare_nums(self.year, date.year) == two_nums::smaller {
             false
         } else if compare_nums(self.month as i16, date.month as i16) == two_nums::larger {
             true
-        } else if compare_nums(self.month as i16, date.month as i16) == two_nums::smaller{
+        } else if compare_nums(self.month as i16, date.month as i16) == two_nums::smaller {
             false
-        } else if compare_nums(self.day as i16, date.day as i16) == two_nums::larger{
+        } else if compare_nums(self.day as i16, date.day as i16) == two_nums::larger {
             true
-        } else if compare_nums(self.day as i16, date.day as i16) == two_nums::smaller{
+        } else if compare_nums(self.day as i16, date.day as i16) == two_nums::smaller {
             false
         } else {
             false
@@ -168,9 +174,8 @@ impl crate::types::Date {
     pub fn is_before(&self, date: Date) -> bool {
         !self.is_after(date)
     }
-
 }
- fn compare_nums(first: i16, second: i16) -> two_nums {
+fn compare_nums(first: i16, second: i16) -> two_nums {
     match first > second {
         true => two_nums::larger,
         false => {
@@ -181,7 +186,7 @@ impl crate::types::Date {
             }
         }
     }
- }
+}
 
 impl crate::types::DateTime {
     fn snapshot_datetime() -> crate::types::DateTime {
