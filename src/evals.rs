@@ -38,7 +38,6 @@ macro_rules! allShare {
             }
           date_vec.push(date);
         )*
-
         shares_terms
     }};
 }

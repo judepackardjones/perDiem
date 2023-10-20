@@ -45,11 +45,12 @@ mod tests {
 }
     }
     mod comparisons {
-        use perDiem::types::{Date, datekindEvals};
-        use perDiem::allShare;
+        use perDiem::{types::{Date, datekindEvals}, allShare};
     #[test]
     fn all_shares_test() {
-        println!("{:?}", allShare!(Date {day: 10, month: 3, year: 1903}, Date {day: 15, month: 4, year: 1943}, Date {day: 15, month: 4, year: 1943}));
+        let shared_terms: Vec<&str> = allShare!(Date {day: 10, month: 4, year: 1903}, Date {day: 15, month: 4, year: 1943}, Date {day: 15, month: 4, year: 1943});
+        let vec_compare: Vec<&str> = vec!["month"];
+        assert_eq!(shared_terms, vec_compare);
     }
     #[test]
     fn same_fields_shared() {
