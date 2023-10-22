@@ -78,6 +78,15 @@ macro_rules! allShare {
     }};
 }
 
+pub fn allShare<T>(vec: Vec<T>) -> Vec<&'static str> {
+    
+}
+
+
+
+
+
+
 #[macro_export]
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
