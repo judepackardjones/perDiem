@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use struct_iterable::Iterable;
 #[derive(Debug, PartialEq, Eq, Iterable)]
 pub struct Date {
@@ -62,4 +64,21 @@ pub enum two_nums {
     larger,
     smaller,
     equal,
+}
+
+pub fn compare_dyn_any_values(a: &dyn Any, b: &dyn Any) -> Result<bool, &'static str> {
+    if let Some(a_value) = a.downcast_ref::<i8>() {
+        if let Some(b_value) = b.downcast_ref::<i8>() {
+            // Compare the values as i8.
+            println!("{}", a_value == b_value);
+            return Ok(a_value == b_value);
+        }
+    } else if let Some(a_value) = a.downcast_ref::<i16>() {
+        if let Some(b_value) = b.downcast_ref::<i16>() {
+            // Compare the values as i16.
+            println!("{}", a_value == b_value);
+            return Ok(a_value == b_value);
+        }
+    }
+    Err("Values not of same type")// Values are not of the same type or the downcast failed.
 }

@@ -4,7 +4,6 @@ use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use struct_iterable::Iterable;
 
-
 #[macro_export]
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
@@ -174,7 +173,8 @@ fn compare_nums(first: i16, second: i16) -> two_nums {
 
 impl crate::types::DateTime {
     pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
-        let mut shares_terms: Vec<&'static str> = vec!["second", "minute", "hour", "day", "month", "year"];
+        let mut terms: Vec<&'static str> = vec!["second", "minute", "hour", "day", "month", "year"];
+        let mut shared_terms: Vec<&'static str> = vec![];
         let base = DateTime {
             second: vec.get(0).expect("Date Vector has no terms").second,
             minute: vec.get(0).unwrap().minute,
@@ -185,16 +185,17 @@ impl crate::types::DateTime {
 
         };
         for date in vec {
-            for ((field_name, field_value), (base_name, base_value)) in date.iter().zip(base.iter()) {
-                if *field_value != *base_value {
-                    if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
-                        shares_terms.remove(index);
+            for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
+                if !compare_dyn_any_values(field_value, base_value).unwrap() {
+                    if let Some(index) = terms.iter().position(|&x| x == field_name) {
+                        shared_terms.push(terms[index]);
+                        terms.remove(terms.iter().position(|&x| x == field_name).unwrap());
                         }
                 }
             }
         
         }
-    shares_terms
+    terms
 }   
     pub fn snapshot_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
