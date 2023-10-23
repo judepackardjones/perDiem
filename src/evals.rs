@@ -2,6 +2,7 @@ use crate::types::*;
 use chrono::prelude::Local;
 use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
+use struct_iterable::Iterable;
 
 
 #[macro_export]
@@ -80,22 +81,22 @@ macro_rules! impl_eval_fns {
         }
     };
 }
-impl crate::types::Date {
+impl Date {
     pub fn allShare(vec: Vec<Date>) -> Vec<&'static str> {
         let mut shares_terms: Vec<&'static str> = vec!["day", "month", "year"];
         let (day, month, year) = (vec.get(0).expect("Date Vector has no terms").day, vec.get(0).unwrap().month, vec.get(0).unwrap().year);
         for date in vec {
-            if date.day == day {
+            if date.day != day {
                 if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
                 shares_terms.remove(index);
                 }
             }
-            if date.month == month{
+            if date.month != month{
                 if let Some(index) = shares_terms.iter().position(|&x| x == "month") {
                 shares_terms.remove(index);
                 }
             }
-            if date.year == year {
+            if date.year != year {
                 if let Some(index) = shares_terms.iter().position(|&x| x == "year") {
                 shares_terms.remove(index);
                 }
@@ -103,7 +104,7 @@ impl crate::types::Date {
         }
         shares_terms
     }
-    fn snapshot_date() -> crate::types::Date {
+    pub fn snapshot_date() -> crate::types::Date {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::Date {
             day: local.day() as i8,
@@ -172,6 +173,29 @@ fn compare_nums(first: i16, second: i16) -> two_nums {
 }
 
 impl crate::types::DateTime {
+    pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
+        let mut shares_terms: Vec<&'static str> = vec!["second", "minute", "hour", "day", "month", "year"];
+        let base = DateTime {
+            second: vec.get(0).expect("Date Vector has no terms").second,
+            minute: vec.get(0).unwrap().minute,
+            hour: vec.get(0).unwrap().hour,
+            day: vec.get(0).unwrap().day,
+            month: vec.get(0).unwrap().month,
+            year: vec.get(0).unwrap().year,
+
+        };
+        for date in vec {
+            for ((field_name, field_value), (base_name, base_value)) in date.iter().zip(base.iter()) {
+                if *field_value != *base_value {
+                    if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
+                        shares_terms.remove(index);
+                        }
+                }
+            }
+        
+        }
+    shares_terms
+}   
     pub fn snapshot_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::DateTime {

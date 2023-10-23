@@ -48,7 +48,8 @@ mod tests {
         use perDiem::types::{Date, datekindEvals};
     #[test]
     fn all_shares_test() {
-        todo!();
+        let compare_vec: Vec<&str> = vec!["day", "month"];
+        assert_eq!(Date::allShare(vec![Date { day: 2, month: 5, year: 2000}, Date { day: 2, month: 5, year: 1990}]), compare_vec);
     }
     #[test]
     fn same_fields_shared() {

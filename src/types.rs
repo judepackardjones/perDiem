@@ -1,4 +1,5 @@
-#[derive(Debug, PartialEq, Eq)]
+use struct_iterable::Iterable;
+#[derive(Debug, PartialEq, Eq, Iterable)]
 pub struct Date {
     pub day: i8,
     pub month: i8,
@@ -9,7 +10,7 @@ impl Date {
         0
     }
 }
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Iterable)]
 pub struct DateTime {
     pub second: i8,
     pub minute: i8,
