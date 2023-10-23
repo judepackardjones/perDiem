@@ -81,6 +81,27 @@ macro_rules! impl_eval_fns {
     };
 }
 impl Date {
+    pub fn allShareEL(vec: Vec<Date>) -> Vec<&'static str> {
+        let mut terms: Vec<&'static str> = vec!["day", "month", "year"];
+        let mut shared_terms: Vec<&'static str> = vec![];
+        let base = Date {
+            day: vec.get(0).expect("Vec has length 0").day,
+            month: vec.get(0).unwrap().month,
+            year: vec.get(0).unwrap().year,
+
+        };
+        for date in vec {
+            for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
+                if !compare_dyn_any_values(field_value, base_value).unwrap() {
+                    if let Some(index) = terms.iter().position(|&x| x == field_name) {
+                        shared_terms.push(terms[index]);
+                        terms.remove(terms.iter().position(|&x| x == field_name).unwrap());
+                        }
+                }
+            }
+        }
+    terms
+}   
     pub fn allShare(vec: Vec<Date>) -> Vec<&'static str> {
         let mut shares_terms: Vec<&'static str> = vec!["day", "month", "year"];
         let (day, month, year) = (vec.get(0).expect("Date Vector has no terms").day, vec.get(0).unwrap().month, vec.get(0).unwrap().year);
@@ -171,8 +192,8 @@ fn compare_nums(first: i16, second: i16) -> two_nums {
     }
 }
 
-impl crate::types::DateTime {
-    pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
+impl DateTime {
+    pub fn allShareEL(vec: Vec<DateTime>) -> Vec<&'static str> {
         let mut terms: Vec<&'static str> = vec!["second", "minute", "hour", "day", "month", "year"];
         let mut shared_terms: Vec<&'static str> = vec![];
         let base = DateTime {
@@ -193,10 +214,46 @@ impl crate::types::DateTime {
                         }
                 }
             }
-        
         }
     terms
 }   
+pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
+    let mut shares_terms: Vec<&'static str> = vec!["second","minute","hour","day", "month", "year"];
+    let (second, minute, hour, day, month, year) = (vec.get(0).expect("Date Vector has no terms").second, vec.get(0).unwrap().minute, vec.get(0).unwrap().hour, vec.get(0).unwrap().day, vec.get(0).unwrap().month, vec.get(0).unwrap().year);
+    for date in vec {
+        if date.second != second {
+            if let Some(index) = shares_terms.iter().position(|&x| x == "second") {
+            shares_terms.remove(index);
+            }
+        }
+        if date.minute != minute {
+            if let Some(index) = shares_terms.iter().position(|&x| x == "minute") {
+            shares_terms.remove(index);
+            }
+        }
+        if date.hour != hour {
+            if let Some(index) = shares_terms.iter().position(|&x| x == "hour") {
+            shares_terms.remove(index);
+            }
+        }
+        if date.day != day {
+            if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
+            shares_terms.remove(index);
+            }
+        }
+        if date.month != month{
+            if let Some(index) = shares_terms.iter().position(|&x| x == "month") {
+            shares_terms.remove(index);
+            }
+        }
+        if date.year != year {
+            if let Some(index) = shares_terms.iter().position(|&x| x == "year") {
+            shares_terms.remove(index);
+            }
+        }
+    }
+    shares_terms
+}
     pub fn snapshot_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::DateTime {
