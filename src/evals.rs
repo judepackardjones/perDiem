@@ -3,89 +3,6 @@ use chrono::prelude::Local;
 use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
 
-#[macro_export]
-macro_rules! allShare {
-    ($($date:expr), *) => {{
-        use perDiem::types::*;
-        let mut date_vec: Vec<Date> = Vec::new();
-        let mut datetime_vec: Vec<DateTime> = Vec::new();
-        let mut second: Option<i8> = None;
-        let mut minute: Option<i8> = None;
-        let mut hour: Option<i8> = None;
-        let mut day: Option<i8> = None;
-        let mut month: Option<i8> = None;
-        let mut year: Option<i16> = None;
-        let mut shares_terms: Vec<&str> = vec!["second", "minute", "hour", "day", "month", "year"];
-
-        $(let date = $date;
-            if date.type_id() == 0 {
-                shares_terms.drain(0..2);
-            }
-          if day.is_none() {
-              day = Some(date.day as i8);
-          } else if day != Some(date.day) {
-                if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
-                    shares_terms.remove(index);
-                }
-            }
-
-          if month.is_none() {
-              month = Some(date.month);
-          } else if month != Some(date.month) {
-                if let Some(index) = shares_terms.iter().position(|&x| x == "month") {
-                    shares_terms.remove(index);
-                }
-            }
-          if year.is_none() {
-              year = Some(date.year);
-          } else if year != Some(date.year) {
-                if let Some(index) = shares_terms.iter().position(|&x| x == "year") {
-                    shares_terms.remove(index);
-                }
-            }
-
-            if date.type_id() != 0 {
-                if second.is_none() {
-                    second = Some(date.second as i8);
-                } else if second != Some(date.second) {
-                      if let Some(index) = shares_terms.iter().position(|&x| x == "second") {
-                          shares_terms.remove(index);
-                      }
-                  }
-      
-                if minute.is_none() {
-                    minute = Some(date.minute);
-                } else if minute != Some(date.minute) {
-                      if let Some(index) = shares_terms.iter().position(|&x| x == "minute") {
-                          shares_terms.remove(index);
-                      }
-                  }
-                if hour.is_none() {
-                    hour = Some(date.hour);
-                } else if hour != Some(date.hour) {
-                      if let Some(index) = shares_terms.iter().position(|&x| x == "hour") {
-                          shares_terms.remove(index);
-                      }
-                  }
-            }
-            if date.type_id() == 1 {
-                date_vec.push(date);
-            } else {
-                datetime_vec.push(date);
-            }
-        )*
-        shares_terms
-    }};
-}
-
-pub fn allShare<T>(vec: Vec<T>) -> Vec<&'static str> {
-    
-}
-
-
-
-
-
 
 #[macro_export]
 macro_rules! impl_eval_fns {
@@ -164,6 +81,28 @@ macro_rules! impl_eval_fns {
     };
 }
 impl crate::types::Date {
+    pub fn allShare(vec: Vec<Date>) -> Vec<&'static str> {
+        let mut shares_terms: Vec<&'static str> = vec!["day", "month", "year"];
+        let (day, month, year) = (vec.get(0).expect("Date Vector has no terms").day, vec.get(0).unwrap().month, vec.get(0).unwrap().year);
+        for date in vec {
+            if date.day == day {
+                if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
+                shares_terms.remove(index);
+                }
+            }
+            if date.month == month{
+                if let Some(index) = shares_terms.iter().position(|&x| x == "month") {
+                shares_terms.remove(index);
+                }
+            }
+            if date.year == year {
+                if let Some(index) = shares_terms.iter().position(|&x| x == "year") {
+                shares_terms.remove(index);
+                }
+            }
+        }
+        shares_terms
+    }
     fn snapshot_date() -> crate::types::Date {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::Date {
@@ -172,7 +111,7 @@ impl crate::types::Date {
             year: local.year() as i16,
         }
     }
-    fn DateShares(&self, datetime2: &Date, compare_type: &str) -> Result<bool, &str> {
+    pub fn DateShares(&self, datetime2: &Date, compare_type: &str) -> Result<bool, &str> {
         match compare_type {
             "day" => {
                 if self.day == datetime2.day {
@@ -233,7 +172,7 @@ fn compare_nums(first: i16, second: i16) -> two_nums {
 }
 
 impl crate::types::DateTime {
-    fn snapshot_datetime() -> crate::types::DateTime {
+    pub fn snapshot_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::DateTime {
             second: local.second() as i8,
@@ -244,25 +183,25 @@ impl crate::types::DateTime {
             year: local.year() as i16,
         }
     }
-    fn sharesSecond(&self, datetime2: DateTime) -> bool {
+    pub fn sharesSecond(&self, datetime2: DateTime) -> bool {
         if self.second == datetime2.second {
             return true;
         }
         false
     }
-    fn sharesMinute(&self, datetime2: DateTime) -> bool {
+    pub fn sharesMinute(&self, datetime2: DateTime) -> bool {
         if self.minute == datetime2.minute {
             return true;
         }
         false
     }
-    fn sharesHour(&self, datetime2: DateTime) -> bool {
+    pub fn sharesHour(&self, datetime2: DateTime) -> bool {
         if self.hour == datetime2.hour {
             return true;
         }
         false
     }
-    fn DateTimeShares(&self, compare_type: &str, datetime2: &Self) -> Result<bool, &str> {
+    pub fn DateTimeShares(&self, compare_type: &str, datetime2: &Self) -> Result<bool, &str> {
         match compare_type {
             "second" => {
                 if self.second == datetime2.second {
