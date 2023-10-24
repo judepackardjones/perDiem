@@ -16,8 +16,8 @@ to_string method converts Date to given format as String.
 snapshot_date and snapshot_datetime gets the current date/datetime and converts it into Date or DateTime, respectively. 
 to_DateTime and to_Date take the other as a parameter and return the date as the other.
 TODO:
-Increment date macro
-Decrease date macro
+Increment date 
+Decrease date 
 measuring time between dates
 */
 

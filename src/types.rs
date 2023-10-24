@@ -18,15 +18,21 @@ pub struct DateTime {
 }
 pub struct TimeDifference {
     // will be used to show the amount of distance of each between dates. It will be the difference across all I.E. : Oct 7 and nov 9 2023: 2 days, 1 month
+    pub seconds: i32,
+    pub minutes: i32,
+    pub hour: i32,
     pub days: i32,
     pub months: i32,
     pub years: i32,
 }
 pub enum TimeSpan {
     // will be used for increase and decrease methods
-    day(i32),
-    month(i32),
-    year(i32),
+    seconds(i32),
+    minutes(i32),
+    hours(i32),
+    days(i32),
+    months(i32),
+    years(i32),
 }
 pub trait datekind {}
 pub trait datekindEvals {
