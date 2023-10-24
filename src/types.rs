@@ -1,4 +1,3 @@
-use std::any::Any;
 
 use struct_iterable::Iterable;
 #[derive(Debug, PartialEq, Eq, Iterable)]
@@ -7,11 +6,7 @@ pub struct Date {
     pub month: i8,
     pub year: i16,
 }
-impl Date {
-    pub fn type_id(&self) -> i8 {
-        0
-    }
-}
+
 #[derive(Debug, PartialEq, Eq, Iterable)]
 pub struct DateTime {
     pub second: i8,
@@ -20,11 +15,6 @@ pub struct DateTime {
     pub day: i8,
     pub month: i8,
     pub year: i16,
-}
-impl DateTime {
-    pub fn type_id(&self) -> i8 {
-        1
-    }
 }
 pub struct TimeDifference {
     // will be used to show the amount of distance of each between dates. It will be the difference across all I.E. : Oct 7 and nov 9 2023: 2 days, 1 month
@@ -64,21 +54,4 @@ pub enum two_nums {
     larger,
     smaller,
     equal,
-}
-
-pub fn compare_dyn_any_values(a: &dyn Any, b: &dyn Any) -> Result<bool, &'static str> {
-    if let Some(a_value) = a.downcast_ref::<i8>() {
-        if let Some(b_value) = b.downcast_ref::<i8>() {
-            // Compare the values as i8.
-            println!("{}", a_value == b_value);
-            return Ok(a_value == b_value);
-        }
-    } else if let Some(a_value) = a.downcast_ref::<i16>() {
-        if let Some(b_value) = b.downcast_ref::<i16>() {
-            // Compare the values as i16.
-            println!("{}", a_value == b_value);
-            return Ok(a_value == b_value);
-        }
-    }
-    Err("Values not of same type")// Values are not of the same type or the downcast failed.
 }
