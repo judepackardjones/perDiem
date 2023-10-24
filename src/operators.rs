@@ -58,20 +58,6 @@ impl Date {
             ("hours", 24),
             ("months", 12),
         ]);
-        let month_lengths: HashMap<i32, i32> = HashMap::from([
-            (1, 31),
-            (2, if increase_date.isLeapYear() { 29 } else { 28 }),
-            (3, 31),
-            (4, 30),
-            (5, 31),
-            (6, 30),
-            (7, 31),
-            (8, 31),
-            (9, 30),
-            (10, 31),
-            (11, 30),
-            (12, 31),
-        ]);
         match length {
             TimeSpan::seconds(secs) => increase_date,
             TimeSpan::minutes(mins) => todo!(),

@@ -1,4 +1,4 @@
-use std::any::Any;
+use std::{any::Any, collections::HashMap};
 use crate::types::*;
 
 pub fn compare_dyn_any_values(a: &dyn Any, b: &dyn Any) -> Result<bool, &'static str> {
@@ -65,4 +65,38 @@ impl Date {
     pub fn type_id(&self) -> i8 {
         0
     }
+}
+
+
+pub fn check_rollover(int1: i32, int2: i32, isleapYear: bool, field: TimeSpan) -> bool {
+    let month_lengths: HashMap<i32, i32> = HashMap::from([
+        (1, 31),
+        (2, if isleapYear { 29 } else { 28 }),
+        (3, 31),
+        (4, 30),
+        (5, 31),
+        (6, 30),
+        (7, 31),
+        (8, 31),
+        (9, 30),
+        (10, 31),
+        (11, 30),
+        (12, 31),
+    ]);
+    let rollovers: HashMap<&str, i32> = HashMap::from([
+        ("seconds", 60),
+        ("minutes", 60),
+        ("hours", 24),
+        ("months", 12),
+    ]);
+    match field {
+        TimeSpan::seconds(secs) => todo!(),
+        TimeSpan::minutes(mins) => todo!(),
+        TimeSpan::hours(hours) => todo!(),
+        TimeSpan::days(days) => todo!(),
+        TimeSpan::months(months) => todo!(),
+        TimeSpan::years(years) => todo!(),
+    }
+
+
 }
