@@ -42,7 +42,14 @@ mod tests {
     assert_eq!(Date{ day: 7, month: 10,  year: 1900}.isLeapYear(), false);
     }
     mod day_comparisons {
-    use perDiem::types::Date;
+    use perDiem::types::*;
+    mod time_differences {
+        use perDiem::types::*;
+        #[test]
+        fn time_differences() {
+        assert_eq!(DateTime{ second: 5, minute: 5, hour: 5, day: 7, month: 10,  year: 1500}.difference(DateTime{ second: 5, minute: 5, hour: 5, day: 7, month: 10,  year: 1490}), TimeDifference {seconds: 0, minutes: 0, hours: 0, days: 0, months: 0, years: 10});
+        }
+    }
     #[test]
     fn is_after_test() {
         assert!(Date{ day: 6, month: 10, year: 1900}.is_after(Date {day: 5, month: 10, year: 1900}));

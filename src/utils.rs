@@ -99,4 +99,13 @@ pub fn check_rollover(int1: i32, int2: i32, isleapYear: bool, field: TimeSpan) -
     }
 
 
+
+}
+
+pub fn get_pos(first: i32, second: i32) -> i32 {
+    if (first - second) % 1 == 1 {
+        first - second
+    } else {
+        (first - second)^2
+    }
 }

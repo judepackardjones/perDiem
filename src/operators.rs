@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::types::*;
+use crate::{types::*, utils::get_pos};
 #[macro_export]
 macro_rules! increase_date {
     ($($time_span:expr), *) => {
@@ -66,6 +66,9 @@ impl Date {
     }
 }
 impl DateTime {
+    pub fn difference(&self, datetime: DateTime) -> TimeDifference {
+        TimeDifference { seconds: get_pos(self.second.into(), datetime.second.into()), minutes: get_pos(self.minute.into(), datetime.minute.into()), hours: get_pos(self.hour.into(), datetime.hour.into()), days: get_pos(self.day.into(), datetime.day.into()), months: get_pos(self.month.into(), datetime.month.into()), years: get_pos(self.year.into(), datetime.year.into()) }
+    }
     pub fn to_Date(&self) -> Date {
         Date {
             day: self.day,

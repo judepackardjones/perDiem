@@ -16,11 +16,12 @@ pub struct DateTime {
     pub month: i8,
     pub year: i16,
 }
+#[derive(Debug, PartialEq, Eq, Iterable)]
 pub struct TimeDifference {
     // will be used to show the amount of distance of each between dates. It will be the difference across all I.E. : Oct 7 and nov 9 2023: 2 days, 1 month
     pub seconds: i32,
     pub minutes: i32,
-    pub hour: i32,
+    pub hours: i32,
     pub days: i32,
     pub months: i32,
     pub years: i32,
