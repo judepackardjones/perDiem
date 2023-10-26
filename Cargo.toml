@@ -2,7 +2,12 @@
 name = "perDiem"
 version = "0.1.0"
 edition = "2021"
-
+license = "MIT"
+description = "A collection of Date and DateTime utilities"
+repository = "https://github.com/Dtimer0/perDiem"
+keywords = ["date-utilities", "Date", "date-utils", "DateTime", "chrono"]
+categories = ["date-and-time", "mathematics", "parsing"]
+readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
