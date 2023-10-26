@@ -47,7 +47,7 @@ mod tests {
         use perDiem::types::*;
         #[test]
         fn time_differences() {
-        assert_eq!(DateTime{ second: 5, minute: 5, hour: 5, day: 7, month: 10,  year: 1500}.difference(DateTime{ second: 5, minute: 5, hour: 5, day: 7, month: 10,  year: 1490}), TimeDifference {seconds: 0, minutes: 0, hours: 0, days: 0, months: 0, years: 10});
+        assert_eq!(DateTime{ second: 2, minute: 5, hour: 5, day: 5, month: 10,  year: 1500}.difference(DateTime{ second: 5, minute: 5, hour: 5, day: 7, month: 10,  year: 1490}), TimeDifference {seconds: 3, minutes: 0, hours: 0, days: 2, months: 0, years: 10});
         }
     }
     #[test]
