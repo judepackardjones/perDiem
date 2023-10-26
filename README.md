@@ -7,3 +7,4 @@ DateTime -> Date
 String -> Date(by format)
 isLeapYear
 sharesDay, sharesMonth, sharesYear
+I'd love to get feedback on the crate and to answer any questions. Message me on discord: dtimer 
