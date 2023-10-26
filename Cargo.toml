@@ -12,9 +12,6 @@ readme = "README.md"
 
 [dependencies]
 chrono = "0.4.31"
-either = "1.9.0"
-cond_utils = "0.1.0"
-regex = "1.10.2"
 undup = "0.0.1"
 tap = "1.0.1"
 struct_iterable = "0.1.1"
