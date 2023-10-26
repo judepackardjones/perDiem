@@ -68,7 +68,7 @@ impl Date {
 }
 
 
-pub fn check_rollover(int1: i32, int2: i32, isleapYear: bool, field: TimeSpan) -> bool {
+    fn check_rollover(int1: i32, int2: i32, isleapYear: bool, field: TimeSpan) -> bool {
     let month_lengths: HashMap<i32, i32> = HashMap::from([
         (1, 31),
         (2, if isleapYear { 29 } else { 28 }),

@@ -1,17 +1,6 @@
 use std::collections::HashMap;
 use crate::{types::*, utils::get_pos};
-#[macro_export]
-macro_rules! increase_date {
-    ($($time_span:expr), *) => {
-        todo!();
-    };
-}
-#[macro_export]
-macro_rules! decrease_date {
-    ($($time_span:expr), *) => {
-        todo!();
-    };
-}
+
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
@@ -47,7 +36,7 @@ impl Date {
             year: self.year,
         }
     }
-    pub fn increase(self, length: TimeSpan) -> Date {
+    fn increase(self, length: TimeSpan) -> Date {
         let increase_date = self;
         let rollovers: HashMap<&str, i32> = HashMap::from([
             ("seconds", 60),
@@ -76,7 +65,7 @@ impl DateTime {
             year: self.year,
         }
     }
-    pub fn increase(&self, length: TimeSpan) -> DateTime {
+    fn increase(&self, length: TimeSpan) -> DateTime {
         todo!();
     }
 }
