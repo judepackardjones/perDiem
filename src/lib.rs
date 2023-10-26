@@ -1,6 +1,9 @@
 #![allow(non_snake_case)]
 #![allow(non_camel_case_types)]
 #![allow(unused_macros)]
+#![warn(missing_docs)]
+#![warn(missing_doc_code_examples)]
+//! A series of Date and DateTime Utilities
 /*This is a public crate for various date related utilities
 This crate relies on the chrono crate.
 Completed functions and methods:
@@ -30,11 +33,17 @@ is significantly faster. Not sure why lol.
 
 
 */
+/// Utilities involving existing information from a Date.
 pub mod evals;
+/// Utilities involving converting Date or DateTime to other information
 pub mod operators;
+/// Defines types and traits used
 pub mod types;
 mod utils;
+/// Utilities for management of text and Dates
 pub mod textmanagement {
+    /// Utilities for formatting Date to Strings
     pub mod formatting;
+    /// Utilities for formatting Strings to Dates
     pub mod parsing;
 }

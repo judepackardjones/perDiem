@@ -1,6 +1,7 @@
 
 use struct_iterable::Iterable;
 #[derive(Debug, PartialEq, Eq, Iterable)]
+/// Struct with fields day: i8, month: i8, and year: i16
 pub struct Date {
     pub day: i8,
     pub month: i8,
@@ -8,6 +9,7 @@ pub struct Date {
 }
 
 #[derive(Debug, PartialEq, Eq, Iterable)]
+/// Struct with fields second: i8, minute: i8, hour: i8, day: i8, month: i8, year: i8
 pub struct DateTime {
     pub second: i8,
     pub minute: i8,
@@ -17,6 +19,7 @@ pub struct DateTime {
     pub year: i16,
 }
 #[derive(Debug, PartialEq, Eq, Iterable)]
+/// Used as a measure of distance between dates
 pub struct TimeDifference {
     // will be used to show the amount of distance of each between dates. It will be the difference across all I.E. : Oct 7 and nov 9 2023: 2 days, 1 month
     pub seconds: i32,
@@ -26,6 +29,7 @@ pub struct TimeDifference {
     pub months: i32,
     pub years: i32,
 }
+/// Unimplemented enum for increase and decrease methods
 pub enum TimeSpan {
     // will be used for increase and decrease methods
     seconds(i32),
@@ -35,7 +39,7 @@ pub enum TimeSpan {
     months(i32),
     years(i32),
 }
-pub trait datekind {}
+/// Eval methods that are impl by macro for both Date and DateTime
 pub trait datekindEvals {
     fn isLeapYear(&self) -> bool;
     fn weekday(&self) -> Result<String, std::io::Error>;
@@ -44,6 +48,7 @@ pub trait datekindEvals {
     fn sharesMonth(&self, date2: &Self) -> bool;
     fn sharesYear(&self, date2: &Self) -> bool;
 }
+/// Operator methods that are impl by macro for both Date and Dateime
 pub trait datekindOperators {
     fn last_two_digits_year(&self) -> String;
 }

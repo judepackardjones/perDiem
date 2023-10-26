@@ -55,18 +55,6 @@ impl y for &str {
     }
 }
 
-impl DateTime {
-    pub fn type_id(&self) -> i8 {
-        1
-    }
-}
-
-impl Date {
-    pub fn type_id(&self) -> i8 {
-        0
-    }
-}
-
 
     fn check_rollover(int1: i32, int2: i32, isleapYear: bool, field: TimeSpan) -> bool {
     let month_lengths: HashMap<i32, i32> = HashMap::from([

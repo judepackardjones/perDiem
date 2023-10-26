@@ -1,6 +1,7 @@
 use crate::types::*;
 
 impl Date {
+    ///Converts a Date object to a String. Give date format something like ddmmyyyy or ddmmyy(for last two digits of year). And separator to output in the format given.
     pub fn to_string(&self, date_format: &str, separator: &char) -> Result<String, &str> {
         let mut rtn_str = date_format.with_separators(separator);
         rtn_str = rtn_str.to_ascii_lowercase();

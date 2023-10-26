@@ -26,11 +26,12 @@ impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);
 
 impl Date {
+    /// Converts Date to DateTime and sets second, minute, and hour to 1.
     pub fn to_DateTime(&self) -> DateTime {
         DateTime {
-            second: 0,
-            minute: 0,
-            hour: 0,
+            second: 1,
+            minute: 1,
+            hour: 1,
             day: self.day,
             month: self.month,
             year: self.year,
@@ -55,9 +56,11 @@ impl Date {
     }
 }
 impl DateTime {
+    /// Returns a TimeDifference of the two dates given. Each field is always positive. 
     pub fn difference(&self, datetime: DateTime) -> TimeDifference {
         TimeDifference { seconds: get_pos(self.second.into(), datetime.second.into()), minutes: get_pos(self.minute.into(), datetime.minute.into()), hours: get_pos(self.hour.into(), datetime.hour.into()), days: get_pos(self.day.into(), datetime.day.into()), months: get_pos(self.month.into(), datetime.month.into()), years: get_pos(self.year.into(), datetime.year.into()) }
     }
+    /// Converts DateTime to Date
     pub fn to_Date(&self) -> Date {
         Date {
             day: self.day,
