@@ -8,9 +8,9 @@ impl x for String {
         let format_order = tap::Tap::tap_mut(undup_chars(format, vec!['d', 'm', 'y']), |s| {
             s.retain(|c| !r#"/,-\."#.contains(c))
         });
-        let mut day: i32 = 1;
+        let mut day: i32 = 1; // This is a stupid bandaid patch idk why but this fixed an issue. 
         let mut month: i8 = 1;
-        let mut year: i16 = 1;
+        let mut year: i32 = 1;
         let mut counter_format: usize = 0;
         for i in format_order.chars() {
             match i {
@@ -34,7 +34,7 @@ impl x for String {
                     year = parts
                         .get(counter_format)
                         .expect("Iterator likely out of bounds")
-                        .parse::<i16>()
+                        .parse::<i32>()
                         .expect("Failed to parse year field to i16.");
                     counter_format += 1;
                 }
