@@ -1,7 +1,7 @@
 
 use struct_iterable::Iterable;
 #[derive(Debug, PartialEq, Eq, Iterable)]
-/// Struct with fields day: i8, month: i8, and year: i16
+/// The basic Date struct
 pub struct Date {
     pub day: i8,
     pub month: i8,
@@ -9,7 +9,7 @@ pub struct Date {
 }
 
 #[derive(Debug, PartialEq, Eq, Iterable)]
-/// Struct with fields second: i8, minute: i8, hour: i8, day: i8, month: i8, year: i8
+/// The basic DateTime struct
 pub struct DateTime {
     pub second: i8,
     pub minute: i8,
