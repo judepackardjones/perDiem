@@ -3,7 +3,7 @@ use chrono::prelude::Local;
 use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use struct_iterable::Iterable;
-use crate::utils::compare_dyn_any_values;
+use crate::utils::{compare_dyn_any_values, compare_nums};
 
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
@@ -159,7 +159,7 @@ impl Date {
         crate::types::Date {
             day: local.day() as i8,
             month: local.month() as i8,
-            year: local.year() as i16,
+            year: local.year() as i32,
         }
     }
     /// same function of sharesDay, sharesMonth, sharesYear, but adds comparison field as a param.
@@ -195,13 +195,13 @@ impl Date {
             true
         } else if compare_nums(self.year, date.year) == two_nums::smaller {
             false
-        } else if compare_nums(self.month as i16, date.month as i16) == two_nums::larger {
+        } else if compare_nums(self.month as i32, date.month as i32) == two_nums::larger {
             true
-        } else if compare_nums(self.month as i16, date.month as i16) == two_nums::smaller {
+        } else if compare_nums(self.month as i32, date.month as i32) == two_nums::smaller {
             false
-        } else if compare_nums(self.day as i16, date.day as i16) == two_nums::larger {
+        } else if compare_nums(self.day as i32, date.day as i32) == two_nums::larger {
             true
-        } else if compare_nums(self.day as i16, date.day as i16) == two_nums::smaller {
+        } else if compare_nums(self.day as i32, date.day as i32) == two_nums::smaller {
             false
         } else {
             false
@@ -212,23 +212,11 @@ impl Date {
         !self.is_after(date)
     }
 }
-fn compare_nums(first: i16, second: i16) -> two_nums {
-    match first > second {
-        true => two_nums::larger,
-        false => {
-            if first < second {
-                two_nums::smaller
-            } else {
-                two_nums::equal
-            }
-        }
-    }
-}
 
 impl DateTime {
     /// Checks if a DateTime is a valid day
     pub fn is_valid(&self) -> bool {
-        if (Date{day: self.day, month: self.month, year: self.year}).is_valid() && self.second >= 0 && self.second < 60 && self.minute >= 0 && self.minute < 60 && self.hour > 0 && self.hour < 24{
+        if (Date {day: self.day, month: self.month, year: self.year}).is_valid() && self.second >= 0 && self.second < 60 && self.minute >= 0 && self.minute < 60 && self.hour > 0 && self.hour < 24{
             true
         } else {
             false
@@ -306,7 +294,7 @@ pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
             hour: local.hour() as i8,
             day: local.day() as i8,
             month: local.month() as i8,
-            year: local.year() as i16,
+            year: local.year() as i32,
         }
     }
     /// Returns true if two DateTimes passed share the same second value

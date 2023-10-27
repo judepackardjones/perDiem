@@ -55,45 +55,23 @@ impl y for &str {
     }
 }
 
-
-    fn check_rollover(int1: i32, int2: i32, isleapYear: bool, field: TimeSpan) -> bool {
-    let month_lengths: HashMap<i32, i32> = HashMap::from([
-        (1, 31),
-        (2, if isleapYear { 29 } else { 28 }),
-        (3, 31),
-        (4, 30),
-        (5, 31),
-        (6, 30),
-        (7, 31),
-        (8, 31),
-        (9, 30),
-        (10, 31),
-        (11, 30),
-        (12, 31),
-    ]);
-    let rollovers: HashMap<&str, i32> = HashMap::from([
-        ("seconds", 60),
-        ("minutes", 60),
-        ("hours", 24),
-        ("months", 12),
-    ]);
-    match field {
-        TimeSpan::seconds(secs) => todo!(),
-        TimeSpan::minutes(mins) => todo!(),
-        TimeSpan::hours(hours) => todo!(),
-        TimeSpan::days(days) => todo!(),
-        TimeSpan::months(months) => todo!(),
-        TimeSpan::years(years) => todo!(),
-    }
-
-
-
-}
-
 pub fn get_pos(first: i32, second: i32) -> i32 {
     if (first - second) >= 0 {
         first - second
     } else {
         (first - second)* - 1
+    }
+}
+
+pub fn compare_nums(first: i32, second: i32) -> two_nums {
+    match first > second {
+        true => two_nums::larger,
+        false => {
+            if first < second {
+                two_nums::smaller
+            } else {
+                two_nums::equal
+            }
+        }
     }
 }

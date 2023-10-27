@@ -5,7 +5,7 @@ use struct_iterable::Iterable;
 pub struct Date {
     pub day: i8,
     pub month: i8,
-    pub year: i16,
+    pub year: i32,
 }
 
 #[derive(Debug, PartialEq, Eq, Iterable)]
@@ -16,7 +16,7 @@ pub struct DateTime {
     pub hour: i8,
     pub day: i8,
     pub month: i8,
-    pub year: i16,
+    pub year: i32,
 }
 #[derive(Debug, PartialEq, Eq, Iterable)]
 /// Used as a measure of distance between dates

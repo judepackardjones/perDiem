@@ -35,7 +35,7 @@ impl Date {
         }
     }
     /// Creates a instance of Date with fields provided
-    pub fn from(day: i8, month: i8, year: i16) -> Date {
+    pub fn from(day: i8, month: i8, year: i32) -> Date {
         Date {
             day: day,
             month: month,
@@ -53,8 +53,8 @@ impl Date {
             year: self.year,
         }
     }
-    fn increase(self, length: TimeSpan) -> Date {
-        let increase_date = self;
+    fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
+        let mut increase_date = self;
         let rollovers: HashMap<&str, i32> = HashMap::from([
             ("seconds", 60),
             ("minutes", 60),
@@ -62,12 +62,11 @@ impl Date {
             ("months", 12),
         ]);
         match length {
-            TimeSpan::seconds(secs) => increase_date,
-            TimeSpan::minutes(mins) => todo!(),
-            TimeSpan::hours(hours) => todo!(),
             TimeSpan::days(days) => todo!(),
             TimeSpan::months(months) => todo!(),
-            TimeSpan::years(years) => todo!(),
+            TimeSpan::years(years) => {increase_date.year += years;
+                Ok(increase_date) },
+            _ => {Err("Invalid TimeSpan specifier")}
         }
     }
 }
@@ -84,7 +83,7 @@ impl DateTime {
         }
     }
     /// Creates a new instance of DateTime with parameters given
-    pub fn from(second: i8, minute: i8, hour: i8, day: i8, month: i8, year: i16) -> DateTime {
+    pub fn from(second: i8, minute: i8, hour: i8, day: i8, month: i8, year: i32) -> DateTime {
         DateTime {
             second: second,
             minute: minute,
