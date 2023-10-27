@@ -87,6 +87,27 @@ macro_rules! impl_eval_fns {
     };
 }
 impl Date {
+    pub fn is_valid(&self) -> bool {
+        let month_lengths: std::collections::HashMap<i32, i32> = std::collections::HashMap::from([
+            (1, 31),
+            (2, if self.isLeapYear() { 29 } else { 28 }),
+            (3, 31),
+            (4, 30),
+            (5, 31),
+            (6, 30),
+            (7, 31),
+            (8, 31),
+            (9, 30),
+            (10, 31),
+            (11, 30),
+            (12, 31),
+        ]);
+        if self.day > 0 && self.day <= *month_lengths.get(&2).unwrap() as i8 && self.month > 0 && self.month < 13 && self.year % 1 == 0 {
+            true
+        } else {
+            false
+        }
+    }
     /// Returns a Vector of &str shared by each Date in Vector params (Returns the same as allShare, just different implementation of it.)
     pub fn allShareEL(vec: Vec<Date>) -> Vec<&'static str> {
         let mut terms: Vec<&'static str> = vec!["day", "month", "year"];
@@ -205,6 +226,14 @@ fn compare_nums(first: i16, second: i16) -> two_nums {
 }
 
 impl DateTime {
+    /// Checks if a DateTime is a valid day
+    pub fn is_valid(&self) -> bool {
+        if (Date{day: self.day, month: self.month, year: self.year}).is_valid() && self.second >= 0 && self.second < 60 && self.minute >= 0 && self.minute < 60 && self.hour > 0 && self.hour < 24{
+            true
+        } else {
+            false
+        }
+    }
     /// Takes a Vector of DateTimes and returns all field values they share as a vector of &str. (Same function  of allShare just different implementation)
     pub fn allShareEL(vec: Vec<DateTime>) -> Vec<&'static str> {
         let mut terms: Vec<&'static str> = vec!["second", "minute", "hour", "day", "month", "year"];

@@ -66,6 +66,13 @@ mod tests {
     }
     mod comparisons {
         use perDiem::types::{Date, datekindEvals, DateTime};
+    #[test] 
+    fn is_valid_tests() {
+        assert_eq!(Date {day: 29, month: 2, year: 2000}.is_valid(), true);
+        assert_ne!(Date {day: 29, month: 2, year: 2001}.is_valid(), true);
+        assert_eq!(DateTime {second: 59, minute: 59, hour: 1, day: 29, month: 3, year: 2000}.is_valid(), true);
+        assert_ne!(DateTime {second: 59, minute: 59, hour: 24, day: 29, month: 3, year: 2000}.is_valid(), true);
+    }
     #[test]
     fn all_shares_test() {
         let compare_vec: Vec<&str> = vec!["second", "minute", "hour", "day"];
