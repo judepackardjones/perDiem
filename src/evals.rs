@@ -16,7 +16,10 @@ macro_rules! impl_eval_fns {
                 false
             }
             /// Method returns the day of the week as a String of the Date or DateTime passed to it.
-            fn weekday(&self) -> Result<String, std::io::Error> {
+            fn weekday(&self) -> Result<String, &str> {
+                if !self.is_valid() {
+                    return Err("Invalid Date or DateTime");
+                }
                 let weekdays: Vec<&str> = vec![
                     "Sunday",
                     "Monday",
@@ -33,7 +36,10 @@ macro_rules! impl_eval_fns {
                     .to_string());
             }
             /// Method returns the day of the week as a i8 with 0 being Sunday
-            fn weekday_as_int(&self) -> Result<i8, std::io::Error> {
+            fn weekday_as_int(&self) -> Result<i8, &str> {
+                if !self.is_valid() {
+                    return Err("Invalid Date or DateTime");
+                }
                 let first_two_digits_year: i32 = self.year as i32 % 100;
                 let mut num: i8 = ((self.day
                     + ((13
@@ -87,6 +93,7 @@ macro_rules! impl_eval_fns {
     };
 }
 impl Date {
+    /// Checks if a Date is valid 
     pub fn is_valid(&self) -> bool {
         let month_lengths: std::collections::HashMap<i32, i32> = std::collections::HashMap::from([
             (1, 31),

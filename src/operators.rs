@@ -26,6 +26,10 @@ impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);
 
 impl Date {
+    /// Returns the difference between two Dates as a TimeDifference with seconds, minutes, and hours set to 0
+    pub fn difference(&self, datetime: Date) -> TimeDifference {
+        TimeDifference { seconds: 0, minutes: 0, hours: 0, days: get_pos(self.day.into(), datetime.day.into()), months: get_pos(self.month.into(), datetime.month.into()), years: get_pos(self.year.into(), datetime.year.into()) }
+    }
     /// Creates an instance of Date with all fields set to 1
     pub fn new() -> Date {
         Date {
