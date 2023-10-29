@@ -1,6 +1,8 @@
 use std::any::Any;
 use crate::types::*;
-
+pub fn floor(num: f32) -> i32 {
+    (num - (num % 1.0)) as i32
+}
 pub fn compare_dyn_any_values(a: &dyn Any, b: &dyn Any) -> Result<bool, &'static str> {
     if let Some(a_value) = a.downcast_ref::<i8>() {
         if let Some(b_value) = b.downcast_ref::<i8>() {

@@ -1,6 +1,5 @@
 use std::collections::HashMap;
-use crate::{types::*, utils::get_pos};
-
+use crate::{types::*, utils::get_pos, utils::floor};
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
@@ -68,9 +67,12 @@ impl Date {
         match length {
             TimeSpan::days(days) => todo!(),
             TimeSpan::months(months) => {
-                let mut month_increase: i32 = increase_date.month.into() + months;
+                let month_increase: i32 = increase_date.month as i32 + months;
                 increase_date.month = (month_increase % 12) as i8;
-                increase_date.year += month_increase/12;
+                increase_date.year = increase_date.year + floor(month_increase as f32 / 12.0);
+
+                Ok(increase_date)
+
             },
             TimeSpan::years(years) => {increase_date.year += years;
                 Ok(increase_date) },
