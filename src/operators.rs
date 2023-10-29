@@ -67,7 +67,11 @@ impl Date {
         ]);
         match length {
             TimeSpan::days(days) => todo!(),
-            TimeSpan::months(months) => todo!(),
+            TimeSpan::months(months) => {
+                let mut month_increase: i32 = increase_date.month.into() + months;
+                increase_date.month = (month_increase % 12) as i8;
+                increase_date.year += month_increase/12;
+            },
             TimeSpan::years(years) => {increase_date.year += years;
                 Ok(increase_date) },
             _ => {Err("Invalid TimeSpan specifier")}
