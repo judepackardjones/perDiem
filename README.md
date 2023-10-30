@@ -41,6 +41,7 @@ Variants:
 >`day`: i32  
 >`month`: i32  
 >`year`: i32  
+
 Helper functions and methods:  
 -----------------------------
 as_Date -> Convert a forming a date to a Date - [docs](https://docs.rs/perDiem/0.1.4/perDiem/types/trait.x.html)  
