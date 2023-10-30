@@ -18,6 +18,7 @@ Fields:
 >`month`: i8  
 >`year`: i16  
 [Implementations](https://docs.rs/perDiem/0.1.4/perDiem/types/struct.DateTime.html)  
+
 The `TimeDifference` struct:  
 ----------------------------
 Used to represent the difference between Dates and DateTimes
@@ -28,7 +29,8 @@ Fields:
 >`day`: i32  
 >`month`: i32  
 >`year`: i32  
-[Implementations](https://docs.rs/perDiem/0.1.4/perDiem/types/struct.TimeDifference.html) 
+[Implementations](https://docs.rs/perDiem/0.1.4/perDiem/types/struct.TimeDifference.html)  
+
 The `TimeSpan` enum:  
 --------------------
 Used for increase and decrease methods(WIP)  
