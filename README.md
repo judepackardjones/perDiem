@@ -1,6 +1,4 @@
 # perDiem
-PerDiem  
-=======
 
 The `Date` struct:  
 ----------------
@@ -33,7 +31,7 @@ Fields:
 [Implementations](https://docs.rs/perDiem/0.1.4/perDiem/types/struct.TimeDifference.html) 
 The `TimeSpan` enum:  
 --------------------
-Used for (WIP) increase and decrease methods
+Used for increase and decrease methods(WIP)  
 Variants:
 >`second`: i32   
 >`minute`: i32  
