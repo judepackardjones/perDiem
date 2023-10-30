@@ -99,5 +99,14 @@ mod tests {
         fn last_two_digits_year_test() {
             assert_eq!(Date {day: 1, month: 1, year: 2003}.last_two_digits_year(), String::from("03"));
         }
+        #[test]
+        fn increases() {
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 2005});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(2)).unwrap(), Date {day: 1, month:3, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(11)).unwrap(), Date {day: 1, month:12, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(12)).unwrap(), Date {day: 1, month:1, year: 2004});
+            assert_eq!(Date {day: 1, month: 12, year: 2003}.increase(TimeSpan::months(12)).unwrap(), Date {day: 1, month:12, year: 2004});
+            assert_eq!(Date {day: 1, month: 8, year: 2000}.increase(TimeSpan::months(26)).unwrap(), Date {day: 1, month: 10, year: 2002});
+        }
     }
 }

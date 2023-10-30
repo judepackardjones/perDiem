@@ -1,5 +1,5 @@
+use crate::{types::*, utils::floor, utils::get_pos};
 use std::collections::HashMap;
-use crate::{types::*, utils::get_pos, utils::floor};
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
@@ -27,12 +27,19 @@ impl_operators_fns!(DateTime);
 impl Date {
     /// Returns the difference between two Dates as a TimeDifference with seconds, minutes, and hours set to 0
     pub fn difference(&self, datetime: Date) -> TimeDifference {
-        TimeDifference { seconds: 0, minutes: 0, hours: 0, days: get_pos(self.day.into(), datetime.day.into()), months: get_pos(self.month.into(), datetime.month.into()), years: get_pos(self.year.into(), datetime.year.into()) }
+        TimeDifference {
+            seconds: 0,
+            minutes: 0,
+            hours: 0,
+            days: get_pos(self.day.into(), datetime.day.into()),
+            months: get_pos(self.month.into(), datetime.month.into()),
+            years: get_pos(self.year.into(), datetime.year.into()),
+        }
     }
     /// Creates an instance of Date with all fields set to 1
     pub fn new() -> Date {
         Date {
-            day: 1, 
+            day: 1,
             month: 1,
             year: 1,
         }
@@ -56,7 +63,8 @@ impl Date {
             year: self.year,
         }
     }
-    fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
+    /// Increases the Date given by the TimeSpan provided.
+    pub fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
         let mut increase_date = self;
         let rollovers: HashMap<&str, i32> = HashMap::from([
             ("seconds", 60),
@@ -67,16 +75,19 @@ impl Date {
         match length {
             TimeSpan::days(days) => todo!(),
             TimeSpan::months(months) => {
-                let month_increase: i32 = increase_date.month as i32 + months;
-                increase_date.month = (month_increase % 12) as i8;
-                increase_date.year = increase_date.year + floor(month_increase as f32 / 12.0);
-
+                increase_date.year = increase_date.year + floor(months as f32 / 12.0);
+                increase_date.month = increase_date.month + (months % 12) as i8;
+                if increase_date.month > 12 {
+                    increase_date.month = increase_date.month - 12;
+                    increase_date.year = increase_date.year + 1;
+                }
                 Ok(increase_date)
-
-            },
-            TimeSpan::years(years) => {increase_date.year += years;
-                Ok(increase_date) },
-            _ => {Err("Invalid TimeSpan specifier")}
+            }
+            TimeSpan::years(years) => {
+                increase_date.year += years;
+                Ok(increase_date)
+            }
+            _ => Err("Invalid TimeSpan specifier"),
         }
     }
 }
@@ -87,7 +98,7 @@ impl DateTime {
             second: 1,
             minute: 1,
             hour: 1,
-            day: 1, 
+            day: 1,
             month: 1,
             year: 1,
         }
@@ -103,9 +114,16 @@ impl DateTime {
             year: year,
         }
     }
-    /// Returns a TimeDifference of the two dates given. Each field is always positive. 
+    /// Returns a TimeDifference of the two dates given. Each field is always positive.
     pub fn difference(&self, datetime: DateTime) -> TimeDifference {
-        TimeDifference { seconds: get_pos(self.second.into(), datetime.second.into()), minutes: get_pos(self.minute.into(), datetime.minute.into()), hours: get_pos(self.hour.into(), datetime.hour.into()), days: get_pos(self.day.into(), datetime.day.into()), months: get_pos(self.month.into(), datetime.month.into()), years: get_pos(self.year.into(), datetime.year.into()) }
+        TimeDifference {
+            seconds: get_pos(self.second.into(), datetime.second.into()),
+            minutes: get_pos(self.minute.into(), datetime.minute.into()),
+            hours: get_pos(self.hour.into(), datetime.hour.into()),
+            days: get_pos(self.day.into(), datetime.day.into()),
+            months: get_pos(self.month.into(), datetime.month.into()),
+            years: get_pos(self.year.into(), datetime.year.into()),
+        }
     }
     /// Converts DateTime to Date
     pub fn to_Date(&self) -> Date {
