@@ -1,5 +1,6 @@
 use std::any::Any;
 use crate::types::*;
+
 pub fn floor(num: f32) -> i32 {
     (num - (num % 1.0)) as i32
 }

@@ -81,4 +81,4 @@ pub enum two_nums {
     larger,
     smaller,
     equal,
-}
+}   
