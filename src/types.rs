@@ -67,11 +67,12 @@ pub trait datekindEvals {
 pub trait datekindOperators {
     fn last_two_digits_year(&self) -> String;
 }
-
+/// Trait used for creating String methods.
 pub trait x {
     // used for creating String methods
     fn as_Date(&self, format: &str) -> Date;
 }
+/// Trait used for creating &str methods.
 pub trait y {
     // used for creating &str methods
     fn with_separators(&self, separator: &char) -> String;

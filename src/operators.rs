@@ -66,14 +66,34 @@ impl Date {
     /// Increases the Date given by the TimeSpan provided.
     pub fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
         let mut increase_date = self;
-        let rollovers: HashMap<&str, i32> = HashMap::from([
-            ("seconds", 60),
-            ("minutes", 60),
-            ("hours", 24),
-            ("months", 12),
-        ]);
         match length {
-            TimeSpan::days(days) => todo!(),
+            TimeSpan::days(days) => {
+                let mut day_count = days;
+                let mut month_skips: i32 = 0;
+                let month_lengths: std::collections::HashMap<i32, i32> = std::collections::HashMap::from([
+                    (1, 31),
+                    (2, if increase_date.isLeapYear() { 29 } else { 28 }),
+                    (3, 31),
+                    (4, 30),
+                    (5, 31),
+                    (6, 30),
+                    (7, 31),
+                    (8, 31),
+                    (9, 30),
+                    (10, 31),
+                    (11, 30),
+                    (12, 31),
+                ]);
+                    if day_count + increase_date.day as i32 > *month_lengths.get(&(increase_date.month as i32)).unwrap() {
+                        for (month, month_days) in &month_lengths {
+                            
+                        }
+                    } else {
+                        increase_date.day += increase_date.day + day_count as i8;
+                    }
+                
+                Ok(increase_date)
+            },
             TimeSpan::months(months) => {
                 increase_date.year = increase_date.year + floor(months as f32 / 12.0);
                 increase_date.month = increase_date.month + (months % 12) as i8;
