@@ -93,10 +93,11 @@ impl Date {
                         let mut started: bool = false;
                         let mut current_key: i8 = start_key;
                         let mut count: i8 = 0;
-                        loop {
-                            println!("{current_key}");
+                        let mut final_day_in_month: i32 = day_count;
+                        while final_day_in_month > 0 {
+                            month_skips += 1;
                             if let Some(value) = month_lengths.get(&(current_key as i32)) {
-                                println!("Key: {}, Value: {}", current_key, value);
+                                final_day_in_month -= *value;
                             } else {
                                 println!("Key: {} not found in the HashMap", current_key);
                             }
@@ -109,15 +110,18 @@ impl Date {
                                 current_key += 1;
                             }
                             count += 1;
-                            if count == 100 {
+                            if count == 40 {
                                 break;
                             }
                         }
-                    
+                        println!("{}", final_day_in_month);
+                        // day seems to be off by about +- 2 days 
+                    increase_date.day = final_day_in_month as i8 + *month_lengths.get(&(increase_date.month as i32)).unwrap() as i8;
+                    println!("Month skips: {}", month_skips);
                     } else {
                         increase_date.day += day_count as i8;
                     }
-                
+                increase_date = increase_date.increase(TimeSpan::months(month_skips - 1)).unwrap();
                 Ok(increase_date)
             },
             TimeSpan::months(months) => {
