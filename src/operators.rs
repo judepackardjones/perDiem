@@ -2,6 +2,7 @@ use ordered_hashmap::OrderedHashMap;
 
 use crate::{types::*, utils::floor, utils::get_pos};
 use std::collections::HashMap;
+use std::hash::Hash;
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
@@ -73,6 +74,7 @@ impl Date {
                 let mut day_count = days;
                 let mut month_skips: i32 = 0;
                 let mut year_skips: i32 = 0;
+                
                 let mut month_lengths: OrderedHashMap<i32, i32> = OrderedHashMap::new();
                 month_lengths.insert(1, 31);
                 month_lengths.insert(2, if increase_date.isLeapYear() { 29 } else { 28 });
@@ -87,16 +89,33 @@ impl Date {
                 month_lengths.insert(11, 30);
                 month_lengths.insert(12, 31);
                     if day_count + increase_date.day as i32 > *month_lengths.get(&(increase_date.month as i32)).unwrap() {
+                        let start_key = increase_date.month;
+                        let mut started: bool = false;
+                        let mut current_key: i8 = start_key;
+                        let mut count: i8 = 0;
                         loop {
-                        for (month, month_days) in month_lengths.into_iter() {
-                            // make sure that it starts at the right month.
-                            if day_count > 0 {
-
+                            println!("{current_key}");
+                            if let Some(value) = month_lengths.get(&(current_key as i32)) {
+                                println!("Key: {}, Value: {}", current_key, value);
+                            } else {
+                                println!("Key: {} not found in the HashMap", current_key);
+                            }
+                            if current_key == start_key {
+                                started = true;
+                            }
+                            if current_key == 12 && started {
+                                current_key = 1;
+                            } else {
+                                current_key += 1;
+                            }
+                            count += 1;
+                            if count == 100 {
+                                break;
                             }
                         }
-                    }
+                    
                     } else {
-                        increase_date.day += increase_date.day + day_count as i8;
+                        increase_date.day += day_count as i8;
                     }
                 
                 Ok(increase_date)
