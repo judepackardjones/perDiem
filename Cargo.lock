@@ -133,10 +133,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dd8b5dd2ae5ed71462c540258bedcb51965123ad7e7ccf4b9a8cafaa4a63576d"
 
 [[package]]
+name = "ordered_hashmap"
+version = "0.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cb1ea499d242299d564879c8b375c11285f5a26d62d8010768909d6d099c4c5a"
+
+[[package]]
 name = "perDiem"
 version = "0.1.4"
 dependencies = [
  "chrono",
+ "ordered_hashmap",
  "struct_iterable",
  "tap",
  "undup",

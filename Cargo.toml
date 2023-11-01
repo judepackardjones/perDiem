@@ -15,5 +15,6 @@ chrono = "0.4.31"
 undup = "0.0.1"
 tap = "1.0.1"
 struct_iterable = "0.1.1"
+ordered_hashmap = "0.0.3"
 [profile.dev]
 opt-level = 3  

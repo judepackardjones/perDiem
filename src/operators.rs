@@ -1,3 +1,5 @@
+use ordered_hashmap::OrderedHashMap;
+
 use crate::{types::*, utils::floor, utils::get_pos};
 use std::collections::HashMap;
 
@@ -70,24 +72,29 @@ impl Date {
             TimeSpan::days(days) => {
                 let mut day_count = days;
                 let mut month_skips: i32 = 0;
-                let month_lengths: std::collections::HashMap<i32, i32> = std::collections::HashMap::from([
-                    (1, 31),
-                    (2, if increase_date.isLeapYear() { 29 } else { 28 }),
-                    (3, 31),
-                    (4, 30),
-                    (5, 31),
-                    (6, 30),
-                    (7, 31),
-                    (8, 31),
-                    (9, 30),
-                    (10, 31),
-                    (11, 30),
-                    (12, 31),
-                ]);
+                let mut year_skips: i32 = 0;
+                let mut month_lengths: OrderedHashMap<i32, i32> = OrderedHashMap::new();
+                month_lengths.insert(1, 31);
+                month_lengths.insert(2, if increase_date.isLeapYear() { 29 } else { 28 });
+                month_lengths.insert(3, 31);
+                month_lengths.insert(4, 30);
+                month_lengths.insert(5, 31);
+                month_lengths.insert(6, 30);
+                month_lengths.insert(7, 31);
+                month_lengths.insert(8, 31);
+                month_lengths.insert(9, 30);
+                month_lengths.insert(10, 31);
+                month_lengths.insert(11, 30);
+                month_lengths.insert(12, 31);
                     if day_count + increase_date.day as i32 > *month_lengths.get(&(increase_date.month as i32)).unwrap() {
-                        for (month, month_days) in &month_lengths {
-                            
+                        loop {
+                        for (month, month_days) in month_lengths.into_iter() {
+                            // make sure that it starts at the right month.
+                            if day_count > 0 {
+
+                            }
                         }
+                    }
                     } else {
                         increase_date.day += increase_date.day + day_count as i8;
                     }
