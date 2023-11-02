@@ -73,8 +73,6 @@ impl Date {
             TimeSpan::days(days) => {
                 let mut day_count = days;
                 let mut month_skips: i32 = 0;
-                let mut year_skips: i32 = 0;
-                
                 let mut month_lengths: OrderedHashMap<i32, i32> = OrderedHashMap::new();
                 month_lengths.insert(1, 31);
                 month_lengths.insert(2, if increase_date.isLeapYear() { 29 } else { 28 });
@@ -89,41 +87,34 @@ impl Date {
                 month_lengths.insert(11, 30);
                 month_lengths.insert(12, 31);
                     if day_count + increase_date.day as i32 > *month_lengths.get(&(increase_date.month as i32)).unwrap() {
-                        let start_key = increase_date.month;
-                        let mut started: bool = false;
-                        let mut current_key: i8 = start_key;
-                        let mut count: i8 = 0;
-                        let mut final_day_in_month: i32 = day_count;
-                        while final_day_in_month > 0 {
-                            month_skips += 1;
-                            if let Some(value) = month_lengths.get(&(current_key as i32)) {
-                                final_day_in_month -= *value;
+                        let start = increase_date.month;
+                        let mut final_days_into_month = day_count;
+                        let mut current_month = start;
+                        'outer: loop {
+                            println!("{current_month}");
+                            println!("{}", month_lengths.get(&(current_month as i32)).unwrap());
+                            if let Some(days_in_current_month) = month_lengths.get(&(current_month as i32)) {
+                                if final_days_into_month - days_in_current_month > 0 {
+                                    final_days_into_month -= days_in_current_month;
+                                    month_skips += 1;
+                                } else {
+                                    println!("Should break");
+                                    break 'outer;
+                                }
+                            }
+                            if current_month != 12 {
+                                current_month += 1;
                             } else {
-                                println!("Key: {} not found in the HashMap", current_key);
-                            }
-                            if current_key == start_key {
-                                started = true;
-                            }
-                            if current_key == 12 && started {
-                                current_key = 1;
-                            } else {
-                                current_key += 1;
-                            }
-                            count += 1;
-                            if count == 40 {
-                                break;
+                                current_month = 1;
                             }
                         }
-                        println!("{}", final_day_in_month);
-                        // day seems to be off by about +- 2 days 
-                    increase_date.day = final_day_in_month as i8 + *month_lengths.get(&(increase_date.month as i32)).unwrap() as i8;
-                    println!("Month skips: {}", month_skips);
-                    } else {
-                        increase_date.day += day_count as i8;
-                    }
-                increase_date = increase_date.increase(TimeSpan::months(month_skips - 1)).unwrap();
-                Ok(increase_date)
-            },
+                increase_date = increase_date.increase(TimeSpan::days(final_days_into_month)).unwrap();
+            }
+            else {
+                increase_date.day += day_count as i8;
+            }
+            Ok(increase_date)
+        },
             TimeSpan::months(months) => {
                 increase_date.year = increase_date.year + floor(months as f32 / 12.0);
                 increase_date.month = increase_date.month + (months % 12) as i8;
