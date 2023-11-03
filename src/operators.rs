@@ -111,6 +111,9 @@ impl Date {
                 }
                 // Find how many months are in the date
                 // call itsself on months
+                /* TODO: Take different approach. Take the ammount of days and subtract the day increase by the amount of days inthe current month
+                then go to the next one and see if you can subtract the current month by this one and not get 0, if you can't, then set it to
+                the current overflow day of the month*/ 
             Ok(increase_date)
         },
             TimeSpan::months(months) => {
