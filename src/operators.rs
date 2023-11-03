@@ -71,7 +71,7 @@ impl Date {
         let mut increase_date = self;
         match length {
             TimeSpan::days(days) => {
-                let mut day_count = days;
+                let day_count = days;
                 let mut month_skips: i32 = 0;
                 let mut month_lengths: OrderedHashMap<i32, i32> = OrderedHashMap::new();
                 month_lengths.insert(1, 31);
@@ -102,12 +102,15 @@ impl Date {
                                     break 'outer;
                                 }
                             }
-                            if current_month != 12 {
-                                current_month += 1;
-                            } else {
+                            if current_month == 12 {
+                                println!("sets to one");
                                 current_month = 1;
+                            } else {
+                                println!("Increments one");
+                                current_month += 1;
                             }
                         }
+                        println!("Broke");
                 increase_date = increase_date.increase(TimeSpan::days(final_days_into_month)).unwrap();
             }
             else {
