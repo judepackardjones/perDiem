@@ -71,7 +71,7 @@ impl Date {
         let mut increase_date = self;
         match length {
             TimeSpan::days(days) => {
-                let day_count = days;
+                let mut day_counter = days;
                 let mut month_skips: i32 = 0;
                 let mut month_lengths: OrderedHashMap<i32, i32> = OrderedHashMap::new();
                 month_lengths.insert(1, 31);
@@ -86,36 +86,31 @@ impl Date {
                 month_lengths.insert(10, 31);
                 month_lengths.insert(11, 30);
                 month_lengths.insert(12, 31);
-                    if day_count + increase_date.day as i32 > *month_lengths.get(&(increase_date.month as i32)).unwrap() {
-                        let start = increase_date.month;
-                        let mut final_days_into_month = day_count;
-                        let mut current_month = start;
-                        'outer: loop {
-                            println!("{current_month}");
-                            println!("{}", month_lengths.get(&(current_month as i32)).unwrap());
-                            if let Some(days_in_current_month) = month_lengths.get(&(current_month as i32)) {
-                                if final_days_into_month - days_in_current_month > 0 {
-                                    final_days_into_month -= days_in_current_month;
-                                    month_skips += 1;
-                                } else {
-                                    println!("Should break");
-                                    break 'outer;
-                                }
-                            }
-                            if current_month == 12 {
-                                println!("sets to one");
-                                current_month = 1;
-                            } else {
-                                println!("Increments one");
-                                current_month += 1;
-                            }
-                        }
-                        println!("Broke");
-                increase_date = increase_date.increase(TimeSpan::days(final_days_into_month)).unwrap();
-            }
-            else {
-                increase_date.day += day_count as i8;
-            }
+                let mut key_counter = increase_date.month as i32;
+                while day_counter > 0 {
+                    day_counter -= month_lengths.get(&key_counter).unwrap();
+                    if day_counter > 0 {
+                        month_skips += 1;
+                        key_counter += 1;
+                        if key_counter == 13 {
+                            key_counter = 1;
+                        } 
+                    }
+                }
+                println!("Daycounter: {}", day_counter);
+                day_counter += month_lengths.get(&key_counter).unwrap();
+                println!("Daycounter after adjust: {}", day_counter);
+                increase_date.day = increase_date.day + day_counter as i8;
+                println!("day: {}", increase_date.day);
+                increase_date = increase_date.increase(TimeSpan::months(month_skips)).unwrap();
+                if increase_date.day > *month_lengths.get(&increase_date.month.into()).unwrap() as i8 {
+                    println!("Larger");
+                    increase_date = increase_date.increase(TimeSpan::months(1)).unwrap();
+                    increase_date.day -= *month_lengths.get(&increase_date.month.into()).unwrap() as i8;
+                    increase_date.day -= 2;
+                }
+                // Find how many months are in the date
+                // call itsself on months
             Ok(increase_date)
         },
             TimeSpan::months(months) => {
