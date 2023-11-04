@@ -73,41 +73,23 @@ impl Date {
             TimeSpan::days(days) => {
                 let mut day_counter = days;
                 let mut month_skips: i32 = 0;
-                let mut month_lengths: OrderedHashMap<i32, i32> = OrderedHashMap::new();
-                month_lengths.insert(1, 31);
-                month_lengths.insert(2, if increase_date.isLeapYear() { 29 } else { 28 });
-                month_lengths.insert(3, 31);
-                month_lengths.insert(4, 30);
-                month_lengths.insert(5, 31);
-                month_lengths.insert(6, 30);
-                month_lengths.insert(7, 31);
-                month_lengths.insert(8, 31);
-                month_lengths.insert(9, 30);
-                month_lengths.insert(10, 31);
-                month_lengths.insert(11, 30);
-                month_lengths.insert(12, 31);
-                let mut key_counter = increase_date.month as i32;
-                while day_counter > 0 {
-                    day_counter -= month_lengths.get(&key_counter).unwrap();
-                    if day_counter > 0 {
-                        month_skips += 1;
-                        key_counter += 1;
-                        if key_counter == 13 {
-                            key_counter = 1;
-                        } 
-                    }
-                }
-                println!("Daycounter: {}", day_counter);
-                day_counter += month_lengths.get(&key_counter).unwrap();
-                println!("Daycounter after adjust: {}", day_counter);
-                increase_date.day = increase_date.day + day_counter as i8;
-                println!("day: {}", increase_date.day);
-                increase_date = increase_date.increase(TimeSpan::months(month_skips)).unwrap();
-                if increase_date.day > *month_lengths.get(&increase_date.month.into()).unwrap() as i8 {
-                    println!("Larger");
-                    increase_date = increase_date.increase(TimeSpan::months(1)).unwrap();
-                    increase_date.day -= *month_lengths.get(&increase_date.month.into()).unwrap() as i8;
-                    increase_date.day -= 2;
+                loop {
+                    // needs to be initialized each loop because leap year changes. 
+                    if 
+                    let month_lengths: HashMap<i32, i32> = HashMap::from([
+                        (1, 31),
+                        (2, if increase_date.isLeapYear() { 29 } else { 28 }),
+                        (3, 31),
+                        (4, 30),
+                        (5, 31),
+                        (6, 30),
+                        (7, 31),
+                        (8, 31),
+                        (9, 30),
+                        (10, 31),
+                        (11, 30),
+                        (12, 31),
+                    ]);
                 }
                 // Find how many months are in the date
                 // call itsself on months
