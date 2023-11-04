@@ -66,30 +66,45 @@ impl Date {
             year: self.year,
         }
     }
-    /// Increases the Date given by the TimeSpan provided.
+    /// Increases the Date given by the TimeSpan provided. End date is NOT included. (This would add 1 to the day.)
     pub fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
         let mut increase_date = self;
         match length {
             TimeSpan::days(days) => {
+                let mut month_lengths: HashMap<i32, i32> = HashMap::from([
+                    (1, 31),
+                    (2, if increase_date.isLeapYear() { 29 } else { 28 }),
+                    (3, 31),
+                    (4, 30),
+                    (5, 31),
+                    (6, 30),
+                    (7, 31),
+                    (8, 31),
+                    (9, 30),
+                    (10, 31),
+                    (11, 30),
+                    (12, 31),
+                ]);
                 let mut day_counter = days;
-                let mut month_skips: i32 = 0;
+                let mut month_counter: i32 = increase_date.month as i32;
                 loop {
+                    *month_lengths.get_mut(&2).unwrap() = if increase_date.isLeapYear() { 29 } else { 28 };
                     // needs to be initialized each loop because leap year changes. 
-                    if 
-                    let month_lengths: HashMap<i32, i32> = HashMap::from([
-                        (1, 31),
-                        (2, if increase_date.isLeapYear() { 29 } else { 28 }),
-                        (3, 31),
-                        (4, 30),
-                        (5, 31),
-                        (6, 30),
-                        (7, 31),
-                        (8, 31),
-                        (9, 30),
-                        (10, 31),
-                        (11, 30),
-                        (12, 31),
-                    ]);
+                    if increase_date.day as i32 + day_counter > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
+                        day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap();
+                        month_counter += 1;
+                        if month_counter == 13 {
+                            month_counter = 1;
+                        }
+                        increase_date = increase_date.increase(TimeSpan::months(1)).unwrap();
+                    } else {
+                        increase_date.day = (day_counter + 1) as i8;
+                        // if increase_date.day == 0 {
+                        //     increase_date.day = 1;
+                        // }
+                        break;
+                    }
+
                 }
                 // Find how many months are in the date
                 // call itsself on months
