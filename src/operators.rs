@@ -1,8 +1,5 @@
-use ordered_hashmap::OrderedHashMap;
-
 use crate::{types::*, utils::floor, utils::get_pos};
 use std::collections::HashMap;
-use std::hash::Hash;
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
@@ -66,11 +63,15 @@ impl Date {
             year: self.year,
         }
     }
-    /// Increases the Date given by the TimeSpan provided. End date is NOT included. (This would add 1 to the day.)
+    /// Increases the Date given by the TimeSpan provided. End date is NOT included. (This would add 1 to the day.) Using TimeSpan variant of which Date's do not have a field for will return and Err
     pub fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
         let mut increase_date = self;
         match length {
             TimeSpan::days(days) => {
+                let initial_day = increase_date.day;
                 let mut month_lengths: HashMap<i32, i32> = HashMap::from([
                     (1, 31),
                     (2, if increase_date.isLeapYear() { 29 } else { 28 }),
@@ -91,23 +92,20 @@ impl Date {
                     *month_lengths.get_mut(&2).unwrap() = if increase_date.isLeapYear() { 29 } else { 28 };
                     // needs to be initialized each loop because leap year changes. 
                     if increase_date.day as i32 + day_counter > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
-                        day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap();
+                        day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0);
                         month_counter += 1;
                         if month_counter == 13 {
                             month_counter = 1;
                         }
                         increase_date = increase_date.increase(TimeSpan::months(1)).unwrap();
                     } else {
-                        increase_date.day = (day_counter + 1) as i8;
-                        // if increase_date.day == 0 {
-                        //     increase_date.day = 1;
-                        // }
+                        increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
                         break;
                     }
 
                 }
                 // Find how many months are in the date
-                // call itsself on months
+                // call itself on months
                 /* TODO: Take different approach. Take the ammount of days and subtract the day increase by the amount of days inthe current month
                 then go to the next one and see if you can subtract the current month by this one and not get 0, if you can't, then set it to
                 the current overflow day of the month*/ 
@@ -126,7 +124,7 @@ impl Date {
                 increase_date.year += years;
                 Ok(increase_date)
             }
-            _ => Err("Invalid TimeSpan specifier"),
+            _ => Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for the Date's increase method"),
         }
     }
 }
