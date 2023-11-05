@@ -122,6 +122,7 @@ impl Date {
             }
             TimeSpan::years(years) => {
                 increase_date.year += years;
+                increase_date.day = if !increase_date.isLeapYear() && increase_date.month == 2 && increase_date.day == 29 { 28 } else { increase_date.day};
                 Ok(increase_date)
             }
             _ => Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for the Date's increase method"),
@@ -170,7 +171,8 @@ impl DateTime {
             year: self.year,
         }
     }
-    fn increase(&self, length: TimeSpan) -> DateTime {
+    fn increase(self, length: TimeSpan) -> Result<DateTime, &'static str> {
+        let mut increase_date = self;
         match length {
             TimeSpan::seconds(seconds) => {
                 todo!();
@@ -188,7 +190,9 @@ impl DateTime {
                 todo!();
             },
             TimeSpan::years(years) => {
-                todo!();
+                increase_date.year += years;
+                increase_date.day = if !increase_date.isLeapYear() && increase_date.month == 2 && increase_date.day == 29 { 28 } else { increase_date.day};
+                Ok(increase_date)
             },
         }
     }
