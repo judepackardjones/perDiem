@@ -1,8 +1,6 @@
 use ordered_hashmap::OrderedHashMap;
 
 use crate::{types::*, utils::floor, utils::get_pos};
-use std::collections::HashMap;
-use std::hash::Hash;
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
@@ -176,6 +174,25 @@ impl DateTime {
         }
     }
     fn increase(&self, length: TimeSpan) -> DateTime {
-        todo!();
+        match length {
+            TimeSpan::seconds(seconds) => {
+                todo!();
+            },
+            TimeSpan::minutes(minutes) => {
+                todo!();
+            },
+            TimeSpan::hours(hours) => {
+                todo!();
+            },
+            TimeSpan::days(days) => {
+                todo!();
+            },
+            TimeSpan::months(months) => {
+                todo!();
+            },
+            TimeSpan::years(years) => {
+                todo!();
+            },
+        }
     }
 }
