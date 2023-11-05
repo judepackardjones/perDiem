@@ -14,11 +14,17 @@ pub struct Date {
 #[derive(Debug, PartialEq, Eq, Iterable)]
 /// The basic DateTime struct
 pub struct DateTime {
+    /// Contains the second number of the DateTime instance
     pub second: i8,
+    /// Contains the minute number of the DateTime instance
     pub minute: i8,
+    /// Contains the hour number of the DateTime instance
     pub hour: i8,
+    /// Contains the day number of the DateTime instance
     pub day: i8,
+    /// Contains the month number of the DateTime instance
     pub month: i8,
+    /// Contains the year number of the DateTime instance
     pub year: i32,
 }
 #[derive(Debug, PartialEq, Eq, Iterable)]
@@ -38,14 +44,20 @@ pub struct TimeDifference {
     /// Contains the year difference 
     pub years: i32,
 }
-/// Unimplemented enum for increase and decrease methods
+/// Used to hold variant time amounts primarily for increase and decrease methods
 pub enum TimeSpan {
     // will be used for increase and decrease methods
+    /// Represents the additive(or subtractive(is that a word?)) seconds to a Date or DateTime
     seconds(i32),
+    /// Represents the variant of minutes that could be added or subtracted from a Date or DateTime
     minutes(i32),
+    /// Represents the variant of hours that could be added or subtracted from a Date or DateTime
     hours(i32),
+    /// Represents the variant of days that could be added or subtracted from a Date or DateTime
     days(i32),
+    /// Represents the variant of months that could be added or subtracted from a Date or DateTime
     months(i32),
+    /// Represents the variant of years that could be added or subtracted from a Date or DateTime
     years(i32),
 }
 /// Eval methods that are impl by macro for both Date and DateTime
@@ -65,21 +77,28 @@ pub trait datekindEvals {
 }
 /// Operator methods that are impl by macro for both Date and Dateime
 pub trait datekindOperators {
+    /// Gets the last two digits from a year. Is used internally for Zueller's congruence for leap year calculation
     fn last_two_digits_year(&self) -> String;
 }
 /// Trait used for creating String methods.
 pub trait x {
     // used for creating String methods
+    /// Takes a String formatted like a Date, and it's format and converts it to a Date instance
     fn as_Date(&self, format: &str) -> Date;
 }
 /// Trait used for creating &str methods.
 pub trait y {
     // used for creating &str methods
+    /// Used for adding separators to Date formats
     fn with_separators(&self, separator: &char) -> String;
 }
 #[derive(PartialEq)]
+/// Internally used enum for larger, smaller, and equal uses
 pub enum two_nums {
+    /// Fucking annoying I've got to write docs for this, but heres some facts:
     larger,
+    /// Did you know the midway point between the size of an atom and the size of the Earth is a spec of dust?
     smaller,
+    /// Did you know that if you give two metronomes enough time, they will eventually sync up, as long as they are on the same body?
     equal,
 }   
