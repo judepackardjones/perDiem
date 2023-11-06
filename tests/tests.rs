@@ -110,7 +110,8 @@ mod tests {
             assert_eq!(Date {day: 1, month: 1, year: 2000}.increase(TimeSpan::days(1)).unwrap(), Date {day: 2, month: 1, year: 2000});
             assert_eq!(Date {day: 1, month: 1, year: 2000}.increase(TimeSpan::days(500)).unwrap(), Date {day: 15, month: 5, year: 2001});
             assert_eq!(Date {day: 6, month: 9, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
-            assert_eq!(Date {day: 28, month: 2, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 15, month: 5, year: 2001});
+            assert_eq!(Date {day: 28, month: 2, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
+            assert_eq!(Date {day: 28, month: 2, year: 1980}.increase(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
         }
     }
 }

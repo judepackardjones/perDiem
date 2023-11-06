@@ -187,7 +187,12 @@ impl DateTime {
                 todo!();
             },
             TimeSpan::months(months) => {
-                todo!();
+                let mut date = increase_date.to_Date();
+                date = date.increase(TimeSpan::months(months)).unwrap();
+                increase_date.day = date.day;
+                increase_date.month = date.month;
+                increase_date.year = date.year;
+                Ok(increase_date)
             },
             TimeSpan::years(years) => {
                 increase_date.year += years;
