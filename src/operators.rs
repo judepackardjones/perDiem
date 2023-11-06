@@ -26,7 +26,7 @@ impl_operators_fns!(DateTime);
 
 impl Date {
     /// Returns the difference between two Dates as a TimeDifference with seconds, minutes, and hours set to 0
-    pub fn difference(&self, datetime: Date) -> TimeDifference {
+    pub fn difference(&self, datetime: &Date) -> TimeDifference {
         TimeDifference {
             seconds: 0,
             minutes: 0,
@@ -128,6 +128,26 @@ impl Date {
             _ => Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for the Date's increase method"),
         }
     }
+    pub fn increase_and_validate(self, length: TimeSpan) -> Result<Date, &'static str> {
+        let increase_date = self.increase(length).unwrap();
+        if increase_date.is_valid() && match length {
+            TimeSpan::days(days) => {
+                increase_date.difference(&self).days == days
+            },
+            TimeSpan::months(months) => {
+                increase_date.difference(&self).months == months
+            },
+            TimeSpan::years(years) => {
+                increase_date.difference(&self).years == years
+            },  
+            _ => {return Err("Invalid TimeSpan Specifier"); }
+
+        } {
+            Ok(increase_date)
+        } else {
+            Err("Mistake")
+        }
+    }
 }
 impl DateTime {
     /// Creates new instance of DateTime with all fields set to 1
@@ -153,7 +173,7 @@ impl DateTime {
         }
     }
     /// Returns a TimeDifference of the two dates given. Each field is always positive.
-    pub fn difference(&self, datetime: DateTime) -> TimeDifference {
+    pub fn difference(&self, datetime: &DateTime) -> TimeDifference {
         TimeDifference {
             seconds: get_pos(self.second.into(), datetime.second.into()),
             minutes: get_pos(self.minute.into(), datetime.minute.into()),
@@ -185,15 +205,26 @@ impl DateTime {
                 todo!();
             },
             TimeSpan::days(days) => {
-                todo!();
+                let date = increase_date.to_Date();
+                if let Ok(date) = date.increase(TimeSpan::days(days)) {
+                    increase_date.day = date.day;
+                    increase_date.month = date.month;
+                    increase_date.year = date.year;
+                    Ok(increase_date)
+                } else {
+                    Err("Increase operation failed")
+                }
             },
             TimeSpan::months(months) => {
-                let mut date = increase_date.to_Date();
-                date = date.increase(TimeSpan::months(months)).unwrap();
-                increase_date.day = date.day;
-                increase_date.month = date.month;
-                increase_date.year = date.year;
-                Ok(increase_date)
+                let date = increase_date.to_Date();
+                if let Ok(date) = date.increase(TimeSpan::months(months)) {
+                    increase_date.day = date.day;
+                    increase_date.month = date.month;
+                    increase_date.year = date.year;
+                    Ok(increase_date)
+                } else {
+                    Err("Increase operation failed")
+                }
             },
             TimeSpan::years(years) => {
                 increase_date.year += years;
