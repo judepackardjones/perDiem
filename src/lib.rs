@@ -2,7 +2,8 @@
 #![allow(non_camel_case_types)]
 #![allow(unused_macros)]
 #![warn(missing_docs)]
-#![warn(missing_doc_code_examples)]
+#![warn(rustdoc::missing_doc_code_examples)]
+#![warn(unknown_lints)]
 //! A series of Date and DateTime Utilities
 /*This is a public crate for various date related utilities
 This crate relies on the chrono crate.

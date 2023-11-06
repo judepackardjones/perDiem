@@ -100,7 +100,7 @@ mod tests {
             assert_eq!(Date {day: 1, month: 1, year: 2003}.last_two_digits_year(), String::from("03"));
         }
         #[test]
-        fn increases() {
+        fn increases_date() {
             assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 2005});
             assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(2)).unwrap(), Date {day: 1, month:3, year: 2003});
             assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(11)).unwrap(), Date {day: 1, month:12, year: 2003});
@@ -112,6 +112,11 @@ mod tests {
             assert_eq!(Date {day: 6, month: 9, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
             assert_eq!(Date {day: 28, month: 2, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
             assert_eq!(Date {day: 28, month: 2, year: 1980}.increase(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
+        }
+        #[test]
+        fn increases_date_time() {
+            let example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
+            assert_eq!(example_datetime.increase(TimeSpan::years(2)).unwrap(), DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2012});
         }
     }
 }

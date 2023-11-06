@@ -171,7 +171,8 @@ impl DateTime {
             year: self.year,
         }
     }
-    fn increase(self, length: TimeSpan) -> Result<DateTime, &'static str> {
+    /// Increases the given DateTime by the TimeSpan specified
+    pub fn increase(self, length: TimeSpan) -> Result<DateTime, &'static str> {
         let mut increase_date = self;
         match length {
             TimeSpan::seconds(seconds) => {
