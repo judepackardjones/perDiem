@@ -129,18 +129,21 @@ impl Date {
         }
     }
     pub fn increase_and_validate(self, length: TimeSpan) -> Result<Date, &'static str> {
+        let initial_date = (&self).clone();
         let increase_date = self.increase(length).unwrap();
-        if increase_date.is_valid() && match length {
+        if increase_date.is_valid() && match &length {
             TimeSpan::days(days) => {
-                increase_date.difference(&self).days == days
+                increase_date.difference(&initial_date).days == *days
             },
             TimeSpan::months(months) => {
-                increase_date.difference(&self).months == months
+                increase_date.difference(&initial_date).months == *months
             },
             TimeSpan::years(years) => {
-                increase_date.difference(&self).years == years
+                increase_date.difference(&initial_date).years == *years
             },  
-            _ => {return Err("Invalid TimeSpan Specifier"); }
+            TimeSpan::seconds(_) => {return Err("seconds is not a valid TimeSpan specifier for Date::increase"); },
+            TimeSpan::minutes(_) => {return Err("minutes is not a valid TimeSpan specifier for Date::increase"); },
+            TimeSpan::hours(_) => {return Err("hours is not a valid TimeSpan specifier for Date::increase"); },
 
         } {
             Ok(increase_date)
@@ -231,6 +234,41 @@ impl DateTime {
                 increase_date.day = if !increase_date.isLeapYear() && increase_date.month == 2 && increase_date.day == 29 { 28 } else { increase_date.day};
                 Ok(increase_date)
             },
+        }
+    }
+}
+
+
+impl Clone for Date {
+    fn clone(&self) -> Date {
+        Date {
+            day: self.day,
+            month: self.month,
+            year: self.year,
+        }
+    }
+}
+impl Clone for DateTime {
+    fn clone(&self) -> DateTime {
+        DateTime {
+            second: self.second,
+            minute: self.minute,
+            hour: self.hour,
+            day: self.day,
+            month: self.month,
+            year: self.year,
+        }
+    }
+}
+impl Clone for TimeSpan {
+    fn clone(&self) -> TimeSpan {
+        match self {
+            TimeSpan::seconds(seconds) => {return TimeSpan::seconds(*seconds);},
+            TimeSpan::minutes(minutes) => {return TimeSpan::minutes(*minutes);},
+            TimeSpan::hours(hours) => {return TimeSpan::hours(*hours);},
+            TimeSpan::days(days) => {return TimeSpan::days(*days);},
+            TimeSpan::months(months) => {return TimeSpan::months(*months);},
+            TimeSpan::years(years) => {return TimeSpan::years(*years);},
         }
     }
 }
