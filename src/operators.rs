@@ -104,11 +104,6 @@ impl Date {
                     }
 
                 }
-                // Find how many months are in the date
-                // call itself on months
-                /* TODO: Take different approach. Take the ammount of days and subtract the day increase by the amount of days inthe current month
-                then go to the next one and see if you can subtract the current month by this one and not get 0, if you can't, then set it to
-                the current overflow day of the month*/ 
             Ok(increase_date)
         },
             TimeSpan::months(months) => {
@@ -203,10 +198,22 @@ impl DateTime {
                 todo!();
             },
             TimeSpan::minutes(minutes) => {
-                todo!();
+                let total_minutes = minutes + increase_date.minute as i32;
+                increase_date = increase_date.increase(TimeSpan::minutes(floor((total_minutes / 60) as f32))).unwrap();
+                increase_date.minute += (total_minutes % 60) as i8;
+                if increase_date.minute > 60 {
+                    increase_date = increase_date.increase(TimeSpan::hours(1)).unwrap();
+                    increase_date.minute = increase_date.minute - 60;
+                }
+                Ok(increase_date)
             },
             TimeSpan::hours(hours) => {
-                todo!();
+                let total_hours = hours + increase_date.hour as i32;
+                if total_hours > 24 {
+                    
+                }
+                println!("{}", total_hours);
+                Ok(increase_date)
             },
             TimeSpan::days(days) => {
                 let date = increase_date.to_Date();

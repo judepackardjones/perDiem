@@ -33,7 +33,7 @@ mod tests {
         use perDiem::types::*;
         #[test]
         fn time_differences() {
-        assert_eq!(DateTime{ second: 2, minute: 5, hour: 5, day: 5, month: 10,  year: 1500}.difference(DateTime{ second: 5, minute: 5, hour: 5, day: 7, month: 10,  year: 1490}), TimeDifference {seconds: 3, minutes: 0, hours: 0, days: 2, months: 0, years: 10});
+        assert_eq!(DateTime{ second: 2, minute: 5, hour: 5, day: 5, month: 10,  year: 1500}.difference(&DateTime{ second: 5, minute: 5, hour: 5, day: 7, month: 10,  year: 1490}), TimeDifference {seconds: 3, minutes: 0, hours: 0, days: 2, months: 0, years: 10});
         }
     }
     #[test]
@@ -115,8 +115,28 @@ mod tests {
         }
         #[test]
         fn increases_date_time() {
-            let example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
+            let mut example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
             assert_eq!(example_datetime.increase(TimeSpan::years(2)).unwrap(), DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2012});
+            example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
+            assert_eq!(example_datetime.increase(TimeSpan::hours(2)).unwrap(), DateTime { second: 4, minute: 20, hour: 16, day: 19, month: 3, year: 2010});
+        }
+        #[test]
+        fn increase_and_validate_date() {
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::days(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 2005});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(2)).unwrap(), Date {day: 1, month:3, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(11)).unwrap(), Date {day: 1, month:12, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(12)).unwrap(), Date {day: 1, month:1, year: 2004});
+            assert_eq!(Date {day: 1, month: 12, year: 2003}.increase(TimeSpan::months(12)).unwrap(), Date {day: 1, month:12, year: 2004});
+            assert_eq!(Date {day: 1, month: 8, year: 2000}.increase(TimeSpan::months(26)).unwrap(), Date {day: 1, month: 10, year: 2002});
+            assert_eq!(Date {day: 1, month: 1, year: 2000}.increase(TimeSpan::days(1)).unwrap(), Date {day: 2, month: 1, year: 2000});
+            assert_eq!(Date {day: 1, month: 1, year: 2000}.increase(TimeSpan::days(500)).unwrap(), Date {day: 15, month: 5, year: 2001});
+            assert_eq!(Date {day: 6, month: 9, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
+            assert_eq!(Date {day: 28, month: 2, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
+            assert_eq!(Date {day: 28, month: 2, year: 1980}.increase(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
         }
     }
 }
+
