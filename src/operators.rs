@@ -128,9 +128,10 @@ impl Date {
             _ => Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for the Date's increase method"),
         }
     }
+    /// Increases the given Date by TimeSpan specified and validates after using difference method
     pub fn increase_and_validate(self, length: TimeSpan) -> Result<Date, &'static str> {
         let initial_date = (&self).clone();
-        let increase_date = self.increase(length).unwrap();
+        let increase_date = self.increase(length.clone()).unwrap();
         if increase_date.is_valid() && match &length {
             TimeSpan::days(days) => {
                 increase_date.difference(&initial_date).days == *days
