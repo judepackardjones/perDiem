@@ -118,7 +118,7 @@ mod tests {
             let mut example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
             assert_eq!(example_datetime.increase(TimeSpan::years(2)).unwrap(), DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2012});
             example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
-            assert_eq!(example_datetime.increase(TimeSpan::hours(2)).unwrap(), DateTime { second: 4, minute: 20, hour: 16, day: 19, month: 3, year: 2010});
+            assert_eq!(example_datetime.increase(TimeSpan::hours(12)).unwrap(), DateTime { second: 4, minute: 20, hour: 24, day: 19, month: 3, year: 2010});
         }
         #[test]
         fn increase_and_validate_date() {

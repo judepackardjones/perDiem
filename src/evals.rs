@@ -1,9 +1,9 @@
 use crate::types::*;
+use crate::utils::{compare_dyn_any_values, compare_nums};
 use chrono::prelude::Local;
 use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use struct_iterable::Iterable;
-use crate::utils::{compare_dyn_any_values, compare_nums};
 
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
@@ -93,7 +93,7 @@ macro_rules! impl_eval_fns {
     };
 }
 impl Date {
-    /// Checks if a Date is valid 
+    /// Checks if a Date is valid
     pub fn is_valid(&self) -> bool {
         let month_lengths: std::collections::HashMap<i32, i32> = std::collections::HashMap::from([
             (1, 31),
@@ -109,7 +109,12 @@ impl Date {
             (11, 30),
             (12, 31),
         ]);
-        if self.day > 0 && self.day <= *month_lengths.get(&2).unwrap() as i8 && self.month > 0 && self.month < 13 && self.year % 1 == 0 {
+        if self.day > 0
+            && self.day <= *month_lengths.get(&2).unwrap() as i8
+            && self.month > 0
+            && self.month < 13
+            && self.year % 1 == 0
+        {
             true
         } else {
             false
@@ -123,7 +128,6 @@ impl Date {
             day: vec.get(0).expect("Vec has length 0").day,
             month: vec.get(0).unwrap().month,
             year: vec.get(0).unwrap().year,
-
         };
         for date in vec {
             for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
@@ -131,30 +135,34 @@ impl Date {
                     if let Some(index) = terms.iter().position(|&x| x == field_name) {
                         shared_terms.push(terms[index]);
                         terms.remove(terms.iter().position(|&x| x == field_name).unwrap());
-                        }
+                    }
                 }
             }
         }
-    terms
-}   
+        terms
+    }
     /// Returns a Vector of the shared fields in each Date from Vector
     pub fn allShare(vec: Vec<Date>) -> Vec<&'static str> {
         let mut shares_terms: Vec<&'static str> = vec!["day", "month", "year"];
-        let (day, month, year) = (vec.get(0).expect("Date Vector has no terms").day, vec.get(0).unwrap().month, vec.get(0).unwrap().year);
+        let (day, month, year) = (
+            vec.get(0).expect("Date Vector has no terms").day,
+            vec.get(0).unwrap().month,
+            vec.get(0).unwrap().year,
+        );
         for date in vec {
             if date.day != day {
                 if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
-                shares_terms.remove(index);
+                    shares_terms.remove(index);
                 }
             }
-            if date.month != month{
+            if date.month != month {
                 if let Some(index) = shares_terms.iter().position(|&x| x == "month") {
-                shares_terms.remove(index);
+                    shares_terms.remove(index);
                 }
             }
             if date.year != year {
                 if let Some(index) = shares_terms.iter().position(|&x| x == "year") {
-                shares_terms.remove(index);
+                    shares_terms.remove(index);
                 }
             }
         }
@@ -223,7 +231,19 @@ impl Date {
 impl DateTime {
     /// Checks if a DateTime is a valid day
     pub fn is_valid(&self) -> bool {
-        if (Date {day: self.day, month: self.month, year: self.year}).is_valid() && self.second >= 0 && self.second < 60 && self.minute >= 0 && self.minute < 60 && self.hour > 0 && self.hour < 24{
+        if (Date {
+            day: self.day,
+            month: self.month,
+            year: self.year,
+        })
+        .is_valid()
+            && self.second >= 0
+            && self.second < 60
+            && self.minute >= 0
+            && self.minute < 60
+            && self.hour > 0
+            && self.hour < 24
+        {
             true
         } else {
             false
@@ -240,7 +260,6 @@ impl DateTime {
             day: vec.get(0).unwrap().day,
             month: vec.get(0).unwrap().month,
             year: vec.get(0).unwrap().year,
-
         };
         for date in vec {
             for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
@@ -248,51 +267,59 @@ impl DateTime {
                     if let Some(index) = terms.iter().position(|&x| x == field_name) {
                         shared_terms.push(terms[index]);
                         terms.remove(terms.iter().position(|&x| x == field_name).unwrap());
-                        }
+                    }
                 }
             }
         }
-    terms
-}   
-/// Takes a Vector of DateTimes and returns a Vector of &strs of the field values they share
-pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
-    let mut shares_terms: Vec<&'static str> = vec!["second","minute","hour","day", "month", "year"];
-    let (second, minute, hour, day, month, year) = (vec.get(0).expect("Date Vector has no terms").second, vec.get(0).unwrap().minute, vec.get(0).unwrap().hour, vec.get(0).unwrap().day, vec.get(0).unwrap().month, vec.get(0).unwrap().year);
-    for date in vec {
-        if date.second != second {
-            if let Some(index) = shares_terms.iter().position(|&x| x == "second") {
-            shares_terms.remove(index);
-            }
-        }
-        if date.minute != minute {
-            if let Some(index) = shares_terms.iter().position(|&x| x == "minute") {
-            shares_terms.remove(index);
-            }
-        }
-        if date.hour != hour {
-            if let Some(index) = shares_terms.iter().position(|&x| x == "hour") {
-            shares_terms.remove(index);
-            }
-        }
-        if date.day != day {
-            if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
-            shares_terms.remove(index);
-            }
-        }
-        if date.month != month{
-            if let Some(index) = shares_terms.iter().position(|&x| x == "month") {
-            shares_terms.remove(index);
-            }
-        }
-        if date.year != year {
-            if let Some(index) = shares_terms.iter().position(|&x| x == "year") {
-            shares_terms.remove(index);
-            }
-        }
+        terms
     }
-    shares_terms
-}
-/// Takes a snapshot of the current local DateTime as a DateTime
+    /// Takes a Vector of DateTimes and returns a Vector of &strs of the field values they share
+    pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
+        let mut shares_terms: Vec<&'static str> =
+            vec!["second", "minute", "hour", "day", "month", "year"];
+        let (second, minute, hour, day, month, year) = (
+            vec.get(0).expect("Date Vector has no terms").second,
+            vec.get(0).unwrap().minute,
+            vec.get(0).unwrap().hour,
+            vec.get(0).unwrap().day,
+            vec.get(0).unwrap().month,
+            vec.get(0).unwrap().year,
+        );
+        for date in vec {
+            if date.second != second {
+                if let Some(index) = shares_terms.iter().position(|&x| x == "second") {
+                    shares_terms.remove(index);
+                }
+            }
+            if date.minute != minute {
+                if let Some(index) = shares_terms.iter().position(|&x| x == "minute") {
+                    shares_terms.remove(index);
+                }
+            }
+            if date.hour != hour {
+                if let Some(index) = shares_terms.iter().position(|&x| x == "hour") {
+                    shares_terms.remove(index);
+                }
+            }
+            if date.day != day {
+                if let Some(index) = shares_terms.iter().position(|&x| x == "day") {
+                    shares_terms.remove(index);
+                }
+            }
+            if date.month != month {
+                if let Some(index) = shares_terms.iter().position(|&x| x == "month") {
+                    shares_terms.remove(index);
+                }
+            }
+            if date.year != year {
+                if let Some(index) = shares_terms.iter().position(|&x| x == "year") {
+                    shares_terms.remove(index);
+                }
+            }
+        }
+        shares_terms
+    }
+    /// Takes a snapshot of the current local DateTime as a DateTime
     pub fn snapshot_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::DateTime {

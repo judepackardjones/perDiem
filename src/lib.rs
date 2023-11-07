@@ -13,14 +13,14 @@ weekday method returns day of week of given Date or DateTime
 weekday_as_int returns day of week of given Date or DateTime as int from 0-6, starting Sunday.
 sharesday, sharesmonth, and sharesyear methods return bool of if self and given Date/DateTime have the same of given field.
 sharessecond, sharesminute, shareshour methods return bool of if self and given DateTime have the same of given field.
-Dateshares and DateTimeshares are the same as the methods above but you specify the field you want to compare. 
+Dateshares and DateTimeshares are the same as the methods above but you specify the field you want to compare.
 last_two_digits_year returns convert Date -> DateTime or DateTime -> Date. Date -> DateTime starts with fields second: 0, minute: 0, hour: 0,.
-to_string method converts Date to given format as String. 
-snapshot_date and snapshot_datetime gets the current date/datetime and converts it into Date or DateTime, respectively. 
+to_string method converts Date to given format as String.
+snapshot_date and snapshot_datetime gets the current date/datetime and converts it into Date or DateTime, respectively.
 to_DateTime and to_Date take the other as a parameter and return the date as the other.
 TODO:
-Increment date 
-Decrease date 
+Increment date
+Decrease date
 measuring time between dates
 */
 

@@ -127,21 +127,24 @@ impl Date {
     pub fn increase_and_validate(self, length: TimeSpan) -> Result<Date, &'static str> {
         let initial_date = (&self).clone();
         let increase_date = self.increase(length.clone()).unwrap();
-        if increase_date.is_valid() && match &length {
-            TimeSpan::days(days) => {
-                increase_date.difference(&initial_date).days == *days
-            },
-            TimeSpan::months(months) => {
-                increase_date.difference(&initial_date).months == *months
-            },
-            TimeSpan::years(years) => {
-                increase_date.difference(&initial_date).years == *years
-            },  
-            TimeSpan::seconds(_) => {return Err("seconds is not a valid TimeSpan specifier for Date::increase"); },
-            TimeSpan::minutes(_) => {return Err("minutes is not a valid TimeSpan specifier for Date::increase"); },
-            TimeSpan::hours(_) => {return Err("hours is not a valid TimeSpan specifier for Date::increase"); },
-
-        } {
+        if increase_date.is_valid()
+            && match &length {
+                TimeSpan::days(days) => increase_date.difference(&initial_date).days == *days,
+                TimeSpan::months(months) => {
+                    increase_date.difference(&initial_date).months == *months
+                }
+                TimeSpan::years(years) => increase_date.difference(&initial_date).years == *years,
+                TimeSpan::seconds(_) => {
+                    return Err("seconds is not a valid TimeSpan specifier for Date::increase");
+                }
+                TimeSpan::minutes(_) => {
+                    return Err("minutes is not a valid TimeSpan specifier for Date::increase");
+                }
+                TimeSpan::hours(_) => {
+                    return Err("hours is not a valid TimeSpan specifier for Date::increase");
+                }
+            }
+        {
             Ok(increase_date)
         } else {
             Err("Mistake")
@@ -196,25 +199,29 @@ impl DateTime {
         match length {
             TimeSpan::seconds(seconds) => {
                 todo!();
-            },
+            }
             TimeSpan::minutes(minutes) => {
                 let total_minutes = minutes + increase_date.minute as i32;
-                increase_date = increase_date.increase(TimeSpan::minutes(floor((total_minutes / 60) as f32))).unwrap();
+                increase_date = increase_date
+                    .increase(TimeSpan::minutes(floor((total_minutes / 60) as f32)))
+                    .unwrap();
                 increase_date.minute += (total_minutes % 60) as i8;
                 if increase_date.minute > 60 {
                     increase_date = increase_date.increase(TimeSpan::hours(1)).unwrap();
                     increase_date.minute = increase_date.minute - 60;
                 }
                 Ok(increase_date)
-            },
+            }
             TimeSpan::hours(hours) => {
-                let total_hours = hours + increase_date.hour as i32;
-                if total_hours > 24 {
-                    
+                increase_date.day = increase_date.day + floor(hours as f32 / 24.0) as i8;
+                increase_date.hour = increase_date.hour + (hours % 24) as i8;
+                increase_date.hour += 1;
+                if increase_date.hour > 24 {
+                    increase_date.hour = increase_date.hour - 24;
+                    increase_date.hour -= 1;
                 }
-                println!("{}", total_hours);
                 Ok(increase_date)
-            },
+            }
             TimeSpan::days(days) => {
                 let date = increase_date.to_Date();
                 if let Ok(date) = date.increase(TimeSpan::days(days)) {
@@ -225,7 +232,7 @@ impl DateTime {
                 } else {
                     Err("Increase operation failed")
                 }
-            },
+            }
             TimeSpan::months(months) => {
                 let date = increase_date.to_Date();
                 if let Ok(date) = date.increase(TimeSpan::months(months)) {
@@ -236,16 +243,22 @@ impl DateTime {
                 } else {
                     Err("Increase operation failed")
                 }
-            },
+            }
             TimeSpan::years(years) => {
                 increase_date.year += years;
-                increase_date.day = if !increase_date.isLeapYear() && increase_date.month == 2 && increase_date.day == 29 { 28 } else { increase_date.day};
+                increase_date.day = if !increase_date.isLeapYear()
+                    && increase_date.month == 2
+                    && increase_date.day == 29
+                {
+                    28
+                } else {
+                    increase_date.day
+                };
                 Ok(increase_date)
-            },
+            }
         }
     }
 }
-
 
 impl Clone for Date {
     fn clone(&self) -> Date {
@@ -271,12 +284,24 @@ impl Clone for DateTime {
 impl Clone for TimeSpan {
     fn clone(&self) -> TimeSpan {
         match self {
-            TimeSpan::seconds(seconds) => {return TimeSpan::seconds(*seconds);},
-            TimeSpan::minutes(minutes) => {return TimeSpan::minutes(*minutes);},
-            TimeSpan::hours(hours) => {return TimeSpan::hours(*hours);},
-            TimeSpan::days(days) => {return TimeSpan::days(*days);},
-            TimeSpan::months(months) => {return TimeSpan::months(*months);},
-            TimeSpan::years(years) => {return TimeSpan::years(*years);},
+            TimeSpan::seconds(seconds) => {
+                return TimeSpan::seconds(*seconds);
+            }
+            TimeSpan::minutes(minutes) => {
+                return TimeSpan::minutes(*minutes);
+            }
+            TimeSpan::hours(hours) => {
+                return TimeSpan::hours(*hours);
+            }
+            TimeSpan::days(days) => {
+                return TimeSpan::days(*days);
+            }
+            TimeSpan::months(months) => {
+                return TimeSpan::months(*months);
+            }
+            TimeSpan::years(years) => {
+                return TimeSpan::years(*years);
+            }
         }
     }
 }

@@ -1,4 +1,3 @@
-
 use struct_iterable::Iterable;
 #[derive(Debug, PartialEq, Eq, Iterable)]
 /// The basic Date struct
@@ -37,11 +36,11 @@ pub struct TimeDifference {
     pub minutes: i32,
     /// Contains the hour difference
     pub hours: i32,
-    /// Contains the day difference 
+    /// Contains the day difference
     pub days: i32,
-    /// Contains the month difference 
+    /// Contains the month difference
     pub months: i32,
-    /// Contains the year difference 
+    /// Contains the year difference
     pub years: i32,
 }
 /// Used to hold variant time amounts primarily for increase and decrease methods
@@ -64,9 +63,9 @@ pub enum TimeSpan {
 pub trait datekindEvals {
     /// Returns if an instance of Date or DateTime's year struct is a leap year
     fn isLeapYear(&self) -> bool;
-    /// Returns the day of the week a certain Date or DateTime is as a String. 
+    /// Returns the day of the week a certain Date or DateTime is as a String.
     fn weekday(&self) -> Result<String, &str>;
-    /// Returns the day of the week as an i8. 0 = Sunday. 
+    /// Returns the day of the week as an i8. 0 = Sunday.
     fn weekday_as_int(&self) -> Result<i8, &str>;
     /// Returns bool from if Date or DateTime share day field.
     fn sharesDay(&self, date2: &Self) -> bool;
@@ -101,4 +100,4 @@ pub enum two_nums {
     smaller,
     /// Did you know that if you give two metronomes enough time, they will eventually sync up, as long as they are on the same body?
     equal,
-}   
+}

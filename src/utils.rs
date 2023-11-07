@@ -1,5 +1,5 @@
-use std::any::Any;
 use crate::types::*;
+use std::any::Any;
 
 pub fn floor(num: f32) -> i32 {
     (num - (num % 1.0)) as i32
@@ -14,7 +14,7 @@ pub fn compare_dyn_any_values(a: &dyn Any, b: &dyn Any) -> Result<bool, &'static
             return Ok(a_value == b_value);
         }
     }
-    Err("Values not of same type")// Values are not of the same type or the downcast failed.
+    Err("Values not of same type") // Values are not of the same type or the downcast failed.
 }
 
 impl y for &str {
@@ -62,7 +62,7 @@ pub fn get_pos(first: i32, second: i32) -> i32 {
     if (first - second) >= 0 {
         first - second
     } else {
-        (first - second)* - 1
+        (first - second) * -1
     }
 }
 
