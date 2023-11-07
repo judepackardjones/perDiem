@@ -201,15 +201,13 @@ impl DateTime {
                 todo!();
             }
             TimeSpan::minutes(minutes) => {
-                let total_minutes = minutes + increase_date.minute as i32;
-                increase_date = increase_date
-                    .increase(TimeSpan::minutes(floor((total_minutes / 60) as f32)))
-                    .unwrap();
-                increase_date.minute += (total_minutes % 60) as i8;
-                if increase_date.minute > 60 {
-                    increase_date = increase_date.increase(TimeSpan::hours(1)).unwrap();
+                let minute_floor = floor(((increase_date.minute as i32 + minutes) as f32) / 60.0) as i8;
+                increase_date = increase_date.increase(TimeSpan::hours(minute_floor as i32).into()).unwrap();
+                increase_date.minute = increase_date.minute + (minutes % 60) as i8;
+                if increase_date.minute > 59 {
                     increase_date.minute = increase_date.minute - 60;
                 }
+
                 Ok(increase_date)
             }
             TimeSpan::hours(hours) => {
@@ -219,9 +217,7 @@ impl DateTime {
                 if increase_date.hour > 23 {
                     increase_date.hour = increase_date.hour - 24;
                 }
-                // if increase_date.hour == 0 {
-                //     increase_date = increase_date.increase(TimeSpan::days(1)).unwrap();
-                // }
+
                 Ok(increase_date)
             }
             TimeSpan::days(days) => {
