@@ -213,14 +213,15 @@ impl DateTime {
                 Ok(increase_date)
             }
             TimeSpan::hours(hours) => {
-                increase_date.day = increase_date.day + floor(hours as f32 / 24.0) as i8;
+                let hour_floor = floor(((increase_date.hour as i32 + hours) as f32) / 24.0) as i8;
+                increase_date = increase_date.increase(TimeSpan::days(hour_floor as i32).into()).unwrap();
                 increase_date.hour = increase_date.hour + (hours % 24) as i8;
                 if increase_date.hour > 23 {
                     increase_date.hour = increase_date.hour - 24;
                 }
-                if increase_date.hour == 0 {
-                    increase_date = increase_date.increase(TimeSpan::days(1)).unwrap();
-                }
+                // if increase_date.hour == 0 {
+                //     increase_date = increase_date.increase(TimeSpan::days(1)).unwrap();
+                // }
                 Ok(increase_date)
             }
             TimeSpan::days(days) => {
