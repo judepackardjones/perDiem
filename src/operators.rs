@@ -65,9 +65,7 @@ impl Date {
     }
     /// Increases the Date given by the TimeSpan provided. End date is NOT included. (This would add 1 to the day.) Using TimeSpan variant of which Date's do not have a field for will return and Err
     pub fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
-        println!("Day: {}, Month: {}, Year: {}", self.day, self.month, self.year);
         if !self.is_valid() {
-            println!("Invalid Date"); // TODO:Fix this, likely failing for given test 
             return Err("Invalid Date");
         }
         let mut increase_date = self;
@@ -202,7 +200,7 @@ impl DateTime {
             TimeSpan::seconds(seconds) => {
                 let second_floor = floor(((increase_date.second as i32 + seconds) as f32) / 60.0) as i8;
                 increase_date = increase_date.increase(TimeSpan::minutes(second_floor as i32).into()).unwrap();
-                increase_date.minute = increase_date.second + (seconds % 60) as i8;
+                increase_date.second = increase_date.second + (seconds % 60) as i8;
                 if increase_date.second > 59 {
                     increase_date.second = increase_date.second - 60;
                 }
