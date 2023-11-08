@@ -65,7 +65,9 @@ impl Date {
     }
     /// Increases the Date given by the TimeSpan provided. End date is NOT included. (This would add 1 to the day.) Using TimeSpan variant of which Date's do not have a field for will return and Err
     pub fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
+        println!("Day: {}, Month: {}, Year: {}", self.day, self.month, self.year);
         if !self.is_valid() {
+            println!("Invalid Date"); // TODO:Fix this, likely failing for given test 
             return Err("Invalid Date");
         }
         let mut increase_date = self;
@@ -214,12 +216,11 @@ impl DateTime {
                 if increase_date.minute > 59 {
                     increase_date.minute = increase_date.minute - 60;
                 }
-
                 Ok(increase_date)
             }
             TimeSpan::hours(hours) => {
                 let hour_floor = floor(((increase_date.hour as i32 + hours) as f32) / 24.0) as i8;
-                increase_date = increase_date.increase(TimeSpan::days(hour_floor as i32).into()).unwrap();
+                increase_date = increase_date.increase(TimeSpan::days(hour_floor as i32)).unwrap();
                 increase_date.hour = increase_date.hour + (hours % 24) as i8;
                 if increase_date.hour > 23 {
                     increase_date.hour = increase_date.hour - 24;
@@ -235,7 +236,7 @@ impl DateTime {
                     increase_date.year = date.year;
                     Ok(increase_date)
                 } else {
-                    Err("Increase operation failed")
+                    Err("Increase operation failed at days")
                 }
             }
             TimeSpan::months(months) => {
@@ -246,7 +247,7 @@ impl DateTime {
                     increase_date.year = date.year;
                     Ok(increase_date)
                 } else {
-                    Err("Increase operation failed")
+                    Err("Increase operation failed at months")
                 }
             }
             TimeSpan::years(years) => {

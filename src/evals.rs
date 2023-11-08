@@ -110,7 +110,7 @@ impl Date {
             (12, 31),
         ]);
         if self.day > 0
-            && self.day <= *month_lengths.get(&2).unwrap() as i8
+            && self.day <= *month_lengths.get(&(self.month as i32)).unwrap() as i8
             && self.month > 0
             && self.month < 13
             && self.year % 1 == 0
