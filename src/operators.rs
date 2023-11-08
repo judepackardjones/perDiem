@@ -198,8 +198,11 @@ impl DateTime {
         let mut increase_date = self;
         match length {
             TimeSpan::seconds(seconds) => {
-                let second_floor = floor(((increase_date.second as i32 + seconds) as f32) / 60.0) as i8;
-                increase_date = increase_date.increase(TimeSpan::minutes(second_floor as i32).into()).unwrap();
+                let second_floor =
+                    floor(((increase_date.second as i32 + seconds) as f32) / 60.0) as i8;
+                increase_date = increase_date
+                    .increase(TimeSpan::minutes(second_floor as i32).into())
+                    .unwrap();
                 increase_date.second = increase_date.second + (seconds % 60) as i8;
                 if increase_date.second > 59 {
                     increase_date.second = increase_date.second - 60;
@@ -208,8 +211,11 @@ impl DateTime {
                 Ok(increase_date)
             }
             TimeSpan::minutes(minutes) => {
-                let minute_floor = floor(((increase_date.minute as i32 + minutes) as f32) / 60.0) as i8;
-                increase_date = increase_date.increase(TimeSpan::hours(minute_floor as i32).into()).unwrap();
+                let minute_floor =
+                    floor(((increase_date.minute as i32 + minutes) as f32) / 60.0) as i8;
+                increase_date = increase_date
+                    .increase(TimeSpan::hours(minute_floor as i32).into())
+                    .unwrap();
                 increase_date.minute = increase_date.minute + (minutes % 60) as i8;
                 if increase_date.minute > 59 {
                     increase_date.minute = increase_date.minute - 60;
@@ -218,7 +224,9 @@ impl DateTime {
             }
             TimeSpan::hours(hours) => {
                 let hour_floor = floor(((increase_date.hour as i32 + hours) as f32) / 24.0) as i8;
-                increase_date = increase_date.increase(TimeSpan::days(hour_floor as i32)).unwrap();
+                increase_date = increase_date
+                    .increase(TimeSpan::days(hour_floor as i32))
+                    .unwrap();
                 increase_date.hour = increase_date.hour + (hours % 24) as i8;
                 if increase_date.hour > 23 {
                     increase_date.hour = increase_date.hour - 24;
@@ -260,6 +268,25 @@ impl DateTime {
                 };
                 Ok(increase_date)
             }
+        }
+    }
+    /// Increases given DateTime by TimeSpan and validates it with difference method
+    pub fn increase_and_validate(self, length: TimeSpan) -> Result<DateTime, &'static str> {
+        let initial_date = (&self).clone();
+        let increase_date = self.increase(length.clone()).unwrap();
+        if increase_date.is_valid()
+            && match &length {
+                TimeSpan::days(days) => increase_date.difference(&initial_date).days == *days,
+                TimeSpan::months(months) => increase_date.difference(&initial_date).months == *months,
+                TimeSpan::years(years) => increase_date.difference(&initial_date).years == *years,
+                TimeSpan::seconds(seconds) => increase_date.difference(&initial_date).seconds == *seconds,
+                TimeSpan::minutes(minutes) => increase_date.difference(&initial_date).minutes == *minutes,
+                TimeSpan::hours(hours) => increase_date.difference(&initial_date).hours == *hours,
+            }
+        {
+            Ok(increase_date)
+        } else {
+            Err("Mistake")
         }
     }
 }
