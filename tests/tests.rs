@@ -121,6 +121,8 @@ mod tests {
             assert_eq!(example_datetime.increase(TimeSpan::hours(48)).unwrap(), DateTime { second: 4, minute: 20, hour: 12, day: 21, month: 3, year: 2010});
             example_datetime = DateTime { second: 4, minute: 20, hour: 23, day: 19, month: 3, year: 2010};
             assert_eq!(example_datetime.increase(TimeSpan::minutes(40)).unwrap(), DateTime { second: 4, minute: 0, hour: 0, day: 20, month: 3, year: 2010 });
+            example_datetime = DateTime { second: 20, minute: 59, hour: 23, day: 31, month: 12, year: 2010};
+            assert_eq!(example_datetime.increase(TimeSpan::seconds(40)).unwrap(), DateTime { second: 4, minute: 0, hour: 0, day: 20, month: 3, year: 2010 });
         }
         #[test]
         fn increase_and_validate_date() {

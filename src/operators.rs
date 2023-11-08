@@ -198,7 +198,14 @@ impl DateTime {
         let mut increase_date = self;
         match length {
             TimeSpan::seconds(seconds) => {
-                todo!();
+                let second_floor = floor(((increase_date.second as i32 + seconds) as f32) / 60.0) as i8;
+                increase_date = increase_date.increase(TimeSpan::minutes(second_floor as i32).into()).unwrap();
+                increase_date.minute = increase_date.second + (seconds % 60) as i8;
+                if increase_date.second > 59 {
+                    increase_date.second = increase_date.second - 60;
+                }
+
+                Ok(increase_date)
             }
             TimeSpan::minutes(minutes) => {
                 let minute_floor = floor(((increase_date.minute as i32 + minutes) as f32) / 60.0) as i8;
