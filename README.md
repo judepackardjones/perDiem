@@ -1,4 +1,15 @@
 # perDiem
+Patch notes:  
+Adds:  
+-----------
+increase method for Dates  
+increase method for DateTimes  
+increase_and_validate for both  
+Fixes:  
+-----------
+Minor bug fixes mostly related to validation, some logic, and error handling  
+
+Normal README:  
 
 The `Date` struct:  
 ----------------
