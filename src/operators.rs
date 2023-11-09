@@ -150,6 +150,9 @@ impl Date {
             Err("Mistake")
         }
     }
+    // pub fn decrease(self, length: TimeSpan) -> Result<Date, &'static str> {
+        
+    // }
 }
 impl DateTime {
     /// Creates new instance of DateTime with all fields set to 1
