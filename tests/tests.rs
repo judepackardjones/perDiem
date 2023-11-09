@@ -141,6 +141,12 @@ mod tests {
             assert_eq!(Date {day: 28, month: 2, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
             assert_eq!(Date {day: 28, month: 2, year: 1980}.increase(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
         }
+        #[test]
+        fn decrease_date() {
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.decrease(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.decrease(TimeSpan::years(5)).unwrap(), Date {day: 1, month: 1, year: 1998});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.decrease(TimeSpan::years(5)).unwrap(), Date {day: 1, month: 1, year: 1998});
+        }
     }
 }
 

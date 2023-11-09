@@ -150,9 +150,42 @@ impl Date {
             Err("Mistake")
         }
     }
-    // pub fn decrease(self, length: TimeSpan) -> Result<Date, &'static str> {
-        
-    // }
+    /// Decreases Date by given TimeSpan parameter. (Unfinished)
+    pub fn decrease(self, length: TimeSpan) -> Result<Date, &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        let mut decrease_date = self;
+        match length {
+            TimeSpan::seconds(seconds) => {
+                
+            },
+            TimeSpan::minutes(minutes) => {
+                
+            },
+            TimeSpan::hours(hours) => {
+                
+            },
+            TimeSpan::days(days) => {
+                
+            },
+            TimeSpan::months(months) => {
+                // decrease_date.year -= floor((months / 12) as f32);
+                // decrease_date.month -= (months % 7) as i8;
+                decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);
+                decrease_date.month = decrease_date.month - (months % 12) as i8;
+                if decrease_date.month < 0 {
+                    decrease_date.month = decrease_date.month + 12;
+                    decrease_date.year = decrease_date.year - 1;
+                }
+            },
+            TimeSpan::years(years) => {
+                decrease_date.year -= years;
+                decrease_date.day = if !decrease_date.isLeapYear() && decrease_date.month == 2 && decrease_date.day == 29 { 28 } else { decrease_date.day };
+            },
+        }
+        Ok(decrease_date)
+    }
 }
 impl DateTime {
     /// Creates new instance of DateTime with all fields set to 1
