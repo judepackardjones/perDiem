@@ -30,6 +30,9 @@ If you try to increase month and the first month has more days then the second, 
 Date represents start of day, so when converting to DateTime, all DateTime specific fields are set to 0.
 allShare and allShareEL has differing performance, with allShare typically being ahead by around 250%. However, in some scenarios, allShareEL
 is significantly faster. Not sure why lol.
+Both increase and increase_and_validate(and their decrease counterparts) validate the date using .is_valid() 
+the only difference is that increase_and_validate also checks that it is correct with difference. This is to make absolute sure that you are correct.
+
 
 
 */

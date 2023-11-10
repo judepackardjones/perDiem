@@ -143,6 +143,7 @@ mod tests {
         }
         #[test]
         fn decrease_date() {
+            println!("{:?}", Date {day: 28, month: 2, year: 1987}.difference(&Date {day: 20, month: 8, year: 1992}));
             assert_eq!(Date {day: 1, month: 1, year: 2003}.decrease(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
             assert_eq!(Date {day: 1, month: 1, year: 2003}.decrease(TimeSpan::months(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
             assert_eq!(Date {day: 1, month: 1, year: 2003}.decrease(TimeSpan::years(5)).unwrap(), Date {day: 1, month: 1, year: 1998});
