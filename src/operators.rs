@@ -166,7 +166,36 @@ impl Date {
                 
             },
             TimeSpan::days(days) => {
-                
+                let initial_day = decrease_date.day as i32;
+                let mut month_lengths: HashMap<i32, i32> = HashMap::from([
+                    (1, 31),
+                    (2, if decrease_date.isLeapYear() { 29 } else { 28 }),
+                    (3, 31),
+                    (4, 30),
+                    (5, 31),
+                    (6, 30),
+                    (7, 31),
+                    (8, 31),
+                    (9, 30),
+                    (10, 31),
+                    (11, 30),
+                    (12, 31),
+                ]);
+                let mut month_skips = 0;
+                loop {
+                    if initial_day - days > 0 {
+                        decrease_date.day -= days as i8;
+                        break;
+                    } else {
+                        month_skips += 1;
+                        if initial_day - days == 0 {
+                            decrease_date.day = *month_lengths.get(&(decrease_date.month as i32)).unwrap() as i8;
+                            break;
+                        } else {
+                            
+                        }
+                    }
+                }
             },
             TimeSpan::months(months) => {
                 decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);
@@ -184,6 +213,7 @@ impl Date {
         Ok(decrease_date)
     }
 }
+
 impl DateTime {
     /// Creates new instance of DateTime with all fields set to 1
     pub fn new() -> DateTime {

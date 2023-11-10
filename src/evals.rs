@@ -4,7 +4,7 @@ use chrono::prelude::Local;
 use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use struct_iterable::Iterable;
-
+// Implments these functions for Date and DateTime
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
         impl crate::types::datekindEvals for $struct {
@@ -125,9 +125,9 @@ impl Date {
         let mut terms: Vec<&'static str> = vec!["day", "month", "year"];
         let mut shared_terms: Vec<&'static str> = vec![];
         let base = Date {
-            day: vec.get(0).expect("Vec has length 0").day,
-            month: vec.get(0).unwrap().month,
-            year: vec.get(0).unwrap().year,
+            day: vec.get(0).expect("Vector has length 0").day,
+            month: vec.get(0).expect("Interior Vector modified by external").month,
+            year: vec.get(0).expect("Interior Vector modified by external").year,
         };
         for date in vec {
             for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
