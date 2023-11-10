@@ -170,11 +170,9 @@ impl Date {
                 
             },
             TimeSpan::months(months) => {
-                // decrease_date.year -= floor((months / 12) as f32);
-                // decrease_date.month -= (months % 7) as i8;
                 decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);
                 decrease_date.month = decrease_date.month - (months % 12) as i8;
-                if decrease_date.month < 0 {
+                if decrease_date.month <= 0 {
                     decrease_date.month = decrease_date.month + 12;
                     decrease_date.year = decrease_date.year - 1;
                 }
