@@ -192,8 +192,8 @@ impl Date {
                             decrease_date.day = *month_lengths.get(&(decrease_date.month as i32)).unwrap() as i8;
                             break;
                         } else {
-                            
-                        }
+
+                        } 
                     }
                 }
             },
