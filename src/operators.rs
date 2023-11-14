@@ -58,7 +58,20 @@ impl Date {
                         if month_counter == 13 {
                             month_counter = 1;
                         }
-                        increase_date.increase(TimeSpan::months(1)).unwrap();
+                        let mut new_day = (&increase_date).day as i32 + day_counter;
+                        if initial_day == 1 {
+                            new_day -= 1;
+                        }
+                        if new_day > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
+                            day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0) - (&increase_date).day as i32 + 1;
+                            increase_date.day = 1;
+                        } else {
+                            increase_date.day = new_day as i8;
+                            break;
+                        }
+                        println!("{:?}", increase_date);
+                        increase_date.experimental_increase(TimeSpan::months(1)).unwrap();
+                        println!("{:?}", increase_date);
                     } else {
                         increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
                         break;
