@@ -147,10 +147,8 @@ mod tests {
             assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
             date.experimental_increase(TimeSpan::years(1)).unwrap();
             assert_eq!(date, Date {day: 1, month: 1, year: 2001});
-            println!("Finished years:");
             date.experimental_increase(TimeSpan::months(13)).unwrap();
             assert_eq!(date, Date {day: 1, month: 2, year: 2002});
-            println!("Finished months:");
             date.experimental_increase(TimeSpan::days(29)).unwrap();
             assert_eq!(date, Date {day: 1, month: 3, year: 2002});
 

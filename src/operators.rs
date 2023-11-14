@@ -67,12 +67,8 @@ impl Date {
                             increase_date.day = 1;
                         } else {
                             increase_date.day = new_day as i8;
-                            break;
                         }
-                        println!("{:?}", increase_date);
-                        increase_date.experimental_increase(TimeSpan::months(1)).unwrap();
-                        println!("{:?}", increase_date);
-                    } else {
+                        increase_date.experimental_increase(TimeSpan::months(1)).unwrap();                    } else {
                         increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
                         break;
                     } 
