@@ -114,7 +114,18 @@ mod tests {
             assert_eq!(Date {day: 28, month: 2, year: 1980}.increase_as_new(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
         }
         #[test]
-        fn increases_date_time() {
+        fn increase_tests_date(){
+            let mut date = Date { day: 1, month: 1, year: 2000};
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
+            date.increase(TimeSpan::years(1)).unwrap();
+            assert_eq!(date, Date {day: 1, month: 1, year: 2001});
+            date.increase(TimeSpan::months(14)).unwrap();
+            assert_eq!(date, Date {day: 1, month: 3, year: 2002});
+            date.increase(TimeSpan::days(200)).unwrap();
+            assert_eq!(date, Date {day: 17, month: 9, year: 2002});
+        }
+        #[test]
+        fn increases_as_new_date_time() {
             let mut example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
             assert_eq!(example_datetime.increase_as_new(TimeSpan::years(2)).unwrap(), DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2012});
             example_datetime = DateTime { second: 4, minute: 20, hour: 12, day: 19, month: 3, year: 2010};
@@ -125,19 +136,30 @@ mod tests {
             assert_eq!(example_datetime.increase_as_new(TimeSpan::seconds(40)).unwrap(), DateTime { second: 0, minute: 0, hour: 0, day: 1, month: 1, year: 2011 });
         }
         #[test]
-        fn experimental_increase_tests(){
-            let mut date = Date { day: 1, month: 1, year: 2000};
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
-            date.increase(TimeSpan::years(1)).unwrap();
-            assert_eq!(date, Date {day: 1, month: 1, year: 2001});
-            date.increase(TimeSpan::months(14)).unwrap();
-            assert_eq!(date, Date {day: 1, month: 3, year: 2002});
-            date.increase(TimeSpan::days(200)).unwrap();
-            assert_eq!(date, Date {day: 17, month: 9, year: 2002});
-
+        fn increases_date_time() {
+            let mut datetime = DateTime { second: 0, minute: 0, hour: 0, day: 1, month: 1, year: 2000};
+            datetime.increase(TimeSpan::years(2)).unwrap();
+            assert_eq!(datetime, DateTime { second: 0, minute: 0, hour: 0, day: 1, month: 1, year: 2002});
+            datetime.increase(TimeSpan::months(14)).unwrap();
+            assert_eq!(datetime, DateTime { second: 0, minute: 0, hour: 0, day: 1, month: 3, year: 2003});
+            datetime.increase(TimeSpan::days(200)).unwrap();
+            assert_eq!(datetime, DateTime { second: 0, minute: 0, hour: 0, day: 17, month: 9, year: 2003});
+            datetime.increase(TimeSpan::hours(49)).unwrap();
+            assert_eq!(datetime, DateTime { second: 0, minute: 0, hour: 1, day: 19, month: 9, year: 2003});
+            datetime.increase(TimeSpan::minutes(40)).unwrap();
+            assert_eq!(datetime, DateTime { second: 0, minute: 40, hour: 1, day: 19, month: 9, year: 2003});
+            datetime.increase(TimeSpan::minutes(20)).unwrap();
+            assert_eq!(datetime, DateTime { second: 0, minute: 0, hour: 2, day: 19, month: 9, year: 2003});
+            datetime.increase(TimeSpan::seconds(40)).unwrap();
+            assert_eq!(datetime, DateTime { second: 40, minute: 0, hour: 2, day: 19, month: 9, year: 2003});
+            datetime.increase(TimeSpan::seconds(20)).unwrap();
+            assert_eq!(datetime, DateTime { second: 0, minute: 1, hour: 2, day: 19, month: 9, year: 2003});
         }
         #[test]
-        fn decrease_date() {
+        fn decrease_as_new_date() {
+            let date = Date {day: 1, month: 1, year: 2000};
+            assert_eq!(date.decrease_as_new(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 1998});
+            assert_eq!(date.decrease_as_new(TimeSpan::months(13)).unwrap(), Date {day: 1, month: 12, year: 1998});
         }
     }
 }
