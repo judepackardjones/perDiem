@@ -25,6 +25,7 @@ impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);
 
 impl Date {
+    /// Mutates the receiver Date by the TimeSpan sepcified and returns a Result.
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
