@@ -101,17 +101,17 @@ mod tests {
         }
         #[test]
         fn increases_date() {
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 2005});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(2)).unwrap(), Date {day: 1, month:3, year: 2003});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(11)).unwrap(), Date {day: 1, month:12, year: 2003});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(12)).unwrap(), Date {day: 1, month:1, year: 2004});
-            assert_eq!(Date {day: 1, month: 12, year: 2003}.increase(TimeSpan::months(12)).unwrap(), Date {day: 1, month:12, year: 2004});
-            assert_eq!(Date {day: 1, month: 8, year: 2000}.increase(TimeSpan::months(26)).unwrap(), Date {day: 1, month: 10, year: 2002});
-            assert_eq!(Date {day: 1, month: 1, year: 2000}.increase(TimeSpan::days(1)).unwrap(), Date {day: 2, month: 1, year: 2000});
-            assert_eq!(Date {day: 1, month: 1, year: 2000}.increase(TimeSpan::days(500)).unwrap(), Date {day: 15, month: 5, year: 2001});
-            assert_eq!(Date {day: 6, month: 9, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
-            assert_eq!(Date {day: 28, month: 2, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
-            assert_eq!(Date {day: 28, month: 2, year: 1980}.increase(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 2005});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::months(2)).unwrap(), Date {day: 1, month:3, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::months(11)).unwrap(), Date {day: 1, month:12, year: 2003});
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::months(12)).unwrap(), Date {day: 1, month:1, year: 2004});
+            assert_eq!(Date {day: 1, month: 12, year: 2003}.increase_as_new(TimeSpan::months(12)).unwrap(), Date {day: 1, month:12, year: 2004});
+            assert_eq!(Date {day: 1, month: 8, year: 2000}.increase_as_new(TimeSpan::months(26)).unwrap(), Date {day: 1, month: 10, year: 2002});
+            assert_eq!(Date {day: 1, month: 1, year: 2000}.increase_as_new(TimeSpan::days(1)).unwrap(), Date {day: 2, month: 1, year: 2000});
+            assert_eq!(Date {day: 1, month: 1, year: 2000}.increase_as_new(TimeSpan::days(500)).unwrap(), Date {day: 15, month: 5, year: 2001});
+            assert_eq!(Date {day: 6, month: 9, year: 1987}.increase_as_new(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
+            assert_eq!(Date {day: 28, month: 2, year: 1987}.increase_as_new(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
+            assert_eq!(Date {day: 28, month: 2, year: 1980}.increase_as_new(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
         }
         #[test]
         fn increases_date_time() {
@@ -125,32 +125,15 @@ mod tests {
             assert_eq!(example_datetime.increase(TimeSpan::seconds(40)).unwrap(), DateTime { second: 0, minute: 0, hour: 0, day: 1, month: 1, year: 2011 });
         }
         #[test]
-        fn increase_and_validate_date() {
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::days(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 2005});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(2)).unwrap(), Date {day: 1, month:3, year: 2003});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(11)).unwrap(), Date {day: 1, month:12, year: 2003});
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::months(12)).unwrap(), Date {day: 1, month:1, year: 2004});
-            assert_eq!(Date {day: 1, month: 12, year: 2003}.increase(TimeSpan::months(12)).unwrap(), Date {day: 1, month:12, year: 2004});
-            assert_eq!(Date {day: 1, month: 8, year: 2000}.increase(TimeSpan::months(26)).unwrap(), Date {day: 1, month: 10, year: 2002});
-            assert_eq!(Date {day: 1, month: 1, year: 2000}.increase(TimeSpan::days(1)).unwrap(), Date {day: 2, month: 1, year: 2000});
-            assert_eq!(Date {day: 1, month: 1, year: 2000}.increase(TimeSpan::days(500)).unwrap(), Date {day: 15, month: 5, year: 2001});
-            assert_eq!(Date {day: 6, month: 9, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
-            assert_eq!(Date {day: 28, month: 2, year: 1987}.increase(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
-            assert_eq!(Date {day: 28, month: 2, year: 1980}.increase(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
-        }
-        #[test]
         fn experimental_increase_tests(){
             let mut date = Date { day: 1, month: 1, year: 2000};
-            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
-            date.experimental_increase(TimeSpan::years(1)).unwrap();
+            assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::years(0)).unwrap(), Date {day: 1, month: 1, year: 2003});
+            date.increase(TimeSpan::years(1)).unwrap();
             assert_eq!(date, Date {day: 1, month: 1, year: 2001});
-            date.experimental_increase(TimeSpan::months(14)).unwrap();
+            date.increase(TimeSpan::months(14)).unwrap();
             assert_eq!(date, Date {day: 1, month: 3, year: 2002});
-            date.experimental_increase(TimeSpan::days(200)).unwrap();
-            assert_eq!(date, Date {day: 2, month: 4, year: 2002});
+            date.increase(TimeSpan::days(200)).unwrap();
+            assert_eq!(date, Date {day: 17, month: 9, year: 2002});
 
         }
         #[test]

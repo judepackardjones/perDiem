@@ -25,57 +25,12 @@ impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);
 
 impl Date {
-    pub fn experimental_increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
+    pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
-        *self = self.clone().increase(length.clone()).unwrap();
+        *self = self.increase_as_new(length.clone()).unwrap();
         Ok(())
-        // let increase_date = self;
-        // match length {
-        //     TimeSpan::days(days) => {
-        //         let initial_day = (&increase_date).day;
-        //         let mut month_lengths: HashMap<i32, i32> = HashMap::from([
-        //             (1, 31),
-        //             (2, if (&increase_date).isLeapYear() { 29 } else { 28 }),
-        //             (3, 31),
-        //             (4, 30),
-        //             (5, 31),
-        //             (6, 30),
-        //             (7, 31),
-        //             (8, 31),
-        //             (9, 30),
-        //             (10, 31),
-        //             (11, 30),
-        //             (12, 31),
-        //         ]);
-        //         let mut day_counter = days;
-        //         let mut month_counter: i32 = (&increase_date).month as i32;
-        //         loop {
-        //             *month_lengths.get_mut(&2).unwrap() = if increase_date.isLeapYear() { 29 } else { 28 };
-        //             // needs to be initialized each loop because leap year changes. 
-        //             if (&increase_date).day as i32 + day_counter > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
-        //                 day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0);
-        //                 month_counter += 1;
-        //                 if month_counter == 13 {
-        //                     month_counter = 1;
-        //                 }
-        //                 let mut new_day = (&increase_date).day as i32 + day_counter;
-        //                 if initial_day == 1 {
-        //                     new_day -= 1;
-        //                 }
-        //                 if new_day > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
-        //                     day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0) - (&increase_date).day as i32 + 1;
-        //                     increase_date.day = 1;
-        //                 } else {
-        //                     increase_date.day = new_day as i8;
-        //                 }
-        //                 increase_date.experimental_increase(TimeSpan::months(1)).unwrap();                    } else {
-        //                 increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
-        //                 break;
-        //             } 
-
-        //         }
         //     },
         //     TimeSpan::months(months) => {
         //         let _ = increase_date.experimental_increase(TimeSpan::years(floor(months as f32 / 12.0)));
@@ -132,12 +87,12 @@ impl Date {
             year: self.year,
         }
     }
-    /// Increases the Date given by the TimeSpan provided. End date is NOT included. (This would add 1 to the day.) Using TimeSpan variant of which Date's do not have a field for will return and Err
-    pub fn increase(self, length: TimeSpan) -> Result<Date, &'static str> {
+        /// Creates 
+        pub fn increase_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
-        let mut increase_date = self;
+        let mut increase_date = self.clone();
         match length {
             TimeSpan::days(days) => {
                 let initial_day = increase_date.day;
@@ -166,7 +121,7 @@ impl Date {
                         if month_counter == 13 {
                             month_counter = 1;
                         }
-                        increase_date = increase_date.increase(TimeSpan::months(1)).unwrap();
+                        increase_date = increase_date.increase_as_new(TimeSpan::months(1)).unwrap();
                     } else {
                         increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
                         break;
@@ -188,35 +143,12 @@ impl Date {
             }
             _ => {return Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for the Date's increase method");},
         }
-        Ok(increase_date)
-    }
-    /// Increases the given Date by TimeSpan specified and validates after using difference method
-    // Privated because of an obvious error I will fix later: TimeDifference doesn't have specific differences yet. So it will return 13 days and 1 month instead of 44 days, for example.
-    fn increase_and_validate(self, length: TimeSpan) -> Result<Date, &'static str> {
-        let initial_date = (&self).clone();
-        let increase_date = self.increase(length.clone()).unwrap();
-        if increase_date.is_valid()
-            && match &length {
-                TimeSpan::days(days) => increase_date.difference(&initial_date).days == *days,
-                TimeSpan::months(months) => {
-                    increase_date.difference(&initial_date).months == *months
-                }
-                TimeSpan::years(years) => increase_date.difference(&initial_date).years == *years,
-                TimeSpan::seconds(_) => {
-                    return Err("seconds is not a valid TimeSpan specifier for Date::increase");
-                }
-                TimeSpan::minutes(_) => {
-                    return Err("minutes is not a valid TimeSpan specifier for Date::increase");
-                }
-                TimeSpan::hours(_) => {
-                    return Err("hours is not a valid TimeSpan specifier for Date::increase");
-                }
-            }
-        {
-            Ok(increase_date)
-        } else {
-            Err("Mistake")
-        }
+        let final_date: Date = Date {
+            day: increase_date.day,
+            month: increase_date.month,
+            year: increase_date.year,
+        };
+        Ok(final_date)
     }
     /// Decreases Date by given TimeSpan parameter. (Unfinished)
     pub fn decrease(self, length: TimeSpan) -> Result<Date, &'static str> {
