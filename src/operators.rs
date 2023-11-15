@@ -29,67 +29,69 @@ impl Date {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
-        let increase_date = self;
-        match length {
-            TimeSpan::days(days) => {
-                let initial_day = (&increase_date).day;
-                let mut month_lengths: HashMap<i32, i32> = HashMap::from([
-                    (1, 31),
-                    (2, if (&increase_date).isLeapYear() { 29 } else { 28 }),
-                    (3, 31),
-                    (4, 30),
-                    (5, 31),
-                    (6, 30),
-                    (7, 31),
-                    (8, 31),
-                    (9, 30),
-                    (10, 31),
-                    (11, 30),
-                    (12, 31),
-                ]);
-                let mut day_counter = days;
-                let mut month_counter: i32 = (&increase_date).month as i32;
-                loop {
-                    *month_lengths.get_mut(&2).unwrap() = if increase_date.isLeapYear() { 29 } else { 28 };
-                    // needs to be initialized each loop because leap year changes. 
-                    if (&increase_date).day as i32 + day_counter > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
-                        day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0);
-                        month_counter += 1;
-                        if month_counter == 13 {
-                            month_counter = 1;
-                        }
-                        let mut new_day = (&increase_date).day as i32 + day_counter;
-                        if initial_day == 1 {
-                            new_day -= 1;
-                        }
-                        if new_day > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
-                            day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0) - (&increase_date).day as i32 + 1;
-                            increase_date.day = 1;
-                        } else {
-                            increase_date.day = new_day as i8;
-                        }
-                        increase_date.experimental_increase(TimeSpan::months(1)).unwrap();                    } else {
-                        increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
-                        break;
-                    } 
-
-                }
-            },
-            TimeSpan::months(months) => {
-                increase_date.year = increase_date.year + floor(months as f32 / 12.0);
-                increase_date.month = increase_date.month + (months % 12) as i8;
-                if increase_date.month > 12 {
-                    increase_date.month = increase_date.month - 12;
-                    increase_date.year = increase_date.year + 1;
-                }
-            },
-            TimeSpan::years(years) => {
-                increase_date.year += years;
-                increase_date.day = if !increase_date.isLeapYear() && increase_date.month == 2 && increase_date.day == 29 { 28 } else { increase_date.day};
-            },
-            _ => {return Err("Invalid TimeSpan specifier");},
-        }
+        *self = self.clone().increase(length.clone()).unwrap();
         Ok(())
+        // let increase_date = self;
+        // match length {
+        //     TimeSpan::days(days) => {
+        //         let initial_day = (&increase_date).day;
+        //         let mut month_lengths: HashMap<i32, i32> = HashMap::from([
+        //             (1, 31),
+        //             (2, if (&increase_date).isLeapYear() { 29 } else { 28 }),
+        //             (3, 31),
+        //             (4, 30),
+        //             (5, 31),
+        //             (6, 30),
+        //             (7, 31),
+        //             (8, 31),
+        //             (9, 30),
+        //             (10, 31),
+        //             (11, 30),
+        //             (12, 31),
+        //         ]);
+        //         let mut day_counter = days;
+        //         let mut month_counter: i32 = (&increase_date).month as i32;
+        //         loop {
+        //             *month_lengths.get_mut(&2).unwrap() = if increase_date.isLeapYear() { 29 } else { 28 };
+        //             // needs to be initialized each loop because leap year changes. 
+        //             if (&increase_date).day as i32 + day_counter > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
+        //                 day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0);
+        //                 month_counter += 1;
+        //                 if month_counter == 13 {
+        //                     month_counter = 1;
+        //                 }
+        //                 let mut new_day = (&increase_date).day as i32 + day_counter;
+        //                 if initial_day == 1 {
+        //                     new_day -= 1;
+        //                 }
+        //                 if new_day > *month_lengths.get(&(month_counter as i32)).unwrap() as i32 {
+        //                     day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0) - (&increase_date).day as i32 + 1;
+        //                     increase_date.day = 1;
+        //                 } else {
+        //                     increase_date.day = new_day as i8;
+        //                 }
+        //                 increase_date.experimental_increase(TimeSpan::months(1)).unwrap();                    } else {
+        //                 increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
+        //                 break;
+        //             } 
+
+        //         }
+        //     },
+        //     TimeSpan::months(months) => {
+        //         let _ = increase_date.experimental_increase(TimeSpan::years(floor(months as f32 / 12.0)));
+        //         increase_date.month = increase_date.month + (months % 12) as i8;
+        //         if increase_date.month > 12 {
+        //             increase_date.month = increase_date.month - 12;
+        //             increase_date.year = increase_date.year + 1;
+        //         }
+        //     },
+        //     TimeSpan::years(years) => {
+        //         increase_date.year += years;
+        //         increase_date.day = if !increase_date.isLeapYear() && increase_date.month == 2 && increase_date.day == 29 { 28 } else { increase_date.day};
+        //     },
+        //     _ => {return Err("Invalid TimeSpan specifier");},
+        // }
+        // Ok(())
     }
     // TODO: End of Experimental increase
     /// Returns the difference between two Dates as a TimeDifference with seconds, minutes, and hours set to 0

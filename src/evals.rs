@@ -117,6 +117,7 @@ impl Date {
         {
             true
         } else {
+            println!("{:?}", self);
             false
         }
     }
