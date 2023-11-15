@@ -32,22 +32,6 @@ impl Date {
         }
         *self = self.increase_as_new(length.clone()).unwrap();
         Ok(())
-        //     },
-        //     TimeSpan::months(months) => {
-        //         let _ = increase_date.experimental_increase(TimeSpan::years(floor(months as f32 / 12.0)));
-        //         increase_date.month = increase_date.month + (months % 12) as i8;
-        //         if increase_date.month > 12 {
-        //             increase_date.month = increase_date.month - 12;
-        //             increase_date.year = increase_date.year + 1;
-        //         }
-        //     },
-        //     TimeSpan::years(years) => {
-        //         increase_date.year += years;
-        //         increase_date.day = if !increase_date.isLeapYear() && increase_date.month == 2 && increase_date.day == 29 { 28 } else { increase_date.day};
-        //     },
-        //     _ => {return Err("Invalid TimeSpan specifier");},
-        // }
-        // Ok(())
     }
     // TODO: End of Experimental increase
     /// Returns the difference between two Dates as a TimeDifference with seconds, minutes, and hours set to 0
@@ -217,6 +201,13 @@ impl Date {
 }
 
 impl DateTime {
+    pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        *self = self.increase_as_new(length.clone()).unwrap();
+        Ok(())
+    }
     /// Creates new instance of DateTime with all fields set to 1
     pub fn new() -> DateTime {
         DateTime {
@@ -259,14 +250,14 @@ impl DateTime {
         }
     }
     /// Increases the given DateTime by the TimeSpan specified
-    pub fn increase(self, length: TimeSpan) -> Result<DateTime, &'static str> {
-        let mut increase_date = self;
+    pub fn increase_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
+        let mut increase_date = self.clone();
         match length {
             TimeSpan::seconds(seconds) => {
                 let second_floor =
                     floor(((increase_date.second as i32 + seconds) as f32) / 60.0) as i8;
                 increase_date = increase_date
-                    .increase(TimeSpan::minutes(second_floor as i32).into())
+                    .increase_as_new(TimeSpan::minutes(second_floor as i32).into())
                     .unwrap();
                 increase_date.second = increase_date.second + (seconds % 60) as i8;
                 if increase_date.second > 59 {
@@ -277,7 +268,7 @@ impl DateTime {
                 let minute_floor =
                     floor(((increase_date.minute as i32 + minutes) as f32) / 60.0) as i8;
                 increase_date = increase_date
-                    .increase(TimeSpan::hours(minute_floor as i32).into())
+                    .increase_as_new(TimeSpan::hours(minute_floor as i32).into())
                     .unwrap();
                 increase_date.minute = increase_date.minute + (minutes % 60) as i8;
                 if increase_date.minute > 59 {
@@ -287,7 +278,7 @@ impl DateTime {
             TimeSpan::hours(hours) => {
                 let hour_floor = floor(((increase_date.hour as i32 + hours) as f32) / 24.0) as i8;
                 increase_date = increase_date
-                    .increase(TimeSpan::days(hour_floor as i32))
+                    .increase_as_new(TimeSpan::days(hour_floor as i32))
                     .unwrap();
                 increase_date.hour = increase_date.hour + (hours % 24) as i8;
                 if increase_date.hour > 23 {
@@ -322,7 +313,7 @@ impl DateTime {
                         if month_counter == 13 {
                             month_counter = 1;
                         }
-                        increase_date = increase_date.increase(TimeSpan::months(1)).unwrap();
+                        increase_date = increase_date.increase_as_new(TimeSpan::months(1)).unwrap();
                     } else {
                         increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
                         break;
@@ -344,25 +335,6 @@ impl DateTime {
             }
         }
         Ok(increase_date)
-    }
-    /// Increases given DateTime by TimeSpan and validates it with difference method
-    fn increase_and_validate(self, length: TimeSpan) -> Result<DateTime, &'static str> {
-        let initial_date = (&self).clone();
-        let increase_date = self.increase(length.clone()).unwrap();
-        if increase_date.is_valid()
-            && match &length {
-                TimeSpan::days(days) => increase_date.difference(&initial_date).days == *days,
-                TimeSpan::months(months) => increase_date.difference(&initial_date).months == *months,
-                TimeSpan::years(years) => increase_date.difference(&initial_date).years == *years,
-                TimeSpan::seconds(seconds) => increase_date.difference(&initial_date).seconds == *seconds,
-                TimeSpan::minutes(minutes) => increase_date.difference(&initial_date).minutes == *minutes,
-                TimeSpan::hours(hours) => increase_date.difference(&initial_date).hours == *hours,
-            }
-        {
-            Ok(increase_date)
-        } else {
-            Err("Mistake")
-        }
     }
 }
 
