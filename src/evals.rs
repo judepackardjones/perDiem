@@ -242,7 +242,7 @@ impl DateTime {
             && self.second < 60
             && self.minute >= 0
             && self.minute < 60
-            && self.hour > 0
+            && self.hour >= 0
             && self.hour < 24
         {
             true
