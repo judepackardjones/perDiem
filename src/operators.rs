@@ -136,21 +136,12 @@ impl Date {
         Ok(final_date)
     }
     /// Decreases Date by given TimeSpan parameter. (Unfinished)
-    pub fn decrease(self, length: TimeSpan) -> Result<Date, &'static str> {
+    pub fn decrease_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
-        let mut decrease_date = self;
+        let mut decrease_date = self.clone();
         match length {
-            TimeSpan::seconds(seconds) => {
-                
-            },
-            TimeSpan::minutes(minutes) => {
-                
-            },
-            TimeSpan::hours(hours) => {
-                
-            },
             TimeSpan::days(days) => {
                 let initial_day = decrease_date.day as i32;
                 let mut month_lengths: HashMap<i32, i32> = HashMap::from([
@@ -195,12 +186,14 @@ impl Date {
                 decrease_date.year -= years;
                 decrease_date.day = if !decrease_date.isLeapYear() && decrease_date.month == 2 && decrease_date.day == 29 { 28 } else { decrease_date.day };
             },
+            _ => {return Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for Date");},
         }
         Ok(decrease_date)
     }
 }
 
 impl DateTime {
+    /// Mutates the receiver DateTime by the TimeSpan sepcified and returns a Result.
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
