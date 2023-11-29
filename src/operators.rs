@@ -143,7 +143,10 @@ impl Date {
         let mut decrease_date = self.clone();
         match length {
             TimeSpan::days(days) => {
+                let mut day_counter = days;
                 let initial_day = decrease_date.day as i32;
+                let initial_month = decrease_date.month as i32;
+                let mut current: i32 = initial_day;
                 let mut month_lengths: HashMap<i32, i32> = HashMap::from([
                     (1, 31),
                     (2, if decrease_date.isLeapYear() { 29 } else { 28 }),
@@ -159,20 +162,26 @@ impl Date {
                     (12, 31),
                 ]);
                 let mut month_skips = 0;
-                loop {
-                    if initial_day - days > 0 {
-                        decrease_date.day -= days as i8;
-                        break;
-                    } else {
+                let mut current_month = initial_month;
+                if initial_day - day_counter > 0 {
+                    decrease_date.day = (initial_day - day_counter) as i8;
+                    } else if initial_day - day_counter ==  0 {
+                        decrease_date.day = *month_lengths.get(&(initial_month - 1)).unwrap_or(&0) as i8;
                         month_skips += 1;
-                        if initial_day - days == 0 {
-                            decrease_date.day = *month_lengths.get(&(decrease_date.month as i32)).unwrap() as i8;
-                            break;
-                        } else {
-                            
+                    } else {
+                    current -= day_counter;
+                    while current < 0 {
+                        month_skips += 1;
+                        current += *month_lengths.get(&(current_month - 1)).unwrap_or(&0);
+                        current_month += 1;
+                        if current_month == 13 {
+                            current_month = 1;
                         }
+                        
                     }
+                    month_skips -= 1;
                 }
+                decrease_date.month = decrease_date.decrease_as_new(TimeSpan::months(month_skips)).unwrap().month;
             },
             TimeSpan::months(months) => {
                 decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);

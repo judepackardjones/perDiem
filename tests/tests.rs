@@ -160,6 +160,7 @@ mod tests {
             let date = Date {day: 1, month: 1, year: 2000};
             assert_eq!(date.decrease_as_new(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 1998});
             assert_eq!(date.decrease_as_new(TimeSpan::months(13)).unwrap(), Date {day: 1, month: 12, year: 1998});
+            assert_eq!(date.decrease_as_new(TimeSpan::days(2)).unwrap(), Date {day: 30, month: 12, year: 1999});
         }
     }
 }
