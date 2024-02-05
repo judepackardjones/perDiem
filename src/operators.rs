@@ -4,6 +4,7 @@ use std::collections::HashMap;
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
         impl crate::types::datekindOperators for $struct {
+            /// Returns the last two digits of the given year
             fn last_two_digits_year(&self) -> String {
                 self.year
                     .to_string()
@@ -25,6 +26,36 @@ impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);
 
 impl Date {
+    /// Changes Date to be start of year
+    pub fn start_of_year(&mut self) {
+        *self = Date {day: 1, month: 1, year: self.year};
+    } 
+    /// Changes Date to be start of current month
+    pub fn start_of_month(&mut self) {
+        *self = Date {day: 1, month: self.month, year: self.year};
+    }
+    /// Changes Date to be end of current year
+    pub fn end_of_year(&mut self) {
+        *self = Date {day: 31, month: 12, year: self.year};
+    }
+    /// Changes Date to be end of current month
+    pub fn end_of_month(&mut self) {
+        let month_lengths: HashMap<i32, i32> = HashMap::from([
+            (1, 31),
+            (2, if self.isLeapYear() { 29 } else { 28 }),
+            (3, 31),
+            (4, 30),
+            (5, 31),
+            (6, 30),
+            (7, 31),
+            (8, 31),
+            (9, 30),
+            (10, 31),
+            (11, 30),
+            (12, 31),
+        ]);
+        *self = Date {day: *month_lengths.get(&(self.month as i32)).unwrap() as i8, month: self.month, year: self.year }
+    }
     /// Mutates the receiver Date by the TimeSpan sepcified and returns a Result.
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
@@ -202,6 +233,36 @@ impl Date {
 }
 
 impl DateTime {
+    /// Changes DateTime to be start of year
+    pub fn start_of_year(&mut self) {
+        *self = DateTime {day: 1, month: 1, year: self.year, second: 0, minute: 0, hour: 0 };
+    } 
+    /// Changes DateTime to be start of current month
+    pub fn start_of_month(&mut self) {
+        *self = DateTime {day: 1, month: self.month, year: self.year, second: 0, minute: 0, hour: 0 };
+    }
+    /// Changes DateTime to be end of current year
+    pub fn end_of_year(&mut self) {
+        *self = DateTime {day: 31, month: 12, year: self.year, second: 59, minute: 59, hour: 23 };
+    }
+    /// Changes DateTime to be end of current month
+    pub fn end_of_month(&mut self) {
+        let month_lengths: HashMap<i32, i32> = HashMap::from([
+            (1, 31),
+            (2, if self.isLeapYear() { 29 } else { 28 }),
+            (3, 31),
+            (4, 30),
+            (5, 31),
+            (6, 30),
+            (7, 31),
+            (8, 31),
+            (9, 30),
+            (10, 31),
+            (11, 30),
+            (12, 31),
+        ]);
+        *self = DateTime {day: *month_lengths.get(&(self.month as i32)).unwrap() as i8, month: self.month, year: self.year,  second: 59, minute: 59, hour: 23  }
+    }
     /// Mutates the receiver DateTime by the TimeSpan sepcified and returns a Result.
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
