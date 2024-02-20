@@ -464,7 +464,16 @@ impl DateTime {
         }
     }
 }
+impl OrdinalDate {
+    /// Checks if an ordinal date is valid
+    pub fn is_valid(&self) -> bool {
+        if isLeapYear(self.year) && self.day > 366 || !isLeapYear(self.year) && self.day > 365 {
+            return false;
+        }
+        true
+    }
 
+}
 /// Method pass Date or DateTime and returns true if Date or DateTime's year field is a leap year
 pub fn isLeapYear(year: i32) -> bool {
     (year % 4 == 0 && year % 100 != 0) || year % 400 == 0

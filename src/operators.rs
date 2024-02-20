@@ -117,17 +117,15 @@ impl Date {
     }
     /// Creates a instance of Date with fields provided
     pub fn from(day: u8, month: u8, year: i32) -> Result<Date, &'static str> {
-        if month > 12 || month < 1 {
-            return Err("Month is out of range");
-        }
-        if day > days_in_month(month as u8, year) as u8 || day < 1 {
-            return Err("Day is out of range");
-        }
-        Ok(Date {
+        let date = Date {
             day: day,
             month: month,
             year: year,
-        })
+        };
+        if !date.is_valid() {
+            return Err("Invalid parameters, make sure every field is within range");
+        }
+        Ok(date)
     }
     /// Converts Date to DateTime and sets second, minute, and hour to 1.
     pub fn to_DateTime(&self) -> DateTime {
@@ -309,29 +307,18 @@ impl DateTime {
     }
     /// Creates a new instance of DateTime with parameters given
     pub fn from(second: u8, minute: u8, hour: u8, day: u8, month: u8, year: i32) -> Result<DateTime, &'static str> {
-        if month > 12 || month < 1 {
-            return Err("Month is out of range");
-        }
-        if day > days_in_month(month, year) as u8 {
-            return Err("Day is out of range");
-        }
-        if second > 60  {
-            return Err("Second is out of range");
-        }
-        if minute > 60  {
-            return Err("Minute is out of range");
-        }
-        if hour > 23  {
-            return Err("Hour is out of range");
-        }
-        Ok(DateTime {
+        let datetime = DateTime {
             second: second,
             minute: minute,
             hour: hour,
             day: day,
             month: month,
             year: year,
-        })
+        };
+        if !datetime.is_valid() {
+            return Err("Invalid parameters, make sure everything is within range");
+        }
+        Ok(datetime)
     }
     /// Returns a TimeDifference of the two dates given. Each field is always positive.
     pub fn difference(&self, datetime: &DateTime) -> TimeDifference {
@@ -455,6 +442,22 @@ impl DateTime {
     }
 }
 impl OrdinalDate {
+    /// Decreases the given OrdinalDate by the days specified(unfinished)
+    /// Increases the given OrdinalDate by the days specified
+    pub fn increase_by_days(&self, days: i32) -> Result<OrdinalDate, &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid OrdinalDate");
+        }
+        let mut day_counter: i32 = self.day as i32 + days;
+        let mut year = self.year;
+        while day_counter > 0 {
+            day_counter -= if isLeapYear(self.year) { 366 } else { 365 };
+            year += 1;
+        }
+        day_counter += if isLeapYear(self.year) { 366 } else { 365 };
+        year -= 1;
+        Ok(OrdinalDate {day: day_counter as u16, year: year})
+    }
     /// Creates a new instance of OrdinalDate with all fields set to 1
     pub fn new() -> OrdinalDate {
         OrdinalDate {
