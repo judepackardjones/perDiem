@@ -42,8 +42,8 @@ impl x for String {
             }
         }
         Date {
-            day: day as i8,// the weird parsing of i32 and back to i8 is due to an overflow error that I don't understand, so this is a bandaid
-            month: month,
+            day: day as u8,// the weird parsing of i32 and back to i8 is due to an overflow error that I don't understand, so this is a bandaid
+            month: month as u8,
             year: year,
         }
     }

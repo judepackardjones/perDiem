@@ -10,10 +10,7 @@ macro_rules! impl_eval_fns {
         impl crate::types::datekindEvals for $struct {
             /// Method pass Date or DateTime and returns true if Date or DateTime's year field is a leap year
             fn isLeapYear(&self) -> bool {
-                if (self.year % 4 == 0 && self.year % 100 != 0) || self.year % 400 == 0 {
-                    return true;
-                }
-                false
+                (self.year % 4 == 0 && self.year % 100 != 0) || self.year % 400 == 0
             }
             /// Method returns the day of the week as a String of the Date or DateTime passed to it.
             fn weekday(&self) -> Result<String, &str> {
@@ -36,12 +33,12 @@ macro_rules! impl_eval_fns {
                     .to_string());
             }
             /// Method returns the day of the week as a i8 with 0 being Sunday
-            fn weekday_as_int(&self) -> Result<i8, &str> {
+            fn weekday_as_int(&self) -> Result<u8, &str> {
                 if !self.is_valid() {
                     return Err("Invalid Date or DateTime");
                 }
                 let first_two_digits_year: i32 = self.year as i32 % 100;
-                let mut num: i8 = ((self.day
+                let mut num: u8 = ((self.day
                     + ((13
                         * (if self.month == 1 || self.month == 2 {
                             self.month + 10
@@ -50,16 +47,16 @@ macro_rules! impl_eval_fns {
                         })
                         - 1)
                         / 5)
-                    + first_two_digits_year as i8
-                    + (first_two_digits_year as i8 / 4)
+                    + first_two_digits_year as u8
+                    + (first_two_digits_year as u8 / 4)
                     + (self
                         .last_two_digits_year()
-                        .parse::<i8>()
+                        .parse::<u8>()
                         .expect("Failed to unwrap last two digits to i8")
                         / 4)
                     - 2 * self
                         .last_two_digits_year()
-                        .parse::<i8>()
+                        .parse::<u8>()
                         .expect("Failed to unwrap last two digits to i8"))
                     % 7
                     + 1);
@@ -110,7 +107,7 @@ impl Date {
             (12, 31),
         ]);
         if self.day > 0
-            && self.day <= *month_lengths.get(&(self.month as i32)).unwrap() as i8
+            && self.day <= *month_lengths.get(&(self.month as i32)).unwrap() as u8
             && self.month > 0
             && self.month < 13
             && self.year % 1 == 0
@@ -173,11 +170,21 @@ impl Date {
     pub fn snapshot_date() -> crate::types::Date {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::Date {
-            day: local.day() as i8,
-            month: local.month() as i8,
+            day: local.day() as u8,
+            month: local.month() as u8,
             year: local.year() as i32,
         }
     }
+    /// Returns the # of days in the month of the Date/DateTime(Credit to TDark on Rust Discord)
+    pub fn days_in_month(&self) -> i8 { 
+        match self.month {
+          1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+          2 if self.isLeapYear() => 29,
+          2 => 28,
+          4 | 6 | 9 | 11 => 30,
+          _ => panic!("Months should be represented as an enum")
+        }
+      }
     /// same function of sharesDay, sharesMonth, sharesYear, but adds comparison field as a param.
     pub fn DateShares(&self, datetime2: &Date, compare_type: &str) -> Result<bool, &str> {
         match compare_type {
@@ -274,6 +281,16 @@ impl DateTime {
         }
         terms
     }
+    /// Returns the # of days in the month of the Date/DateTime(Credit to TDark on Rust Discord)
+    pub fn days_in_month(&self) -> i8 { 
+        match self.month {
+          1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+          2 if self.isLeapYear() => 29,
+          2 => 28,
+          4 | 6 | 9 | 11 => 30,
+          _ => panic!("Months should be represented as an enum")
+        }
+      }
     /// Takes a Vector of DateTimes and returns a Vector of &strs of the field values they share
     pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
         let mut shares_terms: Vec<&'static str> =
@@ -324,11 +341,11 @@ impl DateTime {
     pub fn snapshot_datetime() -> crate::types::DateTime {
         let local: chronoDateTime<Local> = Local::now();
         crate::types::DateTime {
-            second: local.second() as i8,
-            minute: local.minute() as i8,
-            hour: local.hour() as i8,
-            day: local.day() as i8,
-            month: local.month() as i8,
+            second: local.second() as u8,
+            minute: local.minute() as u8,
+            hour: local.hour() as u8,
+            day: local.day() as u8,
+            month: local.month() as u8,
             year: local.year() as i32,
         }
     }
@@ -405,5 +422,18 @@ impl DateTime {
     }
 }
 
+/// Method pass Date or DateTime and returns true if Date or DateTime's year field is a leap year
+pub fn isLeapYear(year: i32) -> bool {
+    (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
+}
+pub fn days_in_month(month: u8, year: i32) -> i8 { 
+    match month {
+      1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+      2 if isLeapYear(year) => 29,
+      2 => 28,
+      4 | 6 | 9 | 11 => 30,
+      _ => panic!("Months should be represented as an enum")
+    }
+  }
 impl_eval_fns!(Date);
 impl_eval_fns!(DateTime);

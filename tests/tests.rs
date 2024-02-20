@@ -100,6 +100,12 @@ mod tests {
             assert_eq!(Date {day: 1, month: 1, year: 2003}.last_two_digits_year(), String::from("03"));
         }
         #[test]
+        fn ordinal() {
+            assert_eq!(Date::from_ordinal(OrdinalDate::from(1, 2000).unwrap()).unwrap(), Date{day: 1, month: 1, year: 2000});
+            assert_eq!(Date::from_ordinal(OrdinalDate::from(32, 2000).unwrap()).unwrap(), Date{day: 1, month: 2, year: 2000});
+            assert_eq!(Date::from(1, 2, 2000).unwrap().to_ordinal().unwrap(), OrdinalDate::from(32, 2000).unwrap());
+        }
+        #[test]
         fn increases_date() {
             assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::years(2)).unwrap(), Date {day: 1, month: 1, year: 2005});
             assert_eq!(Date {day: 1, month: 1, year: 2003}.increase_as_new(TimeSpan::months(2)).unwrap(), Date {day: 1, month:3, year: 2003});
@@ -160,7 +166,9 @@ mod tests {
             let date = Date {day: 3, month: 1, year: 2000};
             assert_eq!(date.decrease_as_new(TimeSpan::years(2)).unwrap(), Date {day: 3, month: 1, year: 1998});
             assert_eq!(date.decrease_as_new(TimeSpan::months(13)).unwrap(), Date {day: 3, month: 12, year: 1998});
-            assert_eq!(date.decrease_as_new(TimeSpan::days(2)).unwrap(), Date {day: 1, month: 12, year: 1999});
+            assert_eq!(date.decrease_as_new(TimeSpan::days(2)).unwrap(), Date {day: 1, month: 1, year: 2000});
+            assert_eq!(date.decrease_as_new(TimeSpan::days(14)).unwrap(), Date{day: 20, month: 1, year: 2000});
+            assert_eq!(date.decrease_as_new(TimeSpan::days(32)).unwrap(), Date{day: 3, month: 1, year: 2000})
         }
     }
 }

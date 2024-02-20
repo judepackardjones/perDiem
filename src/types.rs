@@ -3,9 +3,16 @@ use struct_iterable::Iterable;
 /// The basic Date struct
 pub struct Date {
     /// Contains the day number of the Date instance
-    pub day: i8,
+    pub day: u8,
     /// Contains the month number of the Date instance
-    pub month: i8,
+    pub month: u8,
+    /// Contains the year number of the Date instance
+    pub year: i32,
+}
+#[derive(Debug, PartialEq, Eq, Iterable)]
+pub struct OrdinalDate {
+    /// Contains the day number of the Date instance
+    pub day: u16,
     /// Contains the year number of the Date instance
     pub year: i32,
 }
@@ -14,15 +21,15 @@ pub struct Date {
 /// The basic DateTime struct
 pub struct DateTime {
     /// Contains the second number of the DateTime instance
-    pub second: i8,
+    pub second: u8,
     /// Contains the minute number of the DateTime instance
-    pub minute: i8,
+    pub minute: u8,
     /// Contains the hour number of the DateTime instance
-    pub hour: i8,
+    pub hour: u8,
     /// Contains the day number of the DateTime instance
-    pub day: i8,
+    pub day: u8,
     /// Contains the month number of the DateTime instance
-    pub month: i8,
+    pub month: u8,
     /// Contains the year number of the DateTime instance
     pub year: i32,
 }
@@ -66,7 +73,7 @@ pub trait datekindEvals {
     /// Returns the day of the week a certain Date or DateTime is as a String.
     fn weekday(&self) -> Result<String, &str>;
     /// Returns the day of the week as an i8. 0 = Sunday.
-    fn weekday_as_int(&self) -> Result<i8, &str>;
+    fn weekday_as_int(&self) -> Result<u8, &str>;
     /// Returns bool from if Date or DateTime share day field.
     fn sharesDay(&self, date2: &Self) -> bool;
     /// Returns bool from if Date or DateTime share month field.

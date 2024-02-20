@@ -1,5 +1,6 @@
 use crate::{types::*, utils::floor, utils::get_pos};
 use std::collections::HashMap;
+use crate::evals::{days_in_month, isLeapYear};
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
@@ -25,6 +26,36 @@ impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);
 
 impl Date {
+    pub fn to_ordinal(&self) -> Result<OrdinalDate, &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        let mut day_counter: i16 = self.day as i16;
+        let mut month_counter: u8 = 1;
+        while month_counter < self.month {
+            day_counter += days_in_month(month_counter as u8, self.year) as i16;
+            month_counter += 1;
+        }
+        Ok(OrdinalDate {
+            day: day_counter as u16,
+            year: self.year,
+        })
+    }
+    /// Creates a Date instance from an ordinal Date
+    pub fn from_ordinal(ordinal: OrdinalDate) -> Result<Date, &'static str>{
+        if (isLeapYear(ordinal.year) && ordinal.day > 366) || (!isLeapYear(ordinal.year) && ordinal.day > 365) {
+            return Err("Day is greater than number of days in given year");
+        }
+        let mut month = 1;
+        let mut day_counter: i16 = ordinal.day as i16;
+        while day_counter > 0 {
+            day_counter -= days_in_month(month, ordinal.year) as i16;
+            month += 1;
+        }
+        day_counter += days_in_month(month - 1, ordinal.year) as i16;
+        month -= 1;
+        Ok(Date {day: day_counter as u8, month: month as u8, year: ordinal.year})
+    }
     /// Mutates the receiver Date by the TimeSpan sepcified and returns a Result.
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
@@ -54,12 +85,18 @@ impl Date {
         }
     }
     /// Creates a instance of Date with fields provided
-    pub fn from(day: i8, month: i8, year: i32) -> Date {
-        Date {
+    pub fn from(day: u8, month: u8, year: i32) -> Result<Date, &'static str> {
+        if month > 12 || month < 1 {
+            return Err("Month is out of range");
+        }
+        if day > days_in_month(month as u8, year) as u8 || day < 1 {
+            return Err("Day is out of range");
+        }
+        Ok(Date {
             day: day,
             month: month,
             year: year,
-        }
+        })
     }
     /// Converts Date to DateTime and sets second, minute, and hour to 1.
     pub fn to_DateTime(&self) -> DateTime {
@@ -108,7 +145,7 @@ impl Date {
                         }
                         increase_date = increase_date.increase_as_new(TimeSpan::months(1)).unwrap();
                     } else {
-                        increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
+                        increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as u8;
                         break;
                     }
 
@@ -116,7 +153,7 @@ impl Date {
         },
             TimeSpan::months(months) => {
                 increase_date.year = increase_date.year + floor(months as f32 / 12.0);
-                increase_date.month = increase_date.month + (months % 12) as i8;
+                increase_date.month = increase_date.month + (months % 12) as u8;
                 if increase_date.month > 12 {
                     increase_date.month = increase_date.month - 12;
                     increase_date.year = increase_date.year + 1;
@@ -157,18 +194,23 @@ impl Date {
                     (11, 30),
                     (12, 31),
                 ]);
-                println!("test");
-                for _ in 0..days {
-                    println!("Day: {}", decrease_date.day);
-                    if decrease_date.day - 1 < 1 {
-                        decrease_date = decrease_date.decrease_as_new(TimeSpan::months(1)).unwrap();
-                        decrease_date.day = *month_lengths.get(&(decrease_date.month as i32)).unwrap() as i8;
+                let mut day_counter = decrease_date.day as i32;
+                day_counter -= days as i32;
+                if day_counter as i32 > 0 {
+                    decrease_date.day = day_counter as u8;
+                } else {
+                    while decrease_date.day < 0 {
+                        decrease_date = self.decrease_as_new(TimeSpan::months(1)).unwrap();
+                        day_counter += decrease_date.days_in_month() as i32;
+                        println!("Current day counter: {}", day_counter);
                     }
+                    day_counter += decrease_date.days_in_month() as i32;
                 }
+                decrease_date.day = day_counter as u8;
             },
             TimeSpan::months(months) => {
                 decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);
-                decrease_date.month = decrease_date.month - (months % 12) as i8;
+                decrease_date.month = decrease_date.month - (months % 12) as u8;
                 if decrease_date.month <= 0 {
                     decrease_date.month = decrease_date.month + 12;
                     decrease_date.year = decrease_date.year - 1;
@@ -196,24 +238,39 @@ impl DateTime {
     /// Creates new instance of DateTime with all fields set to 1
     pub fn new() -> DateTime {
         DateTime {
-            second: 1,
-            minute: 1,
-            hour: 1,
+            second: 0,
+            minute: 0,
+            hour: 0,
             day: 1,
             month: 1,
             year: 1,
         }
     }
     /// Creates a new instance of DateTime with parameters given
-    pub fn from(second: i8, minute: i8, hour: i8, day: i8, month: i8, year: i32) -> DateTime {
-        DateTime {
+    pub fn from(second: u8, minute: u8, hour: u8, day: u8, month: u8, year: i32) -> Result<DateTime, &'static str> {
+        if month > 12 || month < 1 {
+            return Err("Month is out of range");
+        }
+        if day > days_in_month(month, year) as u8 {
+            return Err("Day is out of range");
+        }
+        if second > 60  {
+            return Err("Second is out of range");
+        }
+        if minute > 60  {
+            return Err("Minute is out of range");
+        }
+        if hour > 23  {
+            return Err("Hour is out of range");
+        }
+        Ok(DateTime {
             second: second,
             minute: minute,
             hour: hour,
             day: day,
             month: month,
             year: year,
-        }
+        })
     }
     /// Returns a TimeDifference of the two dates given. Each field is always positive.
     pub fn difference(&self, datetime: &DateTime) -> TimeDifference {
@@ -240,32 +297,32 @@ impl DateTime {
         match length {
             TimeSpan::seconds(seconds) => {
                 let second_floor =
-                    floor(((increase_date.second as i32 + seconds) as f32) / 60.0) as i8;
+                    floor(((increase_date.second as i32 + seconds) as f32) / 60.0) as u8;
                 increase_date = increase_date
                     .increase_as_new(TimeSpan::minutes(second_floor as i32).into())
                     .unwrap();
-                increase_date.second = increase_date.second + (seconds % 60) as i8;
+                increase_date.second = increase_date.second + (seconds % 60) as u8;
                 if increase_date.second > 59 {
                     increase_date.second = increase_date.second - 60;
                 }
             }
             TimeSpan::minutes(minutes) => {
                 let minute_floor =
-                    floor(((increase_date.minute as i32 + minutes) as f32) / 60.0) as i8;
+                    floor(((increase_date.minute as i32 + minutes) as f32) / 60.0) as u8;
                 increase_date = increase_date
                     .increase_as_new(TimeSpan::hours(minute_floor as i32).into())
                     .unwrap();
-                increase_date.minute = increase_date.minute + (minutes % 60) as i8;
+                increase_date.minute = increase_date.minute + (minutes % 60) as u8;
                 if increase_date.minute > 59 {
                     increase_date.minute = increase_date.minute - 60;
                 }
             }
             TimeSpan::hours(hours) => {
-                let hour_floor = floor(((increase_date.hour as i32 + hours) as f32) / 24.0) as i8;
+                let hour_floor = floor(((increase_date.hour as i32 + hours) as f32) / 24.0) as u8;
                 increase_date = increase_date
                     .increase_as_new(TimeSpan::days(hour_floor as i32))
                     .unwrap();
-                increase_date.hour = increase_date.hour + (hours % 24) as i8;
+                increase_date.hour = increase_date.hour + (hours % 24) as u8;
                 if increase_date.hour > 23 {
                     increase_date.hour = increase_date.hour - 24;
                 }
@@ -300,7 +357,7 @@ impl DateTime {
                         }
                         increase_date = increase_date.increase_as_new(TimeSpan::months(1)).unwrap();
                     } else {
-                        increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as i8;
+                        increase_date.day = (day_counter + (if initial_day == 1 { 1 } else { (initial_day) as i32})) as u8;
                         break;
                     }
 
@@ -308,7 +365,7 @@ impl DateTime {
             }
             TimeSpan::months(months) => {
                 increase_date.year = increase_date.year + floor(months as f32 / 12.0);
-                increase_date.month = increase_date.month + (months % 12) as i8;
+                increase_date.month = increase_date.month + (months % 12) as u8;
                 if increase_date.month > 12 {
                     increase_date.month = increase_date.month - 12;
                     increase_date.year = increase_date.year + 1;
@@ -321,8 +378,40 @@ impl DateTime {
         }
         Ok(increase_date)
     }
+    pub fn from_ordinal(ordinal: OrdinalDate) -> Result<DateTime, &'static str> {
+        if (isLeapYear(ordinal.year) && ordinal.day > 366) || (!isLeapYear(ordinal.year) && ordinal.day > 365) {
+            return Err("Day is greater than number of days in given year");
+        }
+        let mut month = 1;
+        let mut day_counter: i16 = ordinal.day as i16;
+        while day_counter > 0 {
+            day_counter -= days_in_month(month, ordinal.year) as i16;
+            month += 1;
+        }
+        day_counter += days_in_month(month - 1, ordinal.year) as i16;
+        month -= 1;
+        Ok(DateTime {day: day_counter as u8, month: month as u8, year: ordinal.year, second: 0, minute: 0, hour: 0})
+    }
 }
-
+impl OrdinalDate {
+    /// Creates a new instance of OrdinalDate with all fields set to 1
+    pub fn new() -> OrdinalDate {
+        OrdinalDate {
+            day: 1,
+            year: 1,
+        }
+    }
+    /// Creates a new instance of OrdinalDate with parameters given
+    pub fn from(day: u16, year: i32) -> Result<OrdinalDate, &'static str> {
+        if day > 366 {
+            return Err("Day is out of range");
+        }
+        Ok(OrdinalDate {
+            day: day,
+            year: year,
+        })
+    }
+}
 impl Clone for Date {
     fn clone(&self) -> Date {
         Date {
