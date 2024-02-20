@@ -8,6 +8,49 @@ use struct_iterable::Iterable;
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
         impl crate::types::datekindEvals for $struct {
+            /// Method returns bool if Date or DateTime is start of month.
+            fn isStartOfMonth(&self) -> bool {
+                if self.day == 1 {
+                    return true;
+                }
+                false
+            }
+            /// Method returns bool if Date or DateTime is end of month.
+            fn isEndOfMonth(&self) -> bool {
+                let mut month_lengths: std::collections::HashMap<i32, i32> = std::collections::HashMap::from([
+                    (1, 31),
+                    (2, if self.isLeapYear() { 29 } else { 28 }),
+                    (3, 31),
+                    (4, 30),
+                    (5, 31),
+                    (6, 30),
+                    (7, 31),
+                    (8, 31),
+                    (9, 30),
+                    (10, 31),
+                    (11, 30),
+                    (12, 31),
+                ]);
+                if self.day == *month_lengths.get(&(self.month as i32)).unwrap() as u8 {
+                    return true;
+                }
+                false
+            }
+            /// Method returns bool if Date or DateTime is start of year.
+            fn isStartOfYear(&self) -> bool {
+                if self.month == 1 && self.day == 1 {
+                    return true;
+                }
+                false
+            }
+            /// Method returns bool if Date or DateTime is end of year.
+            fn isEndOfYear(&self) -> bool {
+                if self.month == 12 && self.day == 31 {
+                    return true;
+                }
+                false
+            }
+            
             /// Method pass Date or DateTime and returns true if Date or DateTime's year field is a leap year
             fn isLeapYear(&self) -> bool {
                 (self.year % 4 == 0 && self.year % 100 != 0) || self.year % 400 == 0

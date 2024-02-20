@@ -80,6 +80,15 @@ pub trait datekindEvals {
     fn sharesMonth(&self, date2: &Self) -> bool;
     /// Returns bool from if Date or DateTime share year field.
     fn sharesYear(&self, date2: &Self) -> bool;
+    /// Returns bool from if given Date or DateTime is December 31st
+    fn isEndOfYear(&self) -> bool;
+    /// Returns bool from if given Date or DateTime is January 1st
+    fn isStartOfYear(&self) -> bool;
+    /// Returns bool from if given Date or DateTime is end of current month
+    fn isEndOfMonth(&self) -> bool;
+    /// Returns bool from if given Date or DateTime is start of current month
+    fn isStartOfMonth(&self) -> bool;
+    
 }
 /// Operator methods that are impl by macro for both Date and Dateime
 pub trait datekindOperators {
