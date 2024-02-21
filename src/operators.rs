@@ -1,6 +1,5 @@
 use crate::evals::{days_in_month, isLeapYear};
 use crate::{types::*, utils::floor, utils::get_pos};
-use std::collections::HashMap;
 
 macro_rules! impl_operators_fns {
     ($struct:ident) => {
@@ -69,22 +68,8 @@ impl Date {
     }
     /// Changes Date to be end of current month
     pub fn end_of_month(&mut self) {
-        let month_lengths: HashMap<i32, i32> = HashMap::from([
-            (1, 31),
-            (2, if self.isLeapYear() { 29 } else { 28 }),
-            (3, 31),
-            (4, 30),
-            (5, 31),
-            (6, 30),
-            (7, 31),
-            (8, 31),
-            (9, 30),
-            (10, 31),
-            (11, 30),
-            (12, 31),
-        ]);
         *self = Date {
-            day: *month_lengths.get(&(self.month as i32)).unwrap() as u8,
+            day: self.clone().days_in_month() as u8,
             month: self.month,
             year: self.year,
         }
@@ -236,30 +221,14 @@ impl Date {
         match length {
             TimeSpan::days(days) => {
                 let initial_day = increase_date.day;
-                let mut month_lengths: HashMap<i32, i32> = HashMap::from([
-                    (1, 31),
-                    (2, if increase_date.isLeapYear() { 29 } else { 28 }),
-                    (3, 31),
-                    (4, 30),
-                    (5, 31),
-                    (6, 30),
-                    (7, 31),
-                    (8, 31),
-                    (9, 30),
-                    (10, 31),
-                    (11, 30),
-                    (12, 31),
-                ]);
                 let mut day_counter = days;
                 let mut month_counter: i32 = increase_date.month as i32;
                 loop {
-                    *month_lengths.get_mut(&2).unwrap() =
-                        if increase_date.isLeapYear() { 29 } else { 28 };
                     // needs to be initialized each loop because leap year changes.
                     if increase_date.day as i32 + day_counter
-                        > *month_lengths.get(&(month_counter as i32)).unwrap() as i32
+                        > increase_date.days_in_month() as i32
                     {
-                        day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0);
+                        day_counter -= increase_date.days_in_month() as i32;
                         month_counter += 1;
                         if month_counter == 13 {
                             month_counter = 1;
@@ -306,41 +275,17 @@ impl Date {
         };
         Ok(final_date)
     }
-    /// Decreases Date by given TimeSpan parameter. (Unfinished)
-    pub fn decrease_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
+    /// Decreases Date by given TimeSpan parameter. (Unfinished, use decrease_ordinally_as_new)
+    pub fn decrease_as_new(&self, _length: TimeSpan) -> Result<Date, &'static str> { // remove length and underscores when retrying gregorian decrease
         if !self.is_valid() {
             return Err("Invalid Date");
         }
+        return Err("Decrease for Date is not yet implemented, use decrease_ordinally_as_new");
+        let length = TimeSpan::days(2);
         let mut decrease_date = self.clone();
         match length {
-            TimeSpan::days(days) => {
-                let mut month_lengths: HashMap<i32, i32> = HashMap::from([
-                    (1, 31),
-                    (2, if decrease_date.isLeapYear() { 29 } else { 28 }),
-                    (3, 31),
-                    (4, 30),
-                    (5, 31),
-                    (6, 30),
-                    (7, 31),
-                    (8, 31),
-                    (9, 30),
-                    (10, 31),
-                    (11, 30),
-                    (12, 31),
-                ]);
-                let mut day_counter = decrease_date.day as i32;
-                day_counter -= days as i32;
-                if day_counter as i32 > 0 {
-                    decrease_date.day = day_counter as u8;
-                } else {
-                    while decrease_date.day < 0 {
-                        decrease_date = self.decrease_as_new(TimeSpan::months(1)).unwrap();
-                        day_counter += decrease_date.days_in_month() as i32;
-                        println!("Current day counter: {}", day_counter);
-                    }
-                    day_counter += decrease_date.days_in_month() as i32;
-                }
-                decrease_date.day = day_counter as u8;
+            TimeSpan::days(_days) => {
+                
             }
             TimeSpan::months(months) => {
                 decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);
@@ -437,22 +382,9 @@ impl DateTime {
     }
     /// Changes DateTime to be end of current month
     pub fn end_of_month(&mut self) {
-        let month_lengths: HashMap<i32, i32> = HashMap::from([
-            (1, 31),
-            (2, if self.isLeapYear() { 29 } else { 28 }),
-            (3, 31),
-            (4, 30),
-            (5, 31),
-            (6, 30),
-            (7, 31),
-            (8, 31),
-            (9, 30),
-            (10, 31),
-            (11, 30),
-            (12, 31),
-        ]);
+        
         *self = DateTime {
-            day: *month_lengths.get(&(self.month as i32)).unwrap() as u8,
+            day: self.clone().days_in_month() as u8,
             month: self.month,
             year: self.year,
             second: 59,
@@ -558,30 +490,13 @@ impl DateTime {
             }
             TimeSpan::days(days) => {
                 let initial_day = increase_date.day;
-                let mut month_lengths: HashMap<i32, i32> = HashMap::from([
-                    (1, 31),
-                    (2, if increase_date.isLeapYear() { 29 } else { 28 }),
-                    (3, 31),
-                    (4, 30),
-                    (5, 31),
-                    (6, 30),
-                    (7, 31),
-                    (8, 31),
-                    (9, 30),
-                    (10, 31),
-                    (11, 30),
-                    (12, 31),
-                ]);
                 let mut day_counter = days;
                 let mut month_counter: i32 = increase_date.month as i32;
                 loop {
-                    *month_lengths.get_mut(&2).unwrap() =
-                        if increase_date.isLeapYear() { 29 } else { 28 };
-                    // needs to be initialized each loop because leap year changes.
                     if increase_date.day as i32 + day_counter
-                        > *month_lengths.get(&(month_counter as i32)).unwrap() as i32
+                        > increase_date.days_in_month() as i32
                     {
-                        day_counter -= *month_lengths.get(&(month_counter as i32)).unwrap_or(&0);
+                        day_counter -= increase_date.days_in_month() as i32;
                         month_counter += 1;
                         if month_counter == 13 {
                             month_counter = 1;

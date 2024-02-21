@@ -4,6 +4,7 @@
 #![warn(missing_docs)]
 #![warn(rustdoc::missing_doc_code_examples)]
 #![warn(unknown_lints)]
+#![allow(unreachable_code)]
 //! A series of Date and DateTime Utilities
 /*This is a public crate for various date related utilities
 This crate relies on the chrono crate.

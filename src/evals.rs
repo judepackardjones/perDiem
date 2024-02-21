@@ -17,21 +17,7 @@ macro_rules! impl_eval_fns {
             }
             /// Method returns bool if Date or DateTime is end of month.
             fn isEndOfMonth(&self) -> bool {
-                let mut month_lengths: std::collections::HashMap<i32, i32> = std::collections::HashMap::from([
-                    (1, 31),
-                    (2, if self.isLeapYear() { 29 } else { 28 }),
-                    (3, 31),
-                    (4, 30),
-                    (5, 31),
-                    (6, 30),
-                    (7, 31),
-                    (8, 31),
-                    (9, 30),
-                    (10, 31),
-                    (11, 30),
-                    (12, 31),
-                ]);
-                if self.day == *month_lengths.get(&(self.month as i32)).unwrap() as u8 {
+                if self.day == self.days_in_month() as u8 {
                     return true;
                 }
                 false
@@ -135,22 +121,8 @@ macro_rules! impl_eval_fns {
 impl Date {
     /// Checks if a Date is valid
     pub fn is_valid(&self) -> bool {
-        let month_lengths: std::collections::HashMap<i32, i32> = std::collections::HashMap::from([
-            (1, 31),
-            (2, if self.isLeapYear() { 29 } else { 28 }),
-            (3, 31),
-            (4, 30),
-            (5, 31),
-            (6, 30),
-            (7, 31),
-            (8, 31),
-            (9, 30),
-            (10, 31),
-            (11, 30),
-            (12, 31),
-        ]);
         if self.day > 0
-            && self.day <= *month_lengths.get(&(self.month as i32)).unwrap() as u8
+            && self.day <= self.days_in_month() as u8
             && self.month > 0
             && self.month < 13
             && self.year % 1 == 0
