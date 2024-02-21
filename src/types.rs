@@ -10,6 +10,7 @@ pub struct Date {
     pub year: i32,
 }
 #[derive(Debug, PartialEq, Eq, Iterable)]
+/// The basic OrdinalDate struct, used for ordinal date formats
 pub struct OrdinalDate {
     /// Contains the day number of the Date instance
     pub day: u16,

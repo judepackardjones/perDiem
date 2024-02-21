@@ -288,13 +288,10 @@ impl DateTime {
             year: self.year,
         })
         .is_valid()
-            && self.second >= 0
             && self.second < 60
-            && self.minute >= 0
             && self.minute < 60
-            && self.hour >= 0
             && self.hour < 24
-        {
+        {// comparison  of 0s useless due to type limits
             true
         } else {
             false
@@ -478,6 +475,7 @@ impl OrdinalDate {
 pub fn isLeapYear(year: i32) -> bool {
     (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
 }
+/// Returns the # of days in the month of the Date/DateTime(Credit to TDark on Rust Discord)
 pub fn days_in_month(month: u8, year: i32) -> i8 { 
     match month {
       1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
