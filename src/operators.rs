@@ -89,12 +89,28 @@ impl Date {
             year: self.year,
         }
     }
-    /// Mutates the receiver Date by the TimeSpan sepcified and returns a Result.
+    /// Increases the receiver-in-place Date by the TimeSpan specified and returns a Result.
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
         *self = self.increase_as_new(length.clone()).unwrap();
+        Ok(())
+    }
+    /// Increases the receiver-in-place Date by the TimeSpan specified and returns a result
+    pub fn increase_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        *self = self.increase_ordinally_as_new(length.clone()).unwrap();
+        Ok(())
+    }
+    /// Decreases the receiver-in-place Date by the TimeSpan specified and returns a Result.
+    pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        *self = self.decrease_ordinally_as_new(length.clone()).unwrap();
         Ok(())
     }
     // TODO: End of Experimental increase
@@ -141,7 +157,7 @@ impl Date {
         }
     }
     /// Decreases given Date using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
-    pub fn decrease_ordinally(&self, length: TimeSpan) -> Result<Date, &'static str> {
+    pub fn decrease_ordinally_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
@@ -176,7 +192,7 @@ impl Date {
         Ok(decrease_date)
     }
     /// Increases given Date using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
-    pub fn increase_ordinally(&self, length: TimeSpan) -> Result<Date, &'static str> {
+    pub fn increase_ordinally_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
@@ -354,6 +370,22 @@ impl Date {
 }
 
 impl DateTime {
+     /// Decreases the receiver-in-place DateTime by the TimeSpan specified and returns a Result.
+     pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        *self = self.decrease_ordinally_as_new(length.clone()).unwrap();
+        Ok(())
+    }
+    /// Decreases the receiver-in-place DateTime by the TimeSpan specified and returns a result
+    pub fn increase_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid DateTime");
+        }
+        *self = self.increase_ordinally_as_new(length.clone()).unwrap();
+        Ok(())
+    }
     /// Converts given DateTime to OrdinalDate
     pub fn to_OrdinalDate(&self) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
@@ -589,7 +621,7 @@ impl DateTime {
         Ok(increase_date)
     }
     /// Increases given DateTime using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
-    pub fn increase_ordinally(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
+    pub fn increase_ordinally_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
@@ -654,7 +686,7 @@ impl DateTime {
         Ok(increase_date)
     }
     /// Decreases given DateTime using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days. For now, there is no option for a gregorian decrease method
-    pub fn decrease_ordinally(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
+    pub fn decrease_ordinally_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }

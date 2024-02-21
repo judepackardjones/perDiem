@@ -99,14 +99,14 @@ mod tests {
         #[test]
         fn speed_test() {
             let ordinal = Instant::now();
-            let _ = Date::from(1, 1, 2000).unwrap().increase_ordinally(TimeSpan::days(20));
+            let _ = Date::from(1, 1, 2000).unwrap().increase_ordinally_as_new(TimeSpan::days(20));
             let ordinal = ordinal.elapsed().as_nanos();
             let gregorian = Instant::now();
             let _ = Date::from(1, 1, 2000).unwrap().increase_as_new(TimeSpan::days(20));
             let gregorian = gregorian.elapsed().as_nanos();
             println!("Ordinal: {} nanoseconds, Gregorian: {} nanoseconds", ordinal, gregorian);
             let ordinal = Instant::now();
-            let _ = Date::from(1, 1, 2000).unwrap().increase_ordinally(TimeSpan::days(2000));
+            let _ = Date::from(1, 1, 2000).unwrap().increase_ordinally_as_new(TimeSpan::days(2000));
             let ordinal = ordinal.elapsed().as_nanos();
             let gregorian = Instant::now();
             let _ = Date::from(1, 1, 2000).unwrap().increase_as_new(TimeSpan::days(2000));
@@ -138,9 +138,9 @@ mod tests {
             assert_eq!(Date {day: 6, month: 9, year: 1987}.increase_as_new(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
             assert_eq!(Date {day: 28, month: 2, year: 1987}.increase_as_new(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
             assert_eq!(Date {day: 28, month: 2, year: 1980}.increase_as_new(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
-            assert_eq!(Date {day: 28, month: 2, year: 1980}.increase_ordinally(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
-            assert_eq!(Date {day: 6, month: 9, year: 1987}.increase_ordinally(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
-            assert_eq!(Date {day: 26, month: 2, year: 1993}.decrease_ordinally(TimeSpan::days(2000)).unwrap(), Date {day: 6, month: 9, year: 1987});
+            assert_eq!(Date {day: 28, month: 2, year: 1980}.increase_ordinally_as_new(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
+            assert_eq!(Date {day: 6, month: 9, year: 1987}.increase_ordinally_as_new(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
+            assert_eq!(Date {day: 26, month: 2, year: 1993}.decrease_ordinally_as_new(TimeSpan::days(2000)).unwrap(), Date {day: 6, month: 9, year: 1987});
         }
         #[test]
         fn increase_tests_date(){
