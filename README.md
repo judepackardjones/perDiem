@@ -1,11 +1,11 @@
 # perDiem
 Patch notes:  
-You're better off looking through the docs to get a good idea of this crates ability
+You're better off looking through the docs to get a good idea of this crates ability  
 Adds:  
 -----------
 OrdinalDate struct
-increase and decrease ordinally functions
-to_OrdinalDate
+increase and decrease ordinally functions  
+to_OrdinalDate  
 Fixes:  
 -----------
 Minor bug fixes mostly related to validation, some logic, and error handling  
