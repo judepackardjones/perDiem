@@ -576,7 +576,7 @@ impl OrdinalDate {
         if !self.is_valid() {
             return Err("Invalid OrdinalDate");
         }
-        let mut day_counter = self.day as i32 - days;
+        let mut day_counter: i32 = self.day as i32 - days;
         let mut year = self.year;
         while day_counter <= 0 {
             year -= 1;
@@ -595,11 +595,11 @@ impl OrdinalDate {
         let mut day_counter: i32 = self.day as i32 + days;
         let mut year = self.year;
         while day_counter >= 0 {
-            day_counter -= if isLeapYear(self.year) { 366 } else { 365 };
+            day_counter -= if isLeapYear(year) { 366 } else { 365 };
             year += 1;
         }
-        day_counter += if isLeapYear(self.year) { 366 } else { 365 };
         year -= 1;
+        day_counter += if isLeapYear(year) { 366 } else { 365 };
         Ok(OrdinalDate {
             day: day_counter as u16,
             year: year,

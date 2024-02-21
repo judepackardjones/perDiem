@@ -105,7 +105,7 @@ mod tests {
             assert_eq!(OrdinalDate::from(32, 2000).unwrap().to_Date().unwrap(), Date{day: 1, month: 2, year: 2000});
             assert_eq!(Date::from(1, 2, 2000).unwrap().to_ordinal().unwrap(), OrdinalDate::from(32, 2000).unwrap());
             assert_eq!(OrdinalDate::from(1, 2000).unwrap().increase_by_days(366).unwrap(), OrdinalDate::from(1, 2001).unwrap());
-            assert_eq!(OrdinalDate::from(1, 2001).unwrap().decrease_by_days(2).unwrap(), OrdinalDate::from(365, 2000).unwrap());
+            assert_eq!(OrdinalDate::from(1, 2001).unwrap().decrease_by_days(1).unwrap(), OrdinalDate::from(366, 2000).unwrap());
         }
         #[test]
         fn increases_date() {
