@@ -27,7 +27,8 @@ impl_operators_fns!(Date);
 impl_operators_fns!(DateTime);
 
 impl Date {
-    pub fn to_ordinal(&self) -> Result<OrdinalDate, &'static str> {
+    /// Converts given Date to OrdinalDate
+    pub fn to_OrdinalDate(&self) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
@@ -139,6 +140,7 @@ impl Date {
             year: self.year,
         }
     }
+    /// Decreases given Date using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
     pub fn decrease_ordinally(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -146,7 +148,7 @@ impl Date {
         let mut decrease_date = self.clone();
         match length {
             TimeSpan::days(days) => {
-                decrease_date = decrease_date.to_ordinal().unwrap().decrease_by_days(days).unwrap().to_Date().unwrap();
+                decrease_date = decrease_date.to_OrdinalDate().unwrap().decrease_by_days(days).unwrap().to_Date().unwrap();
             }
             TimeSpan::months(months) => {
                 decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);
@@ -173,6 +175,7 @@ impl Date {
         }
         Ok(decrease_date)
     }
+    /// Increases given Date using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
     pub fn increase_ordinally(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -180,7 +183,7 @@ impl Date {
         let mut increase_date = self.clone();
         match length {
             TimeSpan::days(days) => {
-                increase_date = increase_date.to_ordinal().unwrap().increase_by_days(days).unwrap().to_Date().unwrap();
+                increase_date = increase_date.to_OrdinalDate().unwrap().increase_by_days(days).unwrap().to_Date().unwrap();
             },
             TimeSpan::months(months) => {
                 increase_date.year = increase_date.year + floor(months as f32 / 12.0);
@@ -351,6 +354,22 @@ impl Date {
 }
 
 impl DateTime {
+    /// Converts given DateTime to OrdinalDate
+    pub fn to_OrdinalDate(&self) -> Result<OrdinalDate, &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        let mut day_counter: i16 = self.day as i16;
+        let mut month_counter: u8 = 1;
+        while month_counter < self.month {
+            day_counter += days_in_month(month_counter as u8, self.year) as i16;
+            month_counter += 1;
+        }
+        Ok(OrdinalDate {
+            day: day_counter as u16,
+            year: self.year,
+        })
+    }
     /// Changes DateTime to be start of year
     pub fn start_of_year(&mut self) {
         *self = DateTime {
@@ -568,6 +587,107 @@ impl DateTime {
             }
         }
         Ok(increase_date)
+    }
+    /// Increases given DateTime using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
+    pub fn increase_ordinally(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        let mut increase_date = self.clone();
+        match length {
+            TimeSpan::days(days) => {
+                let temp_date = increase_date.clone().to_OrdinalDate().unwrap().increase_by_days(days).unwrap().to_Date().unwrap();
+                increase_date = DateTime::from(increase_date.second, increase_date.minute, increase_date.hour, temp_date.day, temp_date.month, temp_date.year).unwrap();
+            },
+            TimeSpan::months(months) => {
+                increase_date.year = increase_date.year + floor(months as f32 / 12.0);
+                increase_date.month = increase_date.month + (months % 12) as u8;
+                if increase_date.month > 12 {
+                    increase_date.month = increase_date.month - 12;
+                    increase_date.year = increase_date.year + 1;
+                }
+            },
+            TimeSpan::years(years) => {
+                increase_date.year += years;
+                increase_date.day = if !increase_date.isLeapYear()
+                    && increase_date.month == 2
+                    && increase_date.day == 29
+                {
+                    28
+                } else {
+                    increase_date.day
+                };
+            },
+            TimeSpan::seconds(seconds) => {
+                let second_floor =
+                    floor(((increase_date.second as i32 + seconds) as f32) / 60.0) as u8;
+                increase_date = increase_date
+                    .increase_as_new(TimeSpan::minutes(second_floor as i32).into())
+                    .unwrap();
+                increase_date.second = increase_date.second + (seconds % 60) as u8;
+                if increase_date.second > 59 {
+                    increase_date.second = increase_date.second - 60;
+                }
+            }
+            TimeSpan::minutes(minutes) => {
+                let minute_floor =
+                    floor(((increase_date.minute as i32 + minutes) as f32) / 60.0) as u8;
+                increase_date = increase_date
+                    .increase_as_new(TimeSpan::hours(minute_floor as i32).into())
+                    .unwrap();
+                increase_date.minute = increase_date.minute + (minutes % 60) as u8;
+                if increase_date.minute > 59 {
+                    increase_date.minute = increase_date.minute - 60;
+                }
+            }
+            TimeSpan::hours(hours) => {
+                let hour_floor = floor(((increase_date.hour as i32 + hours) as f32) / 24.0) as u8;
+                increase_date = increase_date
+                    .increase_as_new(TimeSpan::days(hour_floor as i32))
+                    .unwrap();
+                increase_date.hour = increase_date.hour + (hours % 24) as u8;
+                if increase_date.hour > 23 {
+                    increase_date.hour = increase_date.hour - 24;
+                }
+            }
+        }
+        Ok(increase_date)
+    }
+    /// Decreases given DateTime using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days. For now, there is no option for a gregorian decrease method
+    pub fn decrease_ordinally(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        let mut decrease_date = self.clone();
+        match length {
+            TimeSpan::days(days) => {
+                let temp_date = decrease_date.to_OrdinalDate().unwrap().decrease_by_days(days).unwrap().to_Date().unwrap();
+                decrease_date = DateTime::from(decrease_date.second, decrease_date.minute, decrease_date.hour, temp_date.day, temp_date.month, temp_date.year).unwrap();
+            }
+            TimeSpan::months(months) => {
+                decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);
+                decrease_date.month = decrease_date.month - (months % 12) as u8;
+                if decrease_date.month <= 0 {
+                    decrease_date.month = decrease_date.month + 12;
+                    decrease_date.year = decrease_date.year - 1;
+                }
+            }
+            TimeSpan::years(years) => {
+                decrease_date.year -= years;
+                decrease_date.day = if !decrease_date.isLeapYear()
+                    && decrease_date.month == 2
+                    && decrease_date.day == 29
+                {
+                    28
+                } else {
+                    decrease_date.day
+                };
+            }
+            _ => {
+                return Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for Date");
+            }
+        }
+        Ok(decrease_date)
     }
 }
 impl OrdinalDate {

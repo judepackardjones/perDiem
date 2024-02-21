@@ -95,6 +95,24 @@ mod tests {
     }
     mod operators {
         use perDiem::types::*;
+        use std::time::Instant;
+        #[test]
+        fn speed_test() {
+            let ordinal = Instant::now();
+            let _ = Date::from(1, 1, 2000).unwrap().increase_ordinally(TimeSpan::days(20));
+            let ordinal = ordinal.elapsed().as_nanos();
+            let gregorian = Instant::now();
+            let _ = Date::from(1, 1, 2000).unwrap().increase_as_new(TimeSpan::days(20));
+            let gregorian = gregorian.elapsed().as_nanos();
+            println!("Ordinal: {} nanoseconds, Gregorian: {} nanoseconds", ordinal, gregorian);
+            let ordinal = Instant::now();
+            let _ = Date::from(1, 1, 2000).unwrap().increase_ordinally(TimeSpan::days(2000));
+            let ordinal = ordinal.elapsed().as_nanos();
+            let gregorian = Instant::now();
+            let _ = Date::from(1, 1, 2000).unwrap().increase_as_new(TimeSpan::days(2000));
+            let gregorian = gregorian.elapsed().as_nanos();
+            println!("Ordinal: {} nanoseconds, Gregorian: {} nanoseconds", ordinal, gregorian);
+        }
         #[test]
         fn last_two_digits_year_test() {
             assert_eq!(Date {day: 1, month: 1, year: 2003}.last_two_digits_year(), String::from("03"));
@@ -103,7 +121,7 @@ mod tests {
         fn ordinal() {
             assert_eq!(OrdinalDate::from(1, 2000).unwrap().to_Date().unwrap(), Date{day: 1, month: 1, year: 2000});
             assert_eq!(OrdinalDate::from(32, 2000).unwrap().to_Date().unwrap(), Date{day: 1, month: 2, year: 2000});
-            assert_eq!(Date::from(1, 2, 2000).unwrap().to_ordinal().unwrap(), OrdinalDate::from(32, 2000).unwrap());
+            assert_eq!(Date::from(1, 2, 2000).unwrap().to_OrdinalDate().unwrap(), OrdinalDate::from(32, 2000).unwrap());
             assert_eq!(OrdinalDate::from(1, 2000).unwrap().increase_by_days(366).unwrap(), OrdinalDate::from(1, 2001).unwrap());
             assert_eq!(OrdinalDate::from(1, 2001).unwrap().decrease_by_days(1).unwrap(), OrdinalDate::from(366, 2000).unwrap());
         }
