@@ -101,8 +101,8 @@ mod tests {
         }
         #[test]
         fn ordinal() {
-            assert_eq!(Date::from_ordinal(OrdinalDate::from(1, 2000).unwrap()).unwrap(), Date{day: 1, month: 1, year: 2000});
-            assert_eq!(Date::from_ordinal(OrdinalDate::from(32, 2000).unwrap()).unwrap(), Date{day: 1, month: 2, year: 2000});
+            assert_eq!(OrdinalDate::from(1, 2000).unwrap().to_Date().unwrap(), Date{day: 1, month: 1, year: 2000});
+            assert_eq!(OrdinalDate::from(32, 2000).unwrap().to_Date().unwrap(), Date{day: 1, month: 2, year: 2000});
             assert_eq!(Date::from(1, 2, 2000).unwrap().to_ordinal().unwrap(), OrdinalDate::from(32, 2000).unwrap());
             assert_eq!(OrdinalDate::from(1, 2000).unwrap().increase_by_days(366).unwrap(), OrdinalDate::from(1, 2001).unwrap());
             assert_eq!(OrdinalDate::from(1, 2001).unwrap().decrease_by_days(2).unwrap(), OrdinalDate::from(365, 2000).unwrap());
@@ -120,6 +120,9 @@ mod tests {
             assert_eq!(Date {day: 6, month: 9, year: 1987}.increase_as_new(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
             assert_eq!(Date {day: 28, month: 2, year: 1987}.increase_as_new(TimeSpan::days(2000)).unwrap(), Date {day: 20, month: 8, year: 1992});
             assert_eq!(Date {day: 28, month: 2, year: 1980}.increase_as_new(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
+            assert_eq!(Date {day: 28, month: 2, year: 1980}.increase_ordinally(TimeSpan::days(1)).unwrap(), Date {day: 29, month: 2, year: 1980});
+            assert_eq!(Date {day: 6, month: 9, year: 1987}.increase_ordinally(TimeSpan::days(2000)).unwrap(), Date {day: 26, month: 2, year: 1993});
+            assert_eq!(Date {day: 26, month: 2, year: 1993}.decrease_ordinally(TimeSpan::days(2000)).unwrap(), Date {day: 6, month: 9, year: 1987});
         }
         #[test]
         fn increase_tests_date(){

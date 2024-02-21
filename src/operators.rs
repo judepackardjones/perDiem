@@ -139,6 +139,40 @@ impl Date {
             year: self.year,
         }
     }
+    pub fn decrease_ordinally(&self, length: TimeSpan) -> Result<Date, &'static str> {
+        if !self.is_valid() {
+            return Err("Invalid Date");
+        }
+        let mut decrease_date = self.clone();
+        match length {
+            TimeSpan::days(days) => {
+                decrease_date = decrease_date.to_ordinal().unwrap().decrease_by_days(days).unwrap().to_Date().unwrap();
+            }
+            TimeSpan::months(months) => {
+                decrease_date.year = decrease_date.year - floor(months as f32 / 12.0);
+                decrease_date.month = decrease_date.month - (months % 12) as u8;
+                if decrease_date.month <= 0 {
+                    decrease_date.month = decrease_date.month + 12;
+                    decrease_date.year = decrease_date.year - 1;
+                }
+            }
+            TimeSpan::years(years) => {
+                decrease_date.year -= years;
+                decrease_date.day = if !decrease_date.isLeapYear()
+                    && decrease_date.month == 2
+                    && decrease_date.day == 29
+                {
+                    28
+                } else {
+                    decrease_date.day
+                };
+            }
+            _ => {
+                return Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for Date");
+            }
+        }
+        Ok(decrease_date)
+    }
     pub fn increase_ordinally(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -677,3 +711,12 @@ impl Clone for TimeSpan {
         }
     }
 }
+impl Clone for OrdinalDate {
+    fn clone(&self) -> OrdinalDate {
+        OrdinalDate {
+            day: self.day,
+            year: self.year,
+        }
+    }
+}
+
