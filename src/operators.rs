@@ -370,7 +370,7 @@ impl Date {
 }
 
 impl DateTime {
-     /// Decreases the receiver-in-place DateTime by the TimeSpan specified and returns a Result.
+     /// Decreases the receiver-in-place DateTime by the TimeSpan specified and returns a Result. *There is currently no gregorian implementation of decrease because I'm lazy, writing it for me if you want I'll add
      pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
