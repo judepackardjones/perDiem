@@ -2,19 +2,20 @@
 0.1.61-3 Patch notes:  
 -------------
 Message me on Discord @ dtimer for any feedback or suggestions  
+------------
 Adds:  
 -----------
-OrdinalDate struct  
-increase and decrease ordinally functions  
-to_OrdinalDate  
-Finally adding decrease function for Date and DateTime(decrease_ordinally_as_new and decrease_ordinally)  
-Improves documentation a ton  
+>OrdinalDate struct  
+>increase and decrease ordinally functions  
+>to_OrdinalDate  
+>Finally adding decrease function for Date and DateTime(decrease_ordinally_as_new and decrease_ordinally)  
+>Improves documentation a ton  
 Fixes/Changes:  
 -----------
-Changed the start year for .new() for Date, DateTime, and OrdinalDate to 0, (Was 1)  
-Changed some doc descriptions  
-Removed unneccesary checks due to type restrictions  
-Made 24 an invalid hour(Should be hour 0)  
+> Changed the start year for .new() for Date, DateTime, and OrdinalDate to 0, (Was 1)  
+> Changed some doc descriptions  
+> Removed unneccesary checks due to type restrictions  
+> Made 24 an invalid hour(Should be hour 0)  
 Normal README:  
 -----------------
 The `Date` struct:  
