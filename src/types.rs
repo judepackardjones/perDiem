@@ -108,13 +108,11 @@ pub trait y {
     /// Used for adding separators to Date formats
     fn with_separators(&self, separator: &char) -> String;
 }
+
 #[derive(PartialEq)]
-/// Internally used enum for larger, smaller, and equal uses
+// Internally used enum for larger, smaller, and equal uses
 pub enum two_nums {
-    /// Fucking annoying I've got to write docs for this, but heres some facts:
     larger,
-    /// Did you know the midway point between the size of an atom and the size of the Earth is a spec of dust?
     smaller,
-    /// Did you know that if you give two metronomes enough time, they will eventually sync up, as long as they are on the same body?
     equal,
 }

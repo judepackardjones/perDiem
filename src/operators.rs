@@ -5,6 +5,11 @@ macro_rules! impl_operators_fns {
     ($struct:ident) => {
         impl crate::types::datekindOperators for $struct {
             /// Returns the last two digits of the given year
+            /// 
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(1, 1, 2021).last_two_digits_year(), "21".to_string());
             fn last_two_digits_year(&self) -> String {
                 self.year
                     .to_string()
@@ -27,6 +32,12 @@ impl_operators_fns!(DateTime);
 
 impl Date {
     /// Converts given Date to OrdinalDate
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(1, 1, 2021).to_OrdinalDate().unwrap(), OrdinalDate::from(1, 2021));
+    /// assert_eq!(Date::from(25, 5, 2021).to_OrdinalDate().unwrap(), OrdinalDate::from(145, 2021));
     pub fn to_OrdinalDate(&self) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -43,6 +54,13 @@ impl Date {
         })
     }
     /// Changes Date to be start of year
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let date = Date::from(20, 11, 2021);
+    /// date.start_of_year();
+    /// assert_eq!(date, Date::from(1, 1, 2021));
     pub fn start_of_year(&mut self) {
         *self = Date {
             day: 1,
@@ -51,6 +69,13 @@ impl Date {
         };
     }
     /// Changes Date to be start of current month
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let date = Date::from(20, 11, 2021);
+    /// date.start_of_month();
+    /// assert_eq!(date, Date::from(1, 11, 2021));
     pub fn start_of_month(&mut self) {
         *self = Date {
             day: 1,
@@ -59,6 +84,13 @@ impl Date {
         };
     }
     /// Changes Date to be end of current year
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let date = Date::from(20, 11, 2021);
+    /// date.end_of_year();
+    /// assert_eq!(date, Date::from(31, 12, 2021));
     pub fn end_of_year(&mut self) {
         *self = Date {
             day: 31,
@@ -67,6 +99,13 @@ impl Date {
         };
     }
     /// Changes Date to be end of current month
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let date = Date::from(20, 11, 2021);
+    /// date.end_of_month();
+    /// assert_eq!(date, Date::from(30, 11, 2021));
     pub fn end_of_month(&mut self) {
         *self = Date {
             day: self.clone().days_in_month() as u8,
@@ -75,6 +114,13 @@ impl Date {
         }
     }
     /// Increases the receiver-in-place Date by the TimeSpan specified and returns a Result.
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let mut date = Date::from(20, 11, 2021);
+    /// date.increase(TimeSpan::days(5));
+    /// assert_eq!(date, Date::from(25, 11, 2021));
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -82,7 +128,14 @@ impl Date {
         *self = self.increase_as_new(length.clone()).unwrap();
         Ok(())
     }
-    /// Increases the receiver-in-place Date by the TimeSpan specified and returns a result
+    /// Increases the receiver-in-place Date by the TimeSpan specified and returns a result(same result as increase method, just better at larger increases)
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let mut date = Date::from(20, 11, 2021);
+    /// date.increase_ordinally(TimeSpan::days(5));
+    /// assert_eq!(date, Date::from(25, 11, 2021));
     pub fn increase_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -91,6 +144,13 @@ impl Date {
         Ok(())
     }
     /// Decreases the receiver-in-place Date by the TimeSpan specified and returns a Result.
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let mut date = Date::from(20, 11, 2021);
+    /// date.decrease(TimeSpan::days(5));
+    /// assert_eq!(date, Date::from(15, 11, 2021));
     pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -98,27 +158,43 @@ impl Date {
         *self = self.decrease_ordinally_as_new(length.clone()).unwrap();
         Ok(())
     }
-    // TODO: End of Experimental increase
     /// Returns the difference between two Dates as a TimeDifference with seconds, minutes, and hours set to 0
-    pub fn difference(&self, datetime: &Date) -> TimeDifference {
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let date1 = Date::from(20, 11, 2021);
+    /// let date2 = Date::from(25, 5, 2024);
+    /// assert_eq!(date1.difference(&date2), TimeDifference::from(0, 0, 0, 5, 6, 3));
+    pub fn difference(&self, date: &Date) -> TimeDifference {
         TimeDifference {
             seconds: 0,
             minutes: 0,
             hours: 0,
-            days: get_pos(self.day.into(), datetime.day.into()),
-            months: get_pos(self.month.into(), datetime.month.into()),
-            years: get_pos(self.year.into(), datetime.year.into()),
+            days: get_pos(self.day.into(), date.day.into()),
+            months: get_pos(self.month.into(), date.month.into()),
+            years: get_pos(self.year.into(), date.year.into()),
         }
     }
-    /// Creates an instance of Date with all fields set to 1
+    /// Creates an instance of Date at the start of BCE
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::new(), Date::from(1, 1, 1));
     pub fn new() -> Date {
         Date {
             day: 1,
             month: 1,
-            year: 1,
+            year: 0,
         }
     }
     /// Creates a instance of Date with fields provided
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(1, 1, 2021).unwrap(), Date { day: 1, month: 1, year: 2021});
     pub fn from(day: u8, month: u8, year: i32) -> Result<Date, &'static str> {
         let date = Date {
             day: day,
@@ -130,18 +206,29 @@ impl Date {
         }
         Ok(date)
     }
-    /// Converts Date to DateTime and sets second, minute, and hour to 1.
+    /// Converts Date to DateTime and sets second, minute, and hour to 0.
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(1, 1, 2021).to_DateTime(), DateTime::from(0, 0, 0, 1, 1, 2021));
     pub fn to_DateTime(&self) -> DateTime {
         DateTime {
-            second: 1,
-            minute: 1,
-            hour: 1,
+            second: 0,
+            minute: 0,
+            hour: 0,
             day: self.day,
             month: self.month,
             year: self.year,
         }
     }
     /// Decreases given Date using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(20, 11, 2021).decrease_ordinally_as_new(TimeSpan::days(5)).unwrap(), Date::from(15, 11, 2021));
+    /// assert_eq!(Date::from(20, 11, 2021).decrease_ordinally_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 6, 2021));
     pub fn decrease_ordinally_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -177,6 +264,12 @@ impl Date {
         Ok(decrease_date)
     }
     /// Increases given Date using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(20, 11, 2021).increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), Date::from(25, 11, 2021));
+    /// assert_eq!(Date::from(20, 11, 2021).increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 4, 2022));
     pub fn increase_ordinally_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -213,6 +306,12 @@ impl Date {
         Ok(increase_date)
     }
     /// Creates a new instance of Date that has been incremented by given TimeSpan parameter
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(20, 11, 2021).increase_as_new(TimeSpan::days(5)).unwrap(), Date::from(25, 11, 2021));
+    /// assert_eq!(Date::from(20, 11, 2021).increase_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 4, 2022));
     pub fn increase_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -265,7 +364,7 @@ impl Date {
                 };
             }
             _ => {
-                return Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for the Date's increase method");
+                return Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for the Date's increase method!");
             }
         }
         let final_date: Date = Date {
@@ -315,8 +414,21 @@ impl Date {
 }
 
 impl DateTime {
-     /// Decreases the receiver-in-place DateTime by the TimeSpan specified and returns a Result. *There is currently no gregorian implementation of decrease because I'm lazy, writing it for me if you want I'll add
-     pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
+    /// Decreases the receiver-in-place DateTime by the TimeSpan specified and returns a Result. *There is currently no gregorian implementation of decrease because I'm lazy, write it for me if you want I'll add.
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let mut datetime = DateTime::from( 0, 0, 0, 20, 11, 2021);
+    /// datetime.decrease(TimeSpan::days(5));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 15, 11, 2021));
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.decrease(TimeSpan::months(5));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 20, 6, 2021));
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.decrease(TimeSpan::minutes(5));
+    /// assert_eq!(datetime, DateTime::from(0, 55, 0, 19, 11, 2021));
+    pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
@@ -324,6 +436,16 @@ impl DateTime {
         Ok(())
     }
     /// Decreases the receiver-in-place DateTime by the TimeSpan specified and returns a result
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let mut datetime = DateTime::from( 0, 0, 0, 20, 11, 2021);
+    /// datetime.increase_ordinally(TimeSpan::days(5));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 25, 11, 2021));
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.increase_ordinally(TimeSpan::minutes(5));
+    /// assert_eq!(datetime, DateTime::from(0, 5, 0, 20, 11, 2021));
     pub fn increase_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid DateTime");
@@ -332,6 +454,12 @@ impl DateTime {
         Ok(())
     }
     /// Converts given DateTime to OrdinalDate
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2021).to_OrdinalDate().unwrap(), OrdinalDate::from(1, 2021));
+    /// assert_eq!(DateTime::from(0, 0, 0, 25, 5, 2021).to_OrdinalDate().unwrap(), OrdinalDate::from(145, 2021));
     pub fn to_OrdinalDate(&self) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -348,6 +476,13 @@ impl DateTime {
         })
     }
     /// Changes DateTime to be start of year
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.start_of_year();
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 1, 1, 2021));
     pub fn start_of_year(&mut self) {
         *self = DateTime {
             day: 1,
@@ -359,6 +494,13 @@ impl DateTime {
         };
     }
     /// Changes DateTime to be start of current month
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.start_of_month();
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 1, 11, 2021));
     pub fn start_of_month(&mut self) {
         *self = DateTime {
             day: 1,
@@ -370,6 +512,13 @@ impl DateTime {
         };
     }
     /// Changes DateTime to be end of current year
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.end_of_year();
+    /// assert_eq!(datetime, DateTime::from(59, 59, 23, 31, 12, 2021));
     pub fn end_of_year(&mut self) {
         *self = DateTime {
             day: 31,
@@ -381,6 +530,13 @@ impl DateTime {
         };
     }
     /// Changes DateTime to be end of current month
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let datetime = DateTime::from(0, 0, 0, 20, 3, 2021);
+    /// datetime.end_of_month();
+    /// assert_eq!(datetime, DateTime::from(59, 59, 23, 31, 3, 2021));
     pub fn end_of_month(&mut self) {
         
         *self = DateTime {
@@ -393,6 +549,19 @@ impl DateTime {
         }
     }
     /// Mutates the receiver DateTime by the TimeSpan sepcified and returns a Result.
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.increase(TimeSpan::days(5));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 25, 11, 2021));
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.increase(TimeSpan::months(5));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 20, 4, 2022));
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// datetime.increase(TimeSpan::minutes(5));
+    /// assert_eq!(datetime, DateTime::from(0, 5, 0, 20, 11, 2021));
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -400,7 +569,12 @@ impl DateTime {
         *self = self.increase_as_new(length.clone()).unwrap();
         Ok(())
     }
-    /// Creates new instance of DateTime with all fields set to 1
+    /// Creates new instance of DateTime started at the zeroth second of the BCE
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::new(), DateTime::from(0, 0, 0, 1, 1, 0));
     pub fn new() -> DateTime {
         DateTime {
             second: 0,
@@ -408,10 +582,15 @@ impl DateTime {
             hour: 0,
             day: 1,
             month: 1,
-            year: 1,
+            year: 0,
         }
     }
     /// Creates a new instance of DateTime with parameters given
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(45, 2, 0, 1, 1, 2000).unwrap(), DateTime { second: 45, minute: 2, hour: 0, day: 1, month: 1, year: 2000});
     pub fn from(
         second: u8,
         minute: u8,
@@ -434,6 +613,13 @@ impl DateTime {
         Ok(datetime)
     }
     /// Returns a TimeDifference of the two dates given. Each field is always positive.
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// let datetime1 = DateTime::from(5, 4, 0, 20, 11, 2021);
+    /// let datetime2 = DateTime::from(7, 7, 0, 25, 5, 2024);
+    /// assert_eq!(datetime1.difference(&datetime2), TimeDifference{seconds: 2, minutes: 3, hours: 0, days: 5, months: 6, years: 3});
     pub fn difference(&self, datetime: &DateTime) -> TimeDifference {
         TimeDifference {
             seconds: get_pos(self.second.into(), datetime.second.into()),
@@ -445,6 +631,11 @@ impl DateTime {
         }
     }
     /// Converts DateTime to Date
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).to_Date(), Date::from(20, 11, 2021));
     pub fn to_Date(&self) -> Date {
         Date {
             day: self.day,
@@ -453,6 +644,11 @@ impl DateTime {
         }
     }
     /// Increases the given DateTime by the TimeSpan specified
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 25, 11, 2021));
     pub fn increase_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         let mut increase_date = self.clone();
         match length {
@@ -536,6 +732,13 @@ impl DateTime {
         Ok(increase_date)
     }
     /// Increases given DateTime using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 25, 11, 2021));
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 4, 2022));
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 5, 0, 20, 11, 2021));
     pub fn increase_ordinally_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -601,6 +804,13 @@ impl DateTime {
         Ok(increase_date)
     }
     /// Decreases given DateTime using conversion to ordinal for days. Much better at larger increases than other, but much poorer at smaller increases.*Difference is only for TimeSpan::days. For now, there is no option for a gregorian decrease method
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).decrease_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 15, 11, 2021));
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).decrease_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 6, 2021));
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).decrease_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 55, 0, 19, 11, 2021));
     pub fn decrease_ordinally_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -638,7 +848,13 @@ impl DateTime {
     }
 }
 impl OrdinalDate {
-    /// Decreases the given OrdinalDate by the days specified(unfinished)
+    /// Decreases the given OrdinalDate by the days specified
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(OrdinalDate::from(20, 2021).decrease_by_days(5).unwrap(), OrdinalDate::from(15, 2021));
+    /// assert_eq!(OrdinalDate::from(20, 2021).decrease_by_days(20).unwrap(), OrdinalDate::from(355, 2019));
     pub fn decrease_by_days(&self, days: i32) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid OrdinalDate");
@@ -655,6 +871,12 @@ impl OrdinalDate {
         })
     }
     /// Increases the given OrdinalDate by the days specified
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(OrdinalDate::from(20, 2021).increase_by_days(5).unwrap(), OrdinalDate::from(25, 2021));
+    /// assert_eq!(OrdinalDate::from(20, 2021).increase_by_days(20).unwrap(), OrdinalDate::from(40, 2021));
     pub fn increase_by_days(&self, days: i32) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid OrdinalDate");
@@ -672,11 +894,21 @@ impl OrdinalDate {
             year: year,
         })
     }
-    /// Creates a new instance of OrdinalDate with all fields set to 1
+    /// Creates a new instance of OrdinalDate with at the start of BCE
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(OrdinalDate::new(), OrdinalDate::from(1, 0));
     pub fn new() -> OrdinalDate {
-        OrdinalDate { day: 1, year: 1 }
+        OrdinalDate { day: 1, year: 0 }
     }
     /// Creates a new instance of OrdinalDate with parameters given
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap(), OrdinalDate { day: 20, year: 2021});
     pub fn from(day: u16, year: i32) -> Result<OrdinalDate, &'static str> {
         if day > 366 {
             return Err("Day is out of range");
@@ -686,7 +918,12 @@ impl OrdinalDate {
             year: year,
         })
     }
-    /// Creates a Date instance from an ordinal Date
+    /// Creates a Date instance from an OrdinalDate
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(OrdinalDate::from(20, 2021).to_Date().unwrap(), Date::from(20, 1, 2021));
     pub fn to_Date(&self) -> Result<Date, &'static str> {
         if (isLeapYear(self.year) && self.day > 366)
             || (!isLeapYear(self.year) && self.day > 365)
@@ -708,6 +945,11 @@ impl OrdinalDate {
         })
     }
     /// Creates a DateTime instance from an ordinal Date starting new fields at 00:00:00
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(OrdinalDate::from(20, 2021).to_DateTime().unwrap(), DateTime::from(0, 0, 0, 20, 1, 2021));
     pub fn to_DateTime(&self) -> Result<DateTime, &'static str> {
         if (isLeapYear(self.year) && self.day > 366)
             || (!isLeapYear(self.year) && self.day > 365)

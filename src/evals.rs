@@ -4,11 +4,19 @@ use chrono::prelude::Local;
 use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use struct_iterable::Iterable;
+
+
 // Implments these functions for Date and DateTime
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
         impl crate::types::datekindEvals for $struct {
             /// Method returns bool if Date or DateTime is start of month.
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(1, 1, 2000).isStartOfMonth(), true);
+            /// assert_eq!(Date::from(15, 1, 2000).isStartOfMonth(), false);
             fn isStartOfMonth(&self) -> bool {
                 if self.day == 1 {
                     return true;
@@ -16,6 +24,13 @@ macro_rules! impl_eval_fns {
                 false
             }
             /// Method returns bool if Date or DateTime is end of month.
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(29, 2, 2000).isEndOfMonth(), true);
+            /// assert_eq!(Date::from(31, 3, 2000).isEndOfMonth(), true);
+            /// assert_eq!(Date::from(15, 1, 2000).isEndOfMonth(), false);
             fn isEndOfMonth(&self) -> bool {
                 if self.day == self.days_in_month() as u8 {
                     return true;
@@ -23,6 +38,12 @@ macro_rules! impl_eval_fns {
                 false
             }
             /// Method returns bool if Date or DateTime is start of year.
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(1, 1, 2000).isStartOfYear(), true);
+            /// assert_eq!(Date::from(15, 1, 2000).isStartOfYear(), false);
             fn isStartOfYear(&self) -> bool {
                 if self.month == 1 && self.day == 1 {
                     return true;
@@ -30,6 +51,12 @@ macro_rules! impl_eval_fns {
                 false
             }
             /// Method returns bool if Date or DateTime is end of year.
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(31, 12, 2000).isEndOfYear(), true);
+            /// assert_eq!(Date::from(15, 1, 2000).isEndOfYear(), false);
             fn isEndOfYear(&self) -> bool {
                 if self.month == 12 && self.day == 31 {
                     return true;
@@ -37,11 +64,24 @@ macro_rules! impl_eval_fns {
                 false
             }
             
-            /// Method pass Date or DateTime and returns true if Date or DateTime's year field is a leap year
+            /// Method pass Date or DateTime and returns true if Date or DateTime's year field is a leap year 
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(1, 1, 2000).isLeapYear(), true);
+            /// assert_eq!(Date::from(1, 1, 2001).isLeapYear(), false);
+            /// assert_eq!(Date::from(1, 1, 1900).isLeapYear(), false); // Make sure you understand leap year rules
             fn isLeapYear(&self) -> bool {
                 (self.year % 4 == 0 && self.year % 100 != 0) || self.year % 400 == 0
             }
             /// Method returns the day of the week as a String of the Date or DateTime passed to it.
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(22, 2, 2024).weekday().unwrap(), "Thursday");
+            /// assert_eq!(Date::from(23, 2, 2024).weekday().unwrap(), "Friday");
             fn weekday(&self) -> Result<String, &str> {
                 if !self.is_valid() {
                     return Err("Invalid Date or DateTime");
@@ -94,21 +134,39 @@ macro_rules! impl_eval_fns {
                 }
                 return Ok(num);
             }
-            /// returns true if both params share the same day
+            /// Returns true if both params share the same day of month
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(1, 3, 2002).sharesDay(&Date::from(1, 5, 2020)), true);
+            /// assert_eq!(Date::from(1, 3, 2020).sharesDay(&Date::from(2, 3, 2020)), false);
             fn sharesDay(&self, date2: &$struct) -> bool {
                 if self.day == date2.day {
                     return true;
                 }
                 false
             }
-            /// returns true if both params share the same year
+            /// Returns true if both params share the same year
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(5, 3, 2002).sharesYear(&Date::from(1, 5, 2002)), true);
+            /// assert_eq!(Date::from(1, 3, 2000).sharesYear(&Date::from(2, 3, 2020)), false);
             fn sharesYear(&self, date2: &$struct) -> bool {
                 if self.year == date2.year {
                     return true;
                 }
                 false
             }
-            /// returns true if both params share the same month
+            /// Returns true if both params share the same month
+            ///
+            /// # Example
+            /// 
+            ///~~~~
+            /// assert_eq!(Date::from(1, 3, 2002).sharesMonth(&Date::from(15, 3, 2020)), true);
+            /// assert_eq!(Date::from(1, 3, 2000).sharesMonth(&Date::from(2, 4, 2020)), false);
             fn sharesMonth(&self, date2: &$struct) -> bool {
                 if self.month == date2.month {
                     return true;
@@ -120,6 +178,14 @@ macro_rules! impl_eval_fns {
 }
 impl Date {
     /// Checks if a Date is valid
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(1, 1, 2000).is_valid(), true);
+    /// assert_eq!(Date::from(29, 2, 2001).is_valid(), false);
+    /// assert_eq!(Date::from(50, 4, 2000).is_valid(), false);
+    /// assert_eq!(Date::from(1, 50, 2000).is_valid(), false);
     pub fn is_valid(&self) -> bool {
         if self.day > 0
             && self.day <= self.days_in_month() as u8
@@ -134,6 +200,14 @@ impl Date {
         }
     }
     /// Returns a Vector of &str shared by each Date in Vector params (Returns the same as allShare, just different implementation of it.)
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001), Date::from(1, 1, 2000)]);
+    /// assert_eq!(shares_vec.contains("day"), true);
+    /// assert_eq!(shares_vec.contains("month"), true);
+    /// assert_eq!(shares_vec.contains("year"), false);
     pub fn allShareEL(vec: Vec<Date>) -> Vec<&'static str> {
         let mut terms: Vec<&'static str> = vec!["day", "month", "year"];
         let mut shared_terms: Vec<&'static str> = vec![];
@@ -155,6 +229,14 @@ impl Date {
         terms
     }
     /// Returns a Vector of the shared fields in each Date from Vector
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001), Date::from(1, 1, 2000)]);
+    /// assert_eq!(shares_vec.contains("day"), true);
+    /// assert_eq!(shares_vec.contains("month"), true);
+    /// assert_eq!(shares_vec.contains("year"), false);
     pub fn allShare(vec: Vec<Date>) -> Vec<&'static str> {
         let mut shares_terms: Vec<&'static str> = vec!["day", "month", "year"];
         let (day, month, year) = (
@@ -191,6 +273,12 @@ impl Date {
         }
     }
     /// Returns the # of days in the month of the Date/DateTime(Credit to TDark on Rust Discord)
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(1, 1, 2000).days_in_month(), 31);
+    /// assert_eq!(Date::from(1, 2, 2000).days_in_month(), 29);
     pub fn days_in_month(&self) -> i8 { 
         match self.month {
           1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
@@ -201,6 +289,14 @@ impl Date {
         }
       }
     /// same function of sharesDay, sharesMonth, sharesYear, but adds comparison field as a param.
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001), Date::from(1, 1, 2000)]);
+    /// assert_eq!(shares_vec.contains("day"), true);
+    /// assert_eq!(shares_vec.contains("month"), true);
+    /// assert_eq!(shares_vec.contains("year"), false);
     pub fn DateShares(&self, datetime2: &Date, compare_type: &str) -> Result<bool, &str> {
         match compare_type {
             "day" => {
@@ -227,7 +323,13 @@ impl Date {
             &_ => return Err("Invalid compare type"),
         }
     }
-    /// takes self and Date fields and returns true if self is after the second, date, and false if not.
+    /// Takes self and Date fields and returns true if self is after the second, date, and false if not.
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(1, 1, 2001).is_after(Date::from(1, 1, 2000)), true);
+    /// assert_eq!(Date::from(1, 1, 2000).is_after(Date::from(1, 1, 2001)), false);
     pub fn is_after(&self, date: Date) -> bool {
         if compare_nums(self.year, date.year) == two_nums::larger {
             true
@@ -245,7 +347,13 @@ impl Date {
             false
         }
     }
-    /// The reverse of is_after
+    /// Takes self and Date fields and returns true if self is before the second, date, and false if not.
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(1, 1, 2000).is_before(Date::from(1, 1, 2001)), true);
+    /// assert_eq!(Date::from(1, 1, 2001).is_before(Date::from(1, 1, 2000)), false);
     pub fn is_before(&self, date: Date) -> bool {
         !self.is_after(date)
     }
@@ -253,6 +361,18 @@ impl Date {
 
 impl DateTime {
     /// Checks if a DateTime is a valid day
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2000).is_valid(), true);
+    /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2000).is_valid(), true);
+    /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2001).is_valid(), false);
+    /// assert_eq!(DateTime::from(0, 0, 0,50, 4, 2000).is_valid(), false);
+    /// assert_eq!(DateTime::from(60, 0, 0, 50, 4, 2000).is_valid(), false);
+    /// assert_eq!(DateTime::from(0, 60, 0, 50, 4, 2000).is_valid(), false);
+    /// assert_eq!(DateTime::from(0, 60, 25, 50, 4, 2000).is_valid(), false);
+    /// assert_eq!(DateTime::from(0, 60, 24, 50, 4, 2000).is_valid(), false);
     pub fn is_valid(&self) -> bool {
         if (Date {
             day: self.day,
@@ -260,9 +380,9 @@ impl DateTime {
             year: self.year,
         })
         .is_valid()
-            && self.second < 60
-            && self.minute < 60
-            && self.hour < 24
+            && self.second <= 60
+            && self.minute <= 60
+            && self.hour <= 24
         {// comparison  of 0s useless due to type limits
             true
         } else {
@@ -270,6 +390,17 @@ impl DateTime {
         }
     }
     /// Takes a Vector of DateTimes and returns all field values they share as a vector of &str. (Same function  of allShare just different implementation)
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// let shares_vec = Date::allShareEL(vec![DateTime::from(0, 5, 23, 1, 1, 2001), DateTime::from(0, 6, 23, 1, 1, 2000)]);
+    /// assert_eq!(shares_vec.contains("second"), true);
+    /// assert_eq!(shares_vec.contains("minute"), true);
+    /// assert_eq!(shares_vec.contains("hour"), false);
+    /// assert_eq!(shares_vec.contains("day"), true);
+    /// assert_eq!(shares_vec.contains("month"), true);
+    /// assert_eq!(shares_vec.contains("year"), false);
     pub fn allShareEL(vec: Vec<DateTime>) -> Vec<&'static str> {
         let mut terms: Vec<&'static str> = vec!["second", "minute", "hour", "day", "month", "year"];
         let mut shared_terms: Vec<&'static str> = vec![];
@@ -294,6 +425,12 @@ impl DateTime {
         terms
     }
     /// Returns the # of days in the month of the Date/DateTime(Credit to TDark on Rust Discord)
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(Date::from(1, 1, 2000).days_in_month(), 31);
+    /// assert_eq!(Date::from(1, 2, 2000).days_in_month(), 29);
     pub fn days_in_month(&self) -> i8 { 
         match self.month {
           1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
@@ -304,6 +441,17 @@ impl DateTime {
         }
       }
     /// Takes a Vector of DateTimes and returns a Vector of &strs of the field values they share
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// let shares_vec = Date::allShareEL(vec![DateTime::from(0, 5, 23, 1, 1, 2001), DateTime::from(0, 6, 23, 1, 1, 2000)]);
+    /// assert_eq!(shares_vec.contains("second"), true);
+    /// assert_eq!(shares_vec.contains("minute"), true);
+    /// assert_eq!(shares_vec.contains("hour"), false);
+    /// assert_eq!(shares_vec.contains("day"), true);
+    /// assert_eq!(shares_vec.contains("month"), true);
+    /// assert_eq!(shares_vec.contains("year"), false);
     pub fn allShare(vec: Vec<DateTime>) -> Vec<&'static str> {
         let mut shares_terms: Vec<&'static str> =
             vec!["second", "minute", "hour", "day", "month", "year"];
@@ -362,6 +510,11 @@ impl DateTime {
         }
     }
     /// Returns true if two DateTimes passed share the same second value
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(50, 0, 1, 1, 1, 2000).sharesSecond(DateTime::from(50, 0, 1, 1, 1, 2000)), true);
     pub fn sharesSecond(&self, datetime2: DateTime) -> bool {
         if self.second == datetime2.second {
             return true;
@@ -369,6 +522,11 @@ impl DateTime {
         false
     }
     /// Returns true if two DateTimes passed share the same minute value
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(50, 20, 1, 1, 1, 2000).sharesMinute(DateTime::from(50, 20, 1, 1, 1, 2000)), true);
     pub fn sharesMinute(&self, datetime2: DateTime) -> bool {
         if self.minute == datetime2.minute {
             return true;
@@ -376,6 +534,11 @@ impl DateTime {
         false
     }
     /// Returns true if two DateTimes passed share the same hour value
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(50, 4, 16, 1, 1, 2000).sharesHour(DateTime::from(40, 0, 16, 1, 1, 2000)), true);
     pub fn sharesHour(&self, datetime2: DateTime) -> bool {
         if self.hour == datetime2.hour {
             return true;
@@ -383,6 +546,11 @@ impl DateTime {
         false
     }
     /// Returns true if two DateTimes passed share the same compare_type passed
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(DateTime::from(50, 4, 16, 1, 1, 2000).DateTimeShares(&DateTime::from(40, 0, 16, 3, 2, 2020), "hour").unwrap(), true);
     pub fn DateTimeShares(&self, datetime2: &Self, compare_type: &str) -> Result<bool, &str> {
         match compare_type {
             "second" => {
@@ -435,6 +603,13 @@ impl DateTime {
 }
 impl OrdinalDate {
     /// Checks if an ordinal date is valid
+    ///
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!(OrdinalDate::from(1, 2000).is_valid(), true);
+    /// assert_eq!(OrdinalDate::from(366, 2000).is_valid(), true);
+    /// assert_eq!(OrdinalDate::from(367, 2000).is_valid(), false);
     pub fn is_valid(&self) -> bool {
         if isLeapYear(self.year) && self.day > 366 || !isLeapYear(self.year) && self.day > 365 {
             return false;
@@ -444,10 +619,23 @@ impl OrdinalDate {
 
 }
 /// Method pass Date or DateTime and returns true if Date or DateTime's year field is a leap year
+/// 
+/// # Example
+/// 
+///~~~~
+/// assert_eq!(isLeapYear(2000), true);
+/// assert_eq!(isLeapYear(2001), false);
+/// assert_eq!(isLeapYear(1900), false); // Make sure you understand leap year rules
 pub fn isLeapYear(year: i32) -> bool {
     (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
 }
 /// Returns the # of days in the month of the Date/DateTime(Credit to TDark on Rust Discord)
+/// 
+/// # Example
+/// 
+///~~~~
+/// assert_eq!(days_in_month(1, 2000), 31);
+/// assert_eq!(days_in_month(2, 2000), 29);
 pub fn days_in_month(month: u8, year: i32) -> i8 { 
     match month {
       1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,

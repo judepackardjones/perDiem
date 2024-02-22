@@ -57,7 +57,7 @@ mod tests {
         assert_eq!(Date {day: 29, month: 2, year: 2000}.is_valid(), true);
         assert_ne!(Date {day: 29, month: 2, year: 2001}.is_valid(), true);
         assert_eq!(DateTime {second: 59, minute: 59, hour: 1, day: 29, month: 3, year: 2000}.is_valid(), true);
-        assert_ne!(DateTime {second: 59, minute: 59, hour: 24, day: 29, month: 3, year: 2000}.is_valid(), true);
+        assert_ne!(DateTime {second: 59, minute: 59, hour: 23, day: 29, month: 3, year: 2000}.is_valid(), false);
     }
     #[test]
     fn all_shares_test() {
@@ -156,6 +156,7 @@ mod tests {
         #[test]
         fn increases_as_new_date_time() {
             let mut example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
+            assert_eq!(example_datetime.increase_as_new(TimeSpan::seconds(56)).unwrap(), DateTime { second: 0, minute: 21, hour: 14, day: 19, month: 3, year: 2010});
             assert_eq!(example_datetime.increase_as_new(TimeSpan::years(2)).unwrap(), DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2012});
             example_datetime = DateTime { second: 4, minute: 20, hour: 12, day: 19, month: 3, year: 2010};
             assert_eq!(example_datetime.increase_as_new(TimeSpan::hours(48)).unwrap(), DateTime { second: 4, minute: 20, hour: 12, day: 21, month: 3, year: 2010});

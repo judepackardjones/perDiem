@@ -2,6 +2,13 @@ use crate::types::*;
 use undup::undup_chars;
 
 impl x for String {
+    /// Converts a String to a Date. The format is given as a string.
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// assert_eq!("01/01/2021".as_Date("dd/mm/yyyy"), Date::from(1, 1, 2021));
+    /// assert_eq!("25/05/2021".as_Date("dd/mm/yyyy"), Date::from(25, 5, 2021));
     fn as_Date(&self, format: &str) -> Date {
         let rtn_string: String = self.clone();
         let parts: Vec<&str> = rtn_string.split(|x| x == '/' || x == ',' || x == '-' || x == '\\' || x == '.').collect();
