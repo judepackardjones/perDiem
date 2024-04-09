@@ -2,7 +2,7 @@
 #[cfg(test)]
 mod tests {
     mod weekdays {
-        use perDiem::types::{Date, DateTime, datekindEvals};
+        use perDiem::types::*;
 
     #[test]
     fn date_to_weekday() {
@@ -21,7 +21,7 @@ mod tests {
     }
     }
     mod dateconditions {
-        use perDiem::types::{Date, datekindEvals};
+        use perDiem::types::*;
 
     #[test]
     fn is_leap_year() {
@@ -51,7 +51,7 @@ mod tests {
 }
     }
     mod comparisons {
-        use perDiem::types::{Date, datekindEvals, DateTime};
+        use perDiem::types::*;
     #[test] 
     fn is_valid_tests() {
         assert_eq!(Date {day: 29, month: 2, year: 2000}.is_valid(), true);
@@ -84,8 +84,8 @@ mod tests {
             use perDiem::types::*;
             #[test]
             fn separators_insert() {
-                let strr: &str = "ddmmyyyy";
-            assert_eq!(strr.with_separators(&'/'), String::from("dd/mm/yyyy"));
+                let str: &str = "ddmmyyyy";
+            assert_eq!(str.with_separators(&'/'), String::from("dd/mm/yyyy"));
             }
             #[test]
             fn to_string_test() {

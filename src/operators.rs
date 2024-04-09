@@ -9,7 +9,9 @@ macro_rules! impl_operators_fns {
             /// # Example
             /// 
             ///~~~~
-            /// assert_eq!(Date::from(1, 1, 2021).last_two_digits_year(), "21".to_string());
+            /// use perDiem::types::Date;
+            /// 
+            /// assert_eq!(Date::from(1, 1, 2021).unwrap().last_two_digits_year(), "21".to_string());
             fn last_two_digits_year(&self) -> String {
                 self.year
                     .to_string()
@@ -36,8 +38,10 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(Date::from(1, 1, 2021).to_OrdinalDate().unwrap(), OrdinalDate::from(1, 2021));
-    /// assert_eq!(Date::from(25, 5, 2021).to_OrdinalDate().unwrap(), OrdinalDate::from(145, 2021));
+    /// use perDiem::types::{Date, OrdinalDate};
+    /// 
+    /// assert_eq!(Date::from(1, 1, 2021).unwrap().to_OrdinalDate().unwrap(), OrdinalDate::from(1, 2021).unwrap());
+    /// assert_eq!(Date::from(25, 5, 2021).unwrap().to_OrdinalDate().unwrap(), OrdinalDate::from(145, 2021).unwrap());
     pub fn to_OrdinalDate(&self) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -58,9 +62,11 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// let date = Date::from(20, 11, 2021);
+    /// use perDiem::types::Date;
+    /// 
+    /// let mut date = Date::from(20, 11, 2021).unwrap();
     /// date.start_of_year();
-    /// assert_eq!(date, Date::from(1, 1, 2021));
+    /// assert_eq!(date, Date::from(1, 1, 2021).unwrap());
     pub fn start_of_year(&mut self) {
         *self = Date {
             day: 1,
@@ -73,9 +79,11 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// let date = Date::from(20, 11, 2021);
+    /// use perDiem::types::Date;
+    /// 
+    /// let mut date = Date::from(20, 11, 2021).unwrap();
     /// date.start_of_month();
-    /// assert_eq!(date, Date::from(1, 11, 2021));
+    /// assert_eq!(date, Date::from(1, 11, 2021).unwrap());
     pub fn start_of_month(&mut self) {
         *self = Date {
             day: 1,
@@ -133,9 +141,11 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// let mut date = Date::from(20, 11, 2021);
+    /// use perDiem::types::{Date, TimeSpan};
+    /// 
+    /// let mut date = Date::from(20, 11, 2021).unwrap();
     /// date.increase_ordinally(TimeSpan::days(5));
-    /// assert_eq!(date, Date::from(25, 11, 2021));
+    /// assert_eq!(date, Date::from(25, 11, 2021).unwrap());
     pub fn increase_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -181,7 +191,9 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(Date::new(), Date::from(1, 1, 1));
+    /// use perDiem::types::Date;
+    /// 
+    /// assert_eq!(Date::new(), Date::from(1, 1, 1).unwrap());
     pub fn new() -> Date {
         Date {
             day: 1,
@@ -211,7 +223,9 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(Date::from(1, 1, 2021).to_DateTime(), DateTime::from(0, 0, 0, 1, 1, 2021));
+    /// use perDiem::types::{Date, DateTime};
+    /// 
+    /// assert_eq!(Date::from(1, 1, 2021).unwrap().to_DateTime(), DateTime::from(0, 0, 0, 1, 1, 2021).unwrap());
     pub fn to_DateTime(&self) -> DateTime {
         DateTime {
             second: 0,
@@ -268,8 +282,10 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(Date::from(20, 11, 2021).increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), Date::from(25, 11, 2021));
-    /// assert_eq!(Date::from(20, 11, 2021).increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 4, 2022));
+    /// use perDiem::types::{Date, TimeSpan};
+    /// 
+    /// assert_eq!(Date::from(20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), Date::from(25, 11, 2021));
+    /// assert_eq!(Date::from(20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 4, 2022));
     pub fn increase_ordinally_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -310,8 +326,10 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(Date::from(20, 11, 2021).increase_as_new(TimeSpan::days(5)).unwrap(), Date::from(25, 11, 2021));
-    /// assert_eq!(Date::from(20, 11, 2021).increase_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 4, 2022));
+    /// use perDiem::types::{Date, TimeSpan};
+    /// 
+    /// assert_eq!(Date::from(20, 11, 2021).unwrap().increase_as_new(TimeSpan::days(5)).unwrap(), Date::from(25, 11, 2021).unwrap());
+    /// assert_eq!(Date::from(20, 11, 2021).unwrap().increase_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 4, 2022).unwrap());
     pub fn increase_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -419,15 +437,17 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// let mut datetime = DateTime::from( 0, 0, 0, 20, 11, 2021);
-    /// datetime.decrease(TimeSpan::days(5));
-    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 15, 11, 2021));
-    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
-    /// datetime.decrease(TimeSpan::months(5));
-    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 20, 6, 2021));
-    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
-    /// datetime.decrease(TimeSpan::minutes(5));
-    /// assert_eq!(datetime, DateTime::from(0, 55, 0, 19, 11, 2021));
+    /// use perDiem::types::{TimeSpan, DateTime};
+    /// 
+    /// let mut datetime = DateTime::from( 0, 0, 0, 20, 11, 2021).unwrap();
+    /// datetime.decrease_ordinally(TimeSpan::days(5));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 15, 11, 2021).unwrap());
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
+    /// datetime.decrease_ordinally(TimeSpan::months(5));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 20, 6, 2021).unwrap());
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
+    /// datetime.decrease_ordinally(TimeSpan::minutes(5));
+    /// assert_eq!(datetime, DateTime::from(0, 55, 0, 19, 11, 2021).unwrap());
     pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -440,12 +460,14 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// let mut datetime = DateTime::from( 0, 0, 0, 20, 11, 2021);
+    /// use perDiem::types::{TimeSpan, DateTime};
+    /// 
+    /// let mut datetime = DateTime::from( 0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.increase_ordinally(TimeSpan::days(5));
-    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 25, 11, 2021));
-    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 25, 11, 2021).unwrap());
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.increase_ordinally(TimeSpan::minutes(5));
-    /// assert_eq!(datetime, DateTime::from(0, 5, 0, 20, 11, 2021));
+    /// assert_eq!(datetime, DateTime::from(0, 5, 0, 20, 11, 2021).unwrap());
     pub fn increase_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid DateTime");
@@ -516,9 +538,11 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// let datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// use perDiem::types::DateTime;
+    /// 
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.end_of_year();
-    /// assert_eq!(datetime, DateTime::from(59, 59, 23, 31, 12, 2021));
+    /// assert_eq!(datetime, DateTime::from(59, 59, 23, 31, 12, 2021).unwrap());
     pub fn end_of_year(&mut self) {
         *self = DateTime {
             day: 31,
@@ -534,9 +558,11 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// let datetime = DateTime::from(0, 0, 0, 20, 3, 2021);
+    /// use perDiem::types::DateTime;
+    /// 
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 3, 2021).unwrap();
     /// datetime.end_of_month();
-    /// assert_eq!(datetime, DateTime::from(59, 59, 23, 31, 3, 2021));
+    /// assert_eq!(datetime, DateTime::from(59, 59, 23, 31, 3, 2021).unwrap());
     pub fn end_of_month(&mut self) {
         
         *self = DateTime {
@@ -548,18 +574,19 @@ impl DateTime {
             hour: 23,
         }
     }
-    /// Mutates the receiver DateTime by the TimeSpan sepcified and returns a Result.
+    /// Mutates the receiver DateTime by the TimeSpan specified and returns a Result.
     /// 
     /// # Example
     /// 
     ///~~~~
-    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// use perDiem::types::{TimeSpan, DateTime};
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.increase(TimeSpan::days(5));
     /// assert_eq!(datetime, DateTime::from(0, 0, 0, 25, 11, 2021));
-    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.increase(TimeSpan::months(5));
     /// assert_eq!(datetime, DateTime::from(0, 0, 0, 20, 4, 2022));
-    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.increase(TimeSpan::minutes(5));
     /// assert_eq!(datetime, DateTime::from(0, 5, 0, 20, 11, 2021));
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
@@ -590,6 +617,8 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::DateTime;
+    /// 
     /// assert_eq!(DateTime::from(45, 2, 0, 1, 1, 2000).unwrap(), DateTime { second: 45, minute: 2, hour: 0, day: 1, month: 1, year: 2000});
     pub fn from(
         second: u8,
@@ -617,8 +646,10 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// let datetime1 = DateTime::from(5, 4, 0, 20, 11, 2021);
-    /// let datetime2 = DateTime::from(7, 7, 0, 25, 5, 2024);
+    /// use perDiem::types::{DateTime, TimeDifference};
+    /// 
+    /// let datetime1 = DateTime::from(5, 4, 0, 20, 11, 2021).unwrap();
+    /// let datetime2 = DateTime::from(7, 7, 0, 25, 5, 2024).unwrap();
     /// assert_eq!(datetime1.difference(&datetime2), TimeDifference{seconds: 2, minutes: 3, hours: 0, days: 5, months: 6, years: 3});
     pub fn difference(&self, datetime: &DateTime) -> TimeDifference {
         TimeDifference {
@@ -635,6 +666,8 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::{DateTime, Date};
+    /// 
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).to_Date(), Date::from(20, 11, 2021));
     pub fn to_Date(&self) -> Date {
         Date {
@@ -648,7 +681,9 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 25, 11, 2021));
+    /// use perDiem::types::{DateTime, TimeSpan};
+    /// 
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().increase_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 25, 11, 2021).unwrap());
     pub fn increase_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         let mut increase_date = self.clone();
         match length {
@@ -736,6 +771,8 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::DateTime;
+    /// 
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 25, 11, 2021));
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 4, 2022));
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 5, 0, 20, 11, 2021));
@@ -808,9 +845,11 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).decrease_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 15, 11, 2021));
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).decrease_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 6, 2021));
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).decrease_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 55, 0, 19, 11, 2021));
+    /// use perDiem::types::{DateTime, TimeSpan};
+    ///
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 15, 11, 2021).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 6, 2021).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 55, 0, 19, 11, 2021).unwrap());
     pub fn decrease_ordinally_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
