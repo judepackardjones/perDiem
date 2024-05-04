@@ -204,6 +204,8 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::Date;
+    /// 
     /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001), Date::from(1, 1, 2000)]);
     /// assert_eq!(shares_vec.contains("day"), true);
     /// assert_eq!(shares_vec.contains("month"), true);
@@ -233,6 +235,8 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::Date;
+    /// 
     /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001), Date::from(1, 1, 2000)]);
     /// assert_eq!(shares_vec.contains("day"), true);
     /// assert_eq!(shares_vec.contains("month"), true);
@@ -277,6 +281,7 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::Date;
     /// assert_eq!(Date::from(1, 1, 2000).days_in_month(), 31);
     /// assert_eq!(Date::from(1, 2, 2000).days_in_month(), 29);
     pub fn days_in_month(&self) -> i8 { 
@@ -285,7 +290,7 @@ impl Date {
           2 if self.isLeapYear() => 29,
           2 => 28,
           4 | 6 | 9 | 11 => 30,
-          _ => panic!("Months should be represented as an enum")
+          _ => panic!("Invalid month: {}", self.month)
         }
       }
     /// same function of sharesDay, sharesMonth, sharesYear, but adds comparison field as a param.
@@ -293,6 +298,8 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::Date;
+    /// 
     /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001), Date::from(1, 1, 2000)]);
     /// assert_eq!(shares_vec.contains("day"), true);
     /// assert_eq!(shares_vec.contains("month"), true);
@@ -623,6 +630,8 @@ impl OrdinalDate {
 /// # Example
 /// 
 ///~~~~
+/// use perDiem::evals::isLeapYear;
+/// 
 /// assert_eq!(isLeapYear(2000), true);
 /// assert_eq!(isLeapYear(2001), false);
 /// assert_eq!(isLeapYear(1900), false); // Make sure you understand leap year rules
@@ -634,6 +643,8 @@ pub fn isLeapYear(year: i32) -> bool {
 /// # Example
 /// 
 ///~~~~
+/// use perDiem::evals::days_in_month;
+/// 
 /// assert_eq!(days_in_month(1, 2000), 31);
 /// assert_eq!(days_in_month(2, 2000), 29);
 pub fn days_in_month(month: u8, year: i32) -> i8 { 
