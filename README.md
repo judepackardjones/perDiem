@@ -1,6 +1,6 @@
 # perDiem
 
-0.1.61 to 0.1.64 Patch notes:  
+0.1.61 to 0.1.65 Patch notes:  
 -------------
 
 Message me on Discord @ dtimer for any feedback or suggestions  
@@ -22,6 +22,7 @@ Fixes/Changes:
 > Changed some doc descriptions  
 > Removed unnecessary checks due to type restrictions  
 > Made 24 an invalid hour(Should be hour 0)  
+> Fixed 29/2 being change to a non leap year returning 28/2 rather than 1/3
 
 Normal README:  
 -----------------
