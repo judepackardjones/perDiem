@@ -15,8 +15,10 @@ macro_rules! impl_eval_fns {
             /// # Example
             /// 
             ///~~~~
-            /// assert_eq!(Date::from(1, 1, 2000).isStartOfMonth(), true);
-            /// assert_eq!(Date::from(15, 1, 2000).isStartOfMonth(), false);
+            /// use perDiem::types::Date;
+            /// 
+            /// assert_eq!(Date::from(1, 1, 2000).unwrap().isStartOfMonth(), true);
+            /// assert_eq!(Date::from(15, 1, 2000).unwrap().isStartOfMonth(), false);
             fn isStartOfMonth(&self) -> bool {
                 if self.day == 1 {
                     return true;
@@ -102,6 +104,11 @@ macro_rules! impl_eval_fns {
                     .to_string());
             }
             /// Method returns the day of the week as a i8 with 0 being Sunday
+            /// 
+            /// # Example
+            /// use perDiem::evals::weekday_as_int;
+            /// 
+            /// assert_eq!(Date::from(23, 5, 2024).weekday_as_int().unwrap(), 4);
             fn weekday_as_int(&self) -> Result<u8, &str> {
                 if !self.is_valid() {
                     return Err("Invalid Date or DateTime");
@@ -139,8 +146,10 @@ macro_rules! impl_eval_fns {
             /// # Example
             /// 
             ///~~~~
-            /// assert_eq!(Date::from(1, 3, 2002).sharesDay(&Date::from(1, 5, 2020)), true);
-            /// assert_eq!(Date::from(1, 3, 2020).sharesDay(&Date::from(2, 3, 2020)), false);
+            /// use perDiem::types::Date;
+            /// 
+            /// assert_eq!(Date::from(1, 3, 2002).unwrap().sharesDay(&Date::from(1, 5, 2020)), true);
+            /// assert_eq!(Date::from(1, 3, 2020).unwrap().sharesDay(&Date::from(2, 3, 2020)), false);
             fn sharesDay(&self, date2: &$struct) -> bool {
                 if self.day == date2.day {
                     return true;
@@ -152,8 +161,10 @@ macro_rules! impl_eval_fns {
             /// # Example
             /// 
             ///~~~~
-            /// assert_eq!(Date::from(5, 3, 2002).sharesYear(&Date::from(1, 5, 2002)), true);
-            /// assert_eq!(Date::from(1, 3, 2000).sharesYear(&Date::from(2, 3, 2020)), false);
+            /// use perDiem::types::Date;
+            /// 
+            /// assert_eq!(Date::from(5, 3, 2002).unwrap().sharesYear(&Date::from(1, 5, 2002).unwrap()), true);
+            /// assert_eq!(Date::from(1, 3, 2000).unwrap().sharesYear(&Date::from(2, 3, 2020).unwrap()), false);
             fn sharesYear(&self, date2: &$struct) -> bool {
                 if self.year == date2.year {
                     return true;
@@ -165,8 +176,10 @@ macro_rules! impl_eval_fns {
             /// # Example
             /// 
             ///~~~~
-            /// assert_eq!(Date::from(1, 3, 2002).sharesMonth(&Date::from(15, 3, 2020)), true);
-            /// assert_eq!(Date::from(1, 3, 2000).sharesMonth(&Date::from(2, 4, 2020)), false);
+            /// use perDiem::types::datekindEvals;
+            /// 
+            /// assert_eq!(Date::from(1, 3, 2002).unwrap().sharesMonth(&Date::from(15, 3, 2020).unwrap()), true);
+            /// assert_eq!(Date::from(1, 3, 2000).unwrap().sharesMonth(&Date::from(2, 4, 2020).unwrap()), false);
             fn sharesMonth(&self, date2: &$struct) -> bool {
                 if self.month == date2.month {
                     return true;
@@ -372,6 +385,7 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::DateTime;
     /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2000).is_valid(), true);
     /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2000).is_valid(), true);
     /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2001).is_valid(), false);
@@ -521,7 +535,9 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(DateTime::from(50, 0, 1, 1, 1, 2000).sharesSecond(DateTime::from(50, 0, 1, 1, 1, 2000)), true);
+    /// use perDiem::types::DateTime;
+    /// 
+    /// assert_eq!(DateTime::from(50, 0, 1, 1, 1, 2000).unwrap().sharesSecond(DateTime::from(50, 0, 1, 1, 1, 2000).unwrap()), true);
     pub fn sharesSecond(&self, datetime2: DateTime) -> bool {
         if self.second == datetime2.second {
             return true;
@@ -533,7 +549,9 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(DateTime::from(50, 20, 1, 1, 1, 2000).sharesMinute(DateTime::from(50, 20, 1, 1, 1, 2000)), true);
+    /// use perDiem::types::DateTime;
+    /// 
+    /// assert_eq!(DateTime::from(50, 20, 1, 1, 1, 2000).unwrap().sharesMinute(DateTime::from(50, 20, 1, 1, 1, 2000)), true);
     pub fn sharesMinute(&self, datetime2: DateTime) -> bool {
         if self.minute == datetime2.minute {
             return true;
@@ -545,7 +563,9 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(DateTime::from(50, 4, 16, 1, 1, 2000).sharesHour(DateTime::from(40, 0, 16, 1, 1, 2000)), true);
+    /// use perDiem::types::DateTime;
+    /// 
+    /// assert_eq!(DateTime::from(50, 4, 16, 1, 1, 2000).unwrap().sharesHour(DateTime::from(40, 0, 16, 1, 1, 2000)), true);
     pub fn sharesHour(&self, datetime2: DateTime) -> bool {
         if self.hour == datetime2.hour {
             return true;
@@ -614,11 +634,13 @@ impl OrdinalDate {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(OrdinalDate::from(1, 2000).is_valid(), true);
-    /// assert_eq!(OrdinalDate::from(366, 2000).is_valid(), true);
-    /// assert_eq!(OrdinalDate::from(367, 2000).is_valid(), false);
+    /// use perDiem::types::OrdinalDate;
+    /// 
+    /// assert_eq!(OrdinalDate::from(1, 2000).unwrap().is_valid(), true);
+    /// assert_eq!(OrdinalDate::from(366, 2000).unwrap().is_valid(), true);
+    /// assert_eq!(OrdinalDate::from(367, 2000).unwrap().is_valid(), false);
     pub fn is_valid(&self) -> bool {
-        if isLeapYear(self.year) && self.day > 366 || !isLeapYear(self.year) && self.day > 365 {
+        if isLeapYearSimple(self.year) && self.day > 366 || !isLeapYearSimple(self.year) && self.day > 365 {
             return false;
         }
         true
@@ -630,12 +652,12 @@ impl OrdinalDate {
 /// # Example
 /// 
 ///~~~~
-/// use perDiem::evals::isLeapYear;
+/// use perDiem::evals::isLeapYearSimple;
 /// 
-/// assert_eq!(isLeapYear(2000), true);
-/// assert_eq!(isLeapYear(2001), false);
-/// assert_eq!(isLeapYear(1900), false); // Make sure you understand leap year rules
-pub fn isLeapYear(year: i32) -> bool {
+/// assert_eq!(isLeapYearSimple(2000), true);
+/// assert_eq!(isLeapYearSimple(2001), false);
+/// assert_eq!(isLeapYearSimple(1900), false); 
+pub fn isLeapYearSimple(year: i32) -> bool {
     (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
 }
 /// Returns the # of days in the month of the Date/DateTime(Credit to TDark on Rust Discord)
@@ -650,7 +672,7 @@ pub fn isLeapYear(year: i32) -> bool {
 pub fn days_in_month(month: u8, year: i32) -> i8 { 
     match month {
       1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
-      2 if isLeapYear(year) => 29,
+      2 if isLeapYearSimple(year) => 29,
       2 => 28,
       4 | 6 | 9 | 11 => 30,
       _ => panic!("Months should be represented as an enum")

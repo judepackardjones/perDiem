@@ -6,7 +6,8 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// let date = Date::from(1, 1, 2021);
+    /// use perDiem::types::Date;
+    /// let date = Date::from(1, 1, 2021).unwrap();
     /// assert_eq!(date.to_string("ddmmyyyy", &'/').unwrap(), "01/01/2021".to_string());
     /// assert_eq!(date.to_string("ddmmyy", &'-').unwrap(), "01-01-21".to_string());
     pub fn to_string(&self, date_format: &str, separator: &char) -> Result<String, &str> {
@@ -31,7 +32,7 @@ impl Date {
                         rtn_str.replace("yy", self.last_two_digits_year().to_string().as_str());
                 } else {
                     println!("{rtn_str}");
-                    return Err("failed to find suitable year formatting.");
+                    return Err("Failed to find suitable year formatting.");
                 }
             }
         }

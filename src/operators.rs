@@ -1,38 +1,32 @@
-use crate::evals::{days_in_month, isLeapYear};
+use crate::evals::{days_in_month, isLeapYearSimple};
 use crate::{types::*, utils::floor, utils::get_pos};
 
-macro_rules! impl_operators_fns {
-    ($struct:ident) => {
-        impl crate::types::datekindOperators for $struct {
-            /// Returns the last two digits of the given year
-            /// 
-            /// # Example
-            /// 
-            ///~~~~
-            /// use perDiem::types::Date;
-            /// 
-            /// assert_eq!(Date::from(1, 1, 2021).unwrap().last_two_digits_year(), "21".to_string());
-            fn last_two_digits_year(&self) -> String {
-                self.year
-                    .to_string()
-                    .as_str()
-                    .chars()
-                    .rev()
-                    .take(2)
-                    .map(|x| x.to_string())
-                    .collect::<String>()
-                    .chars()
-                    .rev()
-                    .collect::<String>()
-            }
-        }
-    };
-}
 
-impl_operators_fns!(Date);
-impl_operators_fns!(DateTime);
+
 
 impl Date {
+    /// Returns the last two digits of the given year
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// 
+    /// use perDiem::types::Date;
+    /// 
+    /// assert_eq!(Date::from(1, 1, 2021).unwrap().last_two_digits_year(), "21".to_string());
+    pub fn last_two_digits_year(&self) -> String {
+        self.year
+            .to_string()
+            .as_str()
+            .chars()
+            .rev()
+            .take(2)
+            .map(|x| x.to_string())
+            .collect::<String>()
+            .chars()
+            .rev()
+            .collect::<String>()
+    }
     /// Converts given Date to OrdinalDate
     /// 
     /// # Example
@@ -126,9 +120,11 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
-    /// let mut date = Date::from(20, 11, 2021);
-    /// date.increase(TimeSpan::days(5));
-    /// assert_eq!(date, Date::from(25, 11, 2021));
+    /// use perDiem::types::{Date, TimeSpan};
+    /// 
+    /// let mut date = Date::from(20, 11, 2021).unwrap();
+    /// date.increase(TimeSpan::days(5)).unwrap();
+    /// assert_eq!(date, Date::from(25, 11, 2021).unwrap());
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -284,8 +280,8 @@ impl Date {
     ///~~~~
     /// use perDiem::types::{Date, TimeSpan};
     /// 
-    /// assert_eq!(Date::from(20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), Date::from(25, 11, 2021));
-    /// assert_eq!(Date::from(20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 4, 2022));
+    /// assert_eq!(Date::from(20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), Date::from(25, 11, 2021).unwrap());
+    /// assert_eq!(Date::from(20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), Date::from(20, 4, 2022).unwrap());
     pub fn increase_ordinally_as_new(&self, length: TimeSpan) -> Result<Date, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -432,6 +428,27 @@ impl Date {
 }
 
 impl DateTime {
+    /// Returns the last two digits of the given year
+    /// 
+    /// # Example
+    /// 
+    ///~~~~
+    /// use perDiem::types::DateTime;
+    /// 
+    /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2021).unwrap().last_two_digits_year(), "21".to_string());
+    pub fn last_two_digits_year(&self) -> String {
+        self.year
+            .to_string()
+            .as_str()
+            .chars()
+            .rev()
+            .take(2)
+            .map(|x| x.to_string())
+            .collect::<String>()
+            .chars()
+            .rev()
+            .collect::<String>()
+    }
     /// Decreases the receiver-in-place DateTime by the TimeSpan specified and returns a Result. *There is currently no gregorian implementation of decrease because I'm lazy, write it for me if you want I'll add.
     /// 
     /// # Example
@@ -480,8 +497,10 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2021).to_OrdinalDate().unwrap(), OrdinalDate::from(1, 2021));
-    /// assert_eq!(DateTime::from(0, 0, 0, 25, 5, 2021).to_OrdinalDate().unwrap(), OrdinalDate::from(145, 2021));
+    /// use perDiem::types::{DateTime, OrdinalDate};
+    /// 
+    /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2021).unwrap().to_OrdinalDate().unwrap(), OrdinalDate::from(1, 2021).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 0, 25, 5, 2021).unwrap().to_OrdinalDate().unwrap(), OrdinalDate::from(145, 2021).unwrap());
     pub fn to_OrdinalDate(&self) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -502,9 +521,11 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// let datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// use perDiem::types::DateTime;
+    /// 
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.start_of_year();
-    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 1, 1, 2021));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 1, 1, 2021).unwrap());
     pub fn start_of_year(&mut self) {
         *self = DateTime {
             day: 1,
@@ -520,9 +541,11 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// let datetime = DateTime::from(0, 0, 0, 20, 11, 2021);
+    /// use perDiem::types::DateTime;
+    /// 
+    /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.start_of_month();
-    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 1, 11, 2021));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 1, 11, 2021).unwrap());
     pub fn start_of_month(&mut self) {
         *self = DateTime {
             day: 1,
@@ -582,13 +605,13 @@ impl DateTime {
     /// use perDiem::types::{TimeSpan, DateTime};
     /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.increase(TimeSpan::days(5));
-    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 25, 11, 2021));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 25, 11, 2021).unwrap());
     /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.increase(TimeSpan::months(5));
-    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 20, 4, 2022));
+    /// assert_eq!(datetime, DateTime::from(0, 0, 0, 20, 4, 2022).unwrap());
     /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.increase(TimeSpan::minutes(5));
-    /// assert_eq!(datetime, DateTime::from(0, 5, 0, 20, 11, 2021));
+    /// assert_eq!(datetime, DateTime::from(0, 5, 0, 20, 11, 2021).unwrap());
     pub fn increase(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -601,7 +624,9 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(DateTime::new(), DateTime::from(0, 0, 0, 1, 1, 0));
+    /// use perDiem::types::DateTime;
+    /// 
+    /// assert_eq!(DateTime::new(), DateTime::from(0, 0, 0, 1, 1, 0).unwrap());
     pub fn new() -> DateTime {
         DateTime {
             second: 0,
@@ -668,7 +693,7 @@ impl DateTime {
     ///~~~~
     /// use perDiem::types::{DateTime, Date};
     /// 
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).to_Date(), Date::from(20, 11, 2021));
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().to_Date(), Date::from(20, 11, 2021).unwrap());
     pub fn to_Date(&self) -> Date {
         Date {
             day: self.day,
@@ -771,11 +796,11 @@ impl DateTime {
     /// # Example
     /// 
     ///~~~~
-    /// use perDiem::types::DateTime;
+    /// use perDiem::types::{DateTime, TimeSpan};
     /// 
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 25, 11, 2021));
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 4, 2022));
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).increase_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 5, 0, 20, 11, 2021));
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 25, 11, 2021).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 4, 2022).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().increase_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 5, 0, 20, 11, 2021).unwrap());
     pub fn increase_ordinally_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -892,8 +917,10 @@ impl OrdinalDate {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(OrdinalDate::from(20, 2021).decrease_by_days(5).unwrap(), OrdinalDate::from(15, 2021));
-    /// assert_eq!(OrdinalDate::from(20, 2021).decrease_by_days(20).unwrap(), OrdinalDate::from(355, 2019));
+    /// use perDiem::types::OrdinalDate;
+    /// 
+    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap().decrease_by_days(5).unwrap(), OrdinalDate::from(15, 2021).unwrap());
+    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap().decrease_by_days(20).unwrap(), OrdinalDate::from(366, 2020).unwrap());
     pub fn decrease_by_days(&self, days: i32) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid OrdinalDate");
@@ -902,7 +929,7 @@ impl OrdinalDate {
         let mut year = self.year;
         while day_counter <= 0 {
             year -= 1;
-            day_counter += if isLeapYear(year) { 366 } else { 365 };
+            day_counter += if isLeapYearSimple(year) { 366 } else { 365 };
         }
         Ok(OrdinalDate {
             day: day_counter as u16,
@@ -914,8 +941,10 @@ impl OrdinalDate {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(OrdinalDate::from(20, 2021).increase_by_days(5).unwrap(), OrdinalDate::from(25, 2021));
-    /// assert_eq!(OrdinalDate::from(20, 2021).increase_by_days(20).unwrap(), OrdinalDate::from(40, 2021));
+    /// use perDiem::types::OrdinalDate;
+    /// 
+    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap().increase_by_days(5).unwrap(), OrdinalDate::from(25, 2021).unwrap());
+    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap().increase_by_days(20).unwrap(), OrdinalDate::from(40, 2021).unwrap());
     pub fn increase_by_days(&self, days: i32) -> Result<OrdinalDate, &'static str> {
         if !self.is_valid() {
             return Err("Invalid OrdinalDate");
@@ -923,11 +952,11 @@ impl OrdinalDate {
         let mut day_counter: i32 = self.day as i32 + days;
         let mut year = self.year;
         while day_counter >= 0 {
-            day_counter -= if isLeapYear(year) { 366 } else { 365 };
+            day_counter -= if isLeapYearSimple(year) { 366 } else { 365 };
             year += 1;
         }
         year -= 1;
-        day_counter += if isLeapYear(year) { 366 } else { 365 };
+        day_counter += if isLeapYearSimple(year) { 366 } else { 365 };
         Ok(OrdinalDate {
             day: day_counter as u16,
             year: year,
@@ -938,7 +967,8 @@ impl OrdinalDate {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(OrdinalDate::new(), OrdinalDate::from(1, 0));
+    /// use perDiem::types::OrdinalDate;
+    /// assert_eq!(OrdinalDate::new(), OrdinalDate::from(1, 0).unwrap());
     pub fn new() -> OrdinalDate {
         OrdinalDate { day: 1, year: 0 }
     }
@@ -947,10 +977,12 @@ impl OrdinalDate {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap(), OrdinalDate { day: 20, year: 2021});
+    /// use perDiem::types::OrdinalDate;
+    /// 
+    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap(), OrdinalDate{day: 20, year: 2021});
     pub fn from(day: u16, year: i32) -> Result<OrdinalDate, &'static str> {
-        if day > 366 {
-            return Err("Day is out of range");
+        if day > 365 && !isLeapYearSimple(year) || day > 366 && isLeapYearSimple(year){
+            return Err("Day is out of range for year");
         }
         Ok(OrdinalDate {
             day: day,
@@ -962,10 +994,12 @@ impl OrdinalDate {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(OrdinalDate::from(20, 2021).to_Date().unwrap(), Date::from(20, 1, 2021));
+    /// use perDiem::types::{OrdinalDate, Date};
+    /// 
+    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap().to_Date().unwrap(), Date::from(20, 1, 2021).unwrap());
     pub fn to_Date(&self) -> Result<Date, &'static str> {
-        if (isLeapYear(self.year) && self.day > 366)
-            || (!isLeapYear(self.year) && self.day > 365)
+        if (isLeapYearSimple(self.year) && self.day > 366)
+            || (!isLeapYearSimple(self.year) && self.day > 365)
         {
             return Err("Day is greater than number of days in given year");
         }
@@ -988,10 +1022,12 @@ impl OrdinalDate {
     /// # Example
     /// 
     ///~~~~
-    /// assert_eq!(OrdinalDate::from(20, 2021).to_DateTime().unwrap(), DateTime::from(0, 0, 0, 20, 1, 2021));
+    /// use perDiem::types::{OrdinalDate, DateTime};
+    /// 
+    /// assert_eq!(OrdinalDate::from(20, 2021).unwrap().to_DateTime().unwrap(), DateTime::from(0, 0, 0, 20, 1, 2021).unwrap());
     pub fn to_DateTime(&self) -> Result<DateTime, &'static str> {
-        if (isLeapYear(self.year) && self.day > 366)
-            || (!isLeapYear(self.year) && self.day > 365)
+        if (isLeapYearSimple(self.year) && self.day > 366)
+            || (!isLeapYearSimple(self.year) && self.day > 365)
         {
             return Err("Day is greater than number of days in given year");
         }

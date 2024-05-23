@@ -97,13 +97,13 @@ pub trait datekindOperators {
     fn last_two_digits_year(&self) -> String;
 }
 /// Trait used for creating String methods.
-pub trait x {
-    // used for creating String methods
-    /// Takes a String formatted like a Date, and it's format and converts it to a Date instance
+pub trait dateString {
+    // used for creating &str methods
+    /// Takes a &str formatted like a Date, and it's format and converts it to a Date instance
     fn as_Date(&self, format: &str) -> Date;
 }
 /// Trait used for creating &str methods.
-pub trait y {
+pub trait dateStr {
     // used for creating &str methods
     /// Used for adding separators to Date formats
     fn with_separators(&self, separator: &char) -> String;

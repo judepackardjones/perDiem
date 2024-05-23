@@ -17,7 +17,7 @@ pub fn compare_dyn_any_values(a: &dyn Any, b: &dyn Any) -> Result<bool, &'static
     Err("Values not of same type") // Values are not of the same type or the downcast failed.
 }
 
-impl y for &str {
+impl dateStr for &str {
     fn with_separators(&self, separator: &char) -> String {
         let mut result: String = String::new();
         let mut toggle: bool = false;
