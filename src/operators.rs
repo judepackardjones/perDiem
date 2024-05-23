@@ -368,15 +368,11 @@ impl Date {
             }
             TimeSpan::years(years) => {
                 increase_date.year += years;
-                increase_date.day = if !increase_date.isLeapYear()
-                    && increase_date.month == 2
-                    && increase_date.day == 29
-                {
-                    1
-                } else {
-                    increase_date.day
-                };
-                increase_date.month = 3
+                if !increase_date.isLeapYear() && increase_date.month == 2 && increase_date.day == 29 {
+                    increase_date.day = 1;
+                    increase_date.month = 3;
+                } 
+                
             }
             _ => {
                 return Err("Invalid TimeSpan specifier, make sure that you are using a valid TimeSpan for the Date's increase method!");
