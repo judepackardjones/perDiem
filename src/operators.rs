@@ -158,8 +158,10 @@ impl Date {
     /// # Example
     /// 
     ///~~~~
+    /// use perDiem::types::{Date, TimeSpan};
+    /// 
     /// let mut date = Date::from(20, 11, 2021).unwrap();
-    /// date.decrease(TimeSpan::days(5));
+    /// date.decrease_ordinally(TimeSpan::days(5));
     /// assert_eq!(date, Date::from(15, 11, 2021).unwrap());
     pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
