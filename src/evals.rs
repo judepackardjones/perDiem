@@ -386,14 +386,15 @@ impl DateTime {
     /// 
     ///~~~~
     /// use perDiem::types::DateTime;
-    /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2000).is_valid(), true);
-    /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2000).is_valid(), true);
-    /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2001).is_valid(), false);
-    /// assert_eq!(DateTime::from(0, 0, 0,50, 4, 2000).is_valid(), false);
-    /// assert_eq!(DateTime::from(60, 0, 0, 50, 4, 2000).is_valid(), false);
-    /// assert_eq!(DateTime::from(0, 60, 0, 50, 4, 2000).is_valid(), false);
-    /// assert_eq!(DateTime::from(0, 60, 25, 50, 4, 2000).is_valid(), false);
-    /// assert_eq!(DateTime::from(0, 60, 24, 50, 4, 2000).is_valid(), false);
+    /// 
+    /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2000).unwrap().is_valid(), true);
+    /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2000).unwrap().is_valid(), true);
+    /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2001).unwrap().is_valid(), false);
+    /// assert_eq!(DateTime::from(0, 0, 0,50, 4, 2000).unwrap().is_valid(), false);
+    /// assert_eq!(DateTime::from(60, 0, 0, 50, 4, 2000).unwrap().is_valid(), false);
+    /// assert_eq!(DateTime::from(0, 60, 0, 50, 4, 2000).unwrap().is_valid(), false);
+    /// assert_eq!(DateTime::from(0, 60, 25, 50, 4, 2000).unwrap().is_valid(), false);
+    /// assert_eq!(DateTime::from(0, 60, 24, 50, 4, 2000).unwrap().is_valid(), false);
     pub fn is_valid(&self) -> bool {
         if (Date {
             day: self.day,
