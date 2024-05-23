@@ -154,6 +154,11 @@ mod tests {
             assert_eq!(date, Date {day: 17, month: 9, year: 2002});
         }
         #[test]
+        fn leap_year_increase() {
+            let date = Date::from(29, 2, 2012).unwrap();
+            assert_eq!(date.increase_as_new(TimeSpan::years(1)), Date::from(1, 3, 2013));
+        }
+        #[test]
         fn increases_as_new_date_time() {
             let mut example_datetime = DateTime { second: 4, minute: 20, hour: 14, day: 19, month: 3, year: 2010};
             assert_eq!(example_datetime.increase_as_new(TimeSpan::seconds(56)).unwrap(), DateTime { second: 0, minute: 21, hour: 14, day: 19, month: 3, year: 2010});
