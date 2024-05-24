@@ -5,7 +5,6 @@ use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use struct_iterable::Iterable;
 
-
 // Implments these functions for Date and DateTime
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
@@ -111,8 +110,9 @@ macro_rules! impl_eval_fns {
                     "Wednesday",
                     "Thursday",
                     "Friday",
-                    "Saturday",
+                    "Saturday"
                 ];
+                
                 return Ok(weekdays[self
                     .weekday_as_int()
                     .expect("Error converting date to week number")
@@ -129,32 +129,14 @@ macro_rules! impl_eval_fns {
                 if !self.is_valid() {
                     return Err("Invalid Date or DateTime");
                 }
-                let first_two_digits_year: i32 = self.year as i32 % 100;
-                let mut num: u8 = ((self.day
-                    + ((13
-                        * (if self.month == 1 || self.month == 2 {
-                            self.month + 10
-                        } else {
-                            self.month - 2
-                        })
-                        - 1)
-                        / 5)
-                    + first_two_digits_year as u8
-                    + (first_two_digits_year as u8 / 4)
-                    + (self
-                        .last_two_digits_year()
-                        .parse::<u8>()
-                        .expect("Failed to unwrap last two digits to i8")
-                        / 4)
-                    - 2 * self
-                        .last_two_digits_year()
-                        .parse::<u8>()
-                        .expect("Failed to unwrap last two digits to i8"))
-                    % 7
-                    + 1);
-                if num == 7 {
-                    num = 0;
-                }
+                let cc = (self.year / 100);
+                let yy = (self.year % 100);
+
+                let c = (cc/4) - 2*cc-1;
+                let y = 5*yy/4;
+                let m = (26*(self.month as i32 + 1)/10) as i32;
+                let d = self.day as i32;
+                let num: u8 = ((c+y+m+d)%7).try_into().unwrap();
                 return Ok(num);
             }
             /// Returns true if both params share the same day of month
@@ -673,7 +655,7 @@ impl OrdinalDate {
     /// 
     /// assert_eq!(OrdinalDate::from(1, 2000).unwrap().is_valid(), true);
     /// assert_eq!(OrdinalDate::from(366, 2000).unwrap().is_valid(), true);
-    /// assert_eq!(OrdinalDate::from(367, 2000).unwrap().is_valid(), false);
+    /// assert_eq!(OrdinalDate::from(367, 2000)?.is_valid(), false);
     pub fn is_valid(&self) -> bool {
         if isLeapYearSimple(self.year) && self.day > 366 || !isLeapYearSimple(self.year) && self.day > 365 {
             return false;
