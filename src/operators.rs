@@ -884,7 +884,8 @@ impl DateTime {
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 15, 11, 2021).unwrap());
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 6, 2021).unwrap());
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 55, 23, 19, 11, 2021).unwrap());
-    /// assert_eq!(DateTime::from(0, 0, 0, 15, 10, 2022).unwrap().decrease_ordinally_as_new(TimeSpan::minutes(60)).unwrap(), DateTime::from(0, 0, 0, 14, 10, 2022).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 10, 10, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 55, 9, 10, 11, 2021).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 0, 15, 10, 2022).unwrap().decrease_ordinally_as_new(TimeSpan::minutes(60)).unwrap(), DateTime::from(0, 0, 23, 14, 10, 2022).unwrap());
     pub fn decrease_ordinally_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -894,8 +895,7 @@ impl DateTime {
             TimeSpan::minutes(minutes) => {
                 decrease_date.decrease_ordinally(TimeSpan::hours(floor(minutes as f32 / 60.0))).unwrap();
                 let temp_minute = decrease_date.minute as i8 - (minutes % 60) as i8;
-                println!("Temp minute {}", temp_minute);
-                if temp_minute <= 0 {
+                if temp_minute < 0 {
                     decrease_date.minute = (temp_minute + 60) as u8;
                     decrease_date.decrease_ordinally(TimeSpan::hours(1)).unwrap();
                 } else {
