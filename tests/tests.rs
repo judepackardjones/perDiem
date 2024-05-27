@@ -194,10 +194,6 @@ mod tests {
             datetime.increase(TimeSpan::seconds(20)).unwrap();
             assert_eq!(datetime, DateTime { second: 0, minute: 1, hour: 2, day: 19, month: 9, year: 2003});
         }
-        #[test]
-        fn decrease_as_new_date() {
-            let date = Date {day: 3, month: 1, year: 2000};
-        }
     }
 }
 

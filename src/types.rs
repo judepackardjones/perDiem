@@ -110,9 +110,12 @@ pub trait dateStr {
 }
 
 #[derive(PartialEq)]
-// Internally used enum for larger, smaller, and equal uses
+/// Internally used enum for larger, smaller, and equal uses
 pub enum two_nums {
+    /// First number is larger
     larger,
+    /// First number is smaller
     smaller,
+    /// Both numbers are equal
     equal,
 }

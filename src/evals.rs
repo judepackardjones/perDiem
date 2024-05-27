@@ -1,9 +1,8 @@
 use crate::types::*;
-use crate::utils::{compare_dyn_any_values, compare_nums};
+use crate::utils::compare_nums;
 use chrono::prelude::Local;
 use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
-use struct_iterable::Iterable;
 
 // Implements these functions for Date and DateTime
 macro_rules! impl_eval_fns {
