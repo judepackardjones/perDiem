@@ -22,15 +22,16 @@ Adds:
 Fixes/Changes:  
 -----------
 
-> Fixes a ton of tests in the docs that didn't have imports, and some errors
+> Fixes a ton of tests in the docs that didn't have imports, and some errors  
 > Changed the start year for .new() for Date, DateTime, and OrdinalDate to 0, (Was 1)  
 > Changed some doc descriptions for clarity  
 > Removed unnecessary checks due to type restrictions  
 > Made 24 an invalid hour(Should be hour 0)  
-> Fixed 29/2 being change to a non leap year returning 28/2 rather than 1/3
-> Rewrite of weekday calculation 
-> adds compare_dyn_any_values to be able to downcast i32
-> Removes allShareEL for Date and DateTime
+> Fixed 29/2 being change to a non leap year returning 28/2 rather than 1/3  
+> Rewrite of weekday calculation  
+> Removes compare_dyn_any_value  
+> Removes allShareEL for Date and DateTime   
+> Fixes README    
 
 Normal README:  
 -----------------
