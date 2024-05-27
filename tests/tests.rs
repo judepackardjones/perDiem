@@ -5,10 +5,6 @@ mod tests {
         use perDiem::types::*;
 
     #[test]
-    fn date_to_weekday() {
-        assert_eq!(Date{ day: 9, month: 10,  year: 1500}.weekday().unwrap(), "Tuesday");
-    }
-    #[test]
     fn datetime_to_weekday_evals() {
         assert_eq!(DateTime{ second: 5, minute: 5, hour: 5, day: 7, month: 10,  year: 1500}.weekday().unwrap(), "Sunday");
         assert_eq!(DateTime{ second: 5, minute: 5, hour: 5, day: 8, month: 10,  year: 1500}.weekday().unwrap(), "Monday");
@@ -18,6 +14,14 @@ mod tests {
         assert_eq!(DateTime{ second: 5, minute: 5, hour: 5, day: 12, month: 10,  year: 1500}.weekday().unwrap(), "Friday");
         assert_eq!(DateTime{ second: 5, minute: 5, hour: 5, day: 13, month: 10,  year: 1500}.weekday().unwrap(), "Saturday");
         assert_eq!(DateTime{ second: 5, minute: 5, hour: 5, day: 14, month: 10,  year: 1500}.weekday().unwrap(), "Sunday");
+        println!("In test {}", Date::from(23, 5, 2024).unwrap().weekday_as_int().unwrap());
+        assert_eq!(Date::from(23, 1, 2024).unwrap().weekday_as_int().unwrap(), 2);
+        assert_eq!(Date::from(24, 5, 2024).unwrap().weekday_as_int().unwrap(), 5);
+    }
+    #[test]
+    fn weekday_tests() {
+        assert_eq!(Date::from(23, 5, 2024).unwrap().weekday_as_int().unwrap(), 4);
+        assert_eq!(Date::from(24, 5, 2024).unwrap().weekday_as_int().unwrap(), 5);
     }
     }
     mod dateconditions {
