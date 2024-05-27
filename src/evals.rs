@@ -5,7 +5,7 @@ use chrono::Datelike;
 use chrono::{DateTime as chronoDateTime, Timelike};
 use struct_iterable::Iterable;
 
-// Implments these functions for Date and DateTime
+// Implements these functions for Date and DateTime
 macro_rules! impl_eval_fns {
     ($struct:ident) => {
         impl crate::types::datekindEvals for $struct {
@@ -97,8 +97,8 @@ macro_rules! impl_eval_fns {
             /// use perDiem::types::Date; 
             /// use perDiem::types::datekindEvals;
             /// 
-            /// assert_eq!(Date::from(22, 2, 2024).unwrap().weekday().unwrap(), "Thursday");
-            /// assert_eq!(Date::from(23, 2, 2024).unwrap().weekday().unwrap(), "Friday");
+            /// assert_eq!(Date::from(22, 5, 2024).unwrap().weekday().unwrap(), "Wednesday");
+            /// assert_eq!(Date::from(23, 5, 2024).unwrap().weekday().unwrap(), "Thursday");
             fn weekday(&self) -> Result<String, &str> {
                 if !self.is_valid() {
                     return Err("Invalid Date or DateTime");
@@ -112,7 +112,7 @@ macro_rules! impl_eval_fns {
                     "Friday",
                     "Saturday"
                 ];
-                
+                println!("In weekday {}", self.weekday_as_int().unwrap());
                 return Ok(weekdays[self
                     .weekday_as_int()
                     .expect("Error converting date to week number")
@@ -124,20 +124,21 @@ macro_rules! impl_eval_fns {
             /// # Example
             /// use perDiem::evals::weekday_as_int;
             /// 
+            /// println!("Out test {}", Date::from(23, 5, 2024).unwrap().weekday_as_int().unwrap());
             /// assert_eq!(Date::from(23, 5, 2024).unwrap().weekday_as_int().unwrap(), 4);
+            /// assert_eq!(Date::from(24, 5, 2024).unwrap().weekday_as_int().unwrap(), 5);
             fn weekday_as_int(&self) -> Result<u8, &str> {
                 if !self.is_valid() {
                     return Err("Invalid Date or DateTime");
                 }
-                let cc = (self.year / 100);
-                let yy = (self.year % 100);
-
-                let c = (cc/4) - 2*cc-1;
-                let y = 5*yy/4;
-                let m = (26*(self.month as i32 + 1)/10) as i32;
-                let d = self.day as i32;
-                let num: u8 = ((c+y+m+d)%7).try_into().unwrap();
-                return Ok(num);
+                let d: u32= self.day as u32;
+                let m: u8 = if self.month < 3 { self.month + 10 } else { self.month - 2 }; // January and February are counted as months 13 and 14 of the previous year
+                let Y: i32 = if m > 10 { self.year - 1 } else { self.year };
+                let c: u32 = (Y as f64 / 100.0).floor() as u32;
+                let y: u32 = Y as u32 - 100 * c;
+                let weekday = (d + (2.6 * m as f32 - 0.2).floor() as u32 + y + (y as f32 / 4.0).floor() as u32 + (c as f32 / 4.0).floor() as u32 - 2 * c) % 7;
+                Ok(weekday as u8)
+                
             }
             /// Returns true if both params share the same day of month
             ///
@@ -198,10 +199,9 @@ impl Date {
     ///~~~~
     /// use perDiem::types::Date;
     /// 
-    /// assert_eq!(Date::from(1, 1, 2000).unwrap().is_valid(), true);
-    /// assert_eq!(Date::from(29, 2, 2001).unwrap().is_valid(), false);
-    /// assert_eq!(Date::from(50, 4, 2000).unwrap().is_valid(), false);
-    /// assert_eq!(Date::from(1, 50, 2000).unwrap().is_valid(), false);
+    /// assert_eq!(Date { day: 1, month: 1, year: 2000}.is_valid(), true);
+    /// assert_eq!(Date { day: 29, month: 2, year: 2001}.is_valid(), false);
+    /// assert_eq!(Date { day: 50, month: 4, year: 2000}.is_valid(), false);
     pub fn is_valid(&self) -> bool {
         if self.day > 0
             && self.day <= self.days_in_month() as u8
@@ -211,41 +211,30 @@ impl Date {
         {
             true
         } else {
-            println!("{:?}", self);
             false
         }
     }
-    /// Returns a Vector of &str shared by each Date in Vector params (Returns the same as allShare, just different implementation of it.)
-    ///
-    /// # Example
-    /// 
-    ///~~~~
-    /// use perDiem::types::Date;
-    /// 
-    /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001).unwrap(), Date::from(1, 1, 2000).unwrap()]);
-    /// assert_eq!(shares_vec.contains(&"day"), true);
-    /// assert_eq!(shares_vec.contains(&"month"), true);
-    /// assert_eq!(shares_vec.contains(&"year"), false);
-    pub fn allShareEL(vec: Vec<Date>) -> Vec<&'static str> {
-        let mut terms: Vec<&'static str> = vec!["day", "month", "year"];
-        let mut shared_terms: Vec<&'static str> = vec![];
-        let base = Date {
-            day: vec.get(0).expect("Vector has length 0").day,
-            month: vec.get(0).expect("Interior Vector modified by external").month,
-            year: vec.get(0).expect("Interior Vector modified by external").year,
-        };
-        for date in vec {
-            for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
-                if !compare_dyn_any_values(field_value, base_value).unwrap() {
-                    if let Some(index) = terms.iter().position(|&x| x == field_name) {
-                        shared_terms.push(terms[index]);
-                        terms.remove(terms.iter().position(|&x| x == field_name).unwrap());
-                    }
-                }
-            }
-        }
-        terms
-    }
+    // might be reimplemented later
+    // pub fn allShareEL(vec: Vec<Date>) -> Vec<&'static str> {
+    //     let mut terms: Vec<&'static str> = vec!["day", "month", "year"];
+    //     let mut shared_terms: Vec<&'static str> = vec![];
+    //     let base = Date {
+    //         day: vec.get(0).expect("Vector has length 0").day,
+    //         month: vec.get(0).expect("Interior Vector modified by external").month,
+    //         year: vec.get(0).expect("Interior Vector modified by external").year,
+    //     };
+    //     for date in vec {
+    //         for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
+    //             if !compare_dyn_any_values(field_value, base_value).unwrap() {
+    //                 if let Some(index) = terms.iter().position(|&x| x == field_name) {
+    //                     shared_terms.push(terms[index]);
+    //                     terms.remove(terms.iter().position(|&x| x == field_name).unwrap());
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     terms
+    // }
     /// Returns a Vector of the shared fields in each Date from Vector
     ///
     /// # Example
@@ -253,7 +242,7 @@ impl Date {
     ///~~~~
     /// use perDiem::types::Date;
     /// 
-    /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001).unwrap(), Date::from(1, 1, 2000).unwrap()]);
+    /// let shares_vec = Date::allShare(vec![Date::from(1, 1, 2001).unwrap(), Date::from(1, 1, 2000).unwrap()]);
     /// assert_eq!(shares_vec.contains(&"day"), true);
     /// assert_eq!(shares_vec.contains(&"month"), true);
     /// assert_eq!(shares_vec.contains(&"year"), false);
@@ -317,11 +306,9 @@ impl Date {
     ///~~~~
     /// use perDiem::types::Date;
     /// 
-    /// let shares_vec = Date::allShareEL(vec![Date::from(1, 1, 2001).unwrap(), Date::from(1, 1, 2000).unwrap()]);
-    /// assert_eq!(shares_vec.contains(&"day"), true);
-    /// assert_eq!(shares_vec.contains(&"month"), true);
-    /// assert_eq!(shares_vec.contains(&"year"), false);
-    pub fn DateShares(&self, datetime2: &Date, compare_type: &str) -> Result<bool, &str> {
+    /// assert_eq!(Date::from(1, 5, 2000).unwrap().datesShare(&Date::from(1, 10, 2001).unwrap(), "day").unwrap(), true);
+    /// assert_eq!(Date::from(1, 5, 2000).unwrap().datesShare(&Date::from(1, 10, 2001).unwrap(), "month").unwrap(), false);
+    pub fn datesShare(&self, datetime2: &Date, compare_type: &str) -> Result<bool, &str> {
         match compare_type {
             "day" => {
                 if self.day == datetime2.day {
@@ -395,14 +382,12 @@ impl DateTime {
     ///~~~~
     /// use perDiem::types::DateTime;
     /// 
-    /// assert_eq!(DateTime::from(0, 0, 0, 1, 1, 2000).unwrap().is_valid(), true);
-    /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2000).unwrap().is_valid(), true);
-    /// assert_eq!(DateTime::from(0, 0, 0,29, 2, 2001).unwrap().is_valid(), false);
-    /// assert_eq!(DateTime::from(0, 0, 0,50, 4, 2000).unwrap().is_valid(), false);
-    /// assert_eq!(DateTime::from(60, 0, 0, 50, 4, 2000).unwrap().is_valid(), false);
-    /// assert_eq!(DateTime::from(0, 60, 0, 50, 4, 2000).unwrap().is_valid(), false);
-    /// assert_eq!(DateTime::from(0, 60, 25, 50, 4, 2000).unwrap().is_valid(), false);
-    /// assert_eq!(DateTime::from(0, 60, 24, 50, 4, 2000).unwrap().is_valid(), false);
+    /// assert_eq!(DateTime {second: 0, minute: 0, hour: 0, day: 1, month: 1, year: 2000}.is_valid(), true);
+    /// assert_eq!(DateTime {second: 0, minute: 0, hour: 0, day: 29, month: 2, year: 2000}.is_valid(), true);
+    /// assert_eq!(DateTime {second: 0, minute: 0, hour: 0, day: 29, month: 2, year: 2001}.is_valid(), false);
+    /// assert_eq!(DateTime {second: 0, minute: 0, hour: 0, day: 50, month: 1, year: 2000}.is_valid(), false);
+    /// assert_eq!(DateTime {second: 0, minute: 0, hour: 50, day: 1, month: 1, year: 2000}.is_valid(), false);
+    /// assert_eq!(DateTime {second: 65, minute: 0, hour: 0, day: 1, month: 3, year: 2000}.is_valid(), false);
     pub fn is_valid(&self) -> bool {
         if (Date {
             day: self.day,
@@ -419,43 +404,31 @@ impl DateTime {
             false
         }
     }
-    /// Takes a Vector of DateTimes and returns all field values they share as a vector of &str. (Same function  of allShare just different implementation)
-    ///
-    /// # Example
-    /// 
-    ///~~~~
-    /// use perDiem::types::DateTime;
-    /// 
-    /// let shares_vec = DateTime::allShareEL(vec![DateTime::from(0, 5, 23, 1, 1, 2001).unwrap(), DateTime::from(0, 6, 23, 1, 1, 2000).unwrap()]);
-    /// assert_eq!(shares_vec.contains(&"second"), true);
-    /// assert_eq!(shares_vec.contains(&"minute"), true);
-    /// assert_eq!(shares_vec.contains(&"hour"), false);
-    /// assert_eq!(shares_vec.contains(&"day"), true);
-    /// assert_eq!(shares_vec.contains(&"month"), true);
-    /// assert_eq!(shares_vec.contains(&"year"), false);
-    pub fn allShareEL(vec: Vec<DateTime>) -> Vec<&'static str> {
-        let mut terms: Vec<&'static str> = vec!["second", "minute", "hour", "day", "month", "year"];
-        let mut shared_terms: Vec<&'static str> = vec![];
-        let base = DateTime {
-            second: vec.get(0).expect("Date Vector has no terms").second,
-            minute: vec.get(0).unwrap().minute,
-            hour: vec.get(0).unwrap().hour,
-            day: vec.get(0).unwrap().day,
-            month: vec.get(0).unwrap().month,
-            year: vec.get(0).unwrap().year,
-        };
-        for date in vec {
-            for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
-                if !compare_dyn_any_values(field_value, base_value).unwrap() {
-                    if let Some(index) = terms.iter().position(|&x| x == field_name) {
-                        shared_terms.push(terms[index]);
-                        terms.remove(terms.iter().position(|&x| x == field_name).unwrap());
-                    }
-                }
-            }
-        }
-        terms
-    }
+    // might be reimplemented later
+    // pub fn allShareEL(vec: Vec<DateTime>) -> Vec<&'static str> {
+    //     let mut terms: Vec<&'static str> = vec!["second", "minute", "hour", "day", "month", "year"];
+    //     let mut shared_terms: Vec<&'static str> = vec![];
+    //     let base = DateTime {
+    //         second: vec.get(0).expect("Date Vector has no terms").second,
+    //         minute: vec.get(0).unwrap().minute,
+    //         hour: vec.get(0).unwrap().hour,
+    //         day: vec.get(0).unwrap().day,
+    //         month: vec.get(0).unwrap().month,
+    //         year: vec.get(0).unwrap().year,
+    //     };
+    //     for date in vec {
+    //         for ((field_name, field_value), (_, base_value)) in date.iter().zip(base.iter()) {
+    //             if !compare_dyn_any_values(field_value, base_value).unwrap() {
+    //                 if let Some(index) = terms.iter().position(|&x| x == field_name) {
+    //                     shared_terms.push(terms[index]);
+    //                     terms.remove(terms.iter().position(|&x| x == field_name).unwrap());
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     terms
+    // }
+
     /// Returns the # of days in the month of the Date/DateTime(Credit to TDark on Rust Discord)
     ///
     /// # Example
@@ -481,10 +454,10 @@ impl DateTime {
     ///~~~~
     /// use perDiem::types::DateTime;
     /// 
-    /// let shares_vec = DateTime::allShareEL(vec![DateTime::from(0, 5, 23, 1, 1, 2001).unwrap(), DateTime::from(0, 6, 23, 1, 1, 2000).unwrap()]);
+    /// let shares_vec = DateTime::allShare(vec![DateTime::from(0, 5, 23, 1, 1, 2001).unwrap(), DateTime::from(0, 6, 23, 1, 1, 2000).unwrap()]);
     /// assert_eq!(shares_vec.contains(&"second"), true);
-    /// assert_eq!(shares_vec.contains(&"minute"), true);
-    /// assert_eq!(shares_vec.contains(&"hour"), false);
+    /// assert_eq!(shares_vec.contains(&"minute"), false);
+    /// assert_eq!(shares_vec.contains(&"hour"), true);
     /// assert_eq!(shares_vec.contains(&"day"), true);
     /// assert_eq!(shares_vec.contains(&"month"), true);
     /// assert_eq!(shares_vec.contains(&"year"), false);
@@ -653,9 +626,9 @@ impl OrdinalDate {
     ///~~~~
     /// use perDiem::types::OrdinalDate;
     /// 
-    /// assert_eq!(OrdinalDate::from(1, 2000).unwrap().is_valid(), true);
-    /// assert_eq!(OrdinalDate::from(366, 2000).unwrap().is_valid(), true);
-    /// assert_eq!(OrdinalDate::from(367, 2000)?.is_valid(), false);
+    /// assert_eq!(OrdinalDate {day: 1, year: 2000}.is_valid(), true);
+    /// assert_eq!(OrdinalDate {day: 366, year: 2000}.is_valid(), true);
+    /// assert_eq!(OrdinalDate {day: 367, year: 2000}.is_valid(), false);
     pub fn is_valid(&self) -> bool {
         if isLeapYearSimple(self.year) && self.day > 366 || !isLeapYearSimple(self.year) && self.day > 365 {
             return false;
