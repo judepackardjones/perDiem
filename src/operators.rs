@@ -473,7 +473,7 @@ impl DateTime {
     /// assert_eq!(datetime, DateTime::from(0, 0, 0, 20, 6, 2021).unwrap());
     /// let mut datetime = DateTime::from(0, 0, 0, 20, 11, 2021).unwrap();
     /// datetime.decrease_ordinally(TimeSpan::minutes(5));
-    /// assert_eq!(datetime, DateTime::from(0, 55, 0, 19, 11, 2021).unwrap());
+    /// assert_eq!(datetime, DateTime::from(0, 55, 23, 19, 11, 2021).unwrap());
     pub fn decrease_ordinally(&mut self, length: TimeSpan) -> Result<(), &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
@@ -883,13 +883,35 @@ impl DateTime {
     ///
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::days(5)).unwrap(), DateTime::from(0, 0, 0, 15, 11, 2021).unwrap());
     /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::months(5)).unwrap(), DateTime::from(0, 0, 0, 20, 6, 2021).unwrap());
-    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 55, 0, 19, 11, 2021).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 0, 20, 11, 2021).unwrap().decrease_ordinally_as_new(TimeSpan::minutes(5)).unwrap(), DateTime::from(0, 55, 23, 19, 11, 2021).unwrap());
+    /// assert_eq!(DateTime::from(0, 0, 0, 15, 10, 2022).unwrap().decrease_ordinally_as_new(TimeSpan::minutes(60)).unwrap(), DateTime::from(0, 0, 0, 14, 10, 2022).unwrap());
     pub fn decrease_ordinally_as_new(&self, length: TimeSpan) -> Result<DateTime, &'static str> {
         if !self.is_valid() {
             return Err("Invalid Date");
         }
         let mut decrease_date = self.clone();
         match length {
+            TimeSpan::minutes(minutes) => {
+                decrease_date.decrease_ordinally(TimeSpan::hours(floor(minutes as f32 / 60.0))).unwrap();
+                let temp_minute = decrease_date.minute as i8 - (minutes % 60) as i8;
+                println!("Temp minute {}", temp_minute);
+                if temp_minute <= 0 {
+                    decrease_date.minute = (temp_minute + 60) as u8;
+                    decrease_date.decrease_ordinally(TimeSpan::hours(1)).unwrap();
+                } else {
+                    decrease_date.minute = temp_minute as u8;
+                }
+            }
+            TimeSpan::hours(hours) => {
+                decrease_date.decrease_ordinally(TimeSpan::days(floor(hours as f32 / 24.0))).unwrap();
+                let temp_hour: i8 = decrease_date.hour as i8 - (hours % 24) as i8;
+                if temp_hour <= 0 {
+                    decrease_date.hour = (temp_hour + 24) as u8;
+                    decrease_date.decrease_ordinally(TimeSpan::days(1)).unwrap();
+                } else {
+                    decrease_date.hour = temp_hour as u8;
+                }
+            }
             TimeSpan::days(days) => {
                 let temp_date = decrease_date.to_OrdinalDate().unwrap().decrease_by_days(days).unwrap().to_Date().unwrap();
                 decrease_date = DateTime::from(decrease_date.second, decrease_date.minute, decrease_date.hour, temp_date.day, temp_date.month, temp_date.year).unwrap();
